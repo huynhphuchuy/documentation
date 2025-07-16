@@ -2,10 +2,6 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Soul Language",
-  "modeToggle": {
-    "default": "dark",
-    "isHidden": true
-  },
   "colors": {
     "primary": "#1E90FF",
     "light": "#1E90FF",
@@ -15,15 +11,11 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Soul",
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
+            "pages": ["index", "howtoinstall", "quickstart"]
           },
           {
             "group": "Essentials",
@@ -39,22 +31,53 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "group": "Welcome",
+            "pages": ["documents/introduction"]
           },
           {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
+            "group": "Syntaxes",
+            "pages": ["documents/introduction"]
+          },
+          {
+            "group": "Modules",
+            "pages": ["documents/introduction"]
+          }
+        ]
+      },
+      {
+        "tab": "Jet Framework",
+        "groups": [
+          {
+            "group": "Welcome to Jet",
+            "pages": ["jet/introduction"]
+          },
+          {
+            "group": "Syntaxes",
+            "pages": ["jet/introduction"]
+          },
+          {
+            "group": "Modules",
+            "pages": ["jet/introduction"]
+          }
+        ]
+      },
+      {
+        "tab": "User Defined Functions",
+        "groups": [
+          {
+            "group": "Welcome to UDFs",
+            "pages": ["udf/introduction"]
+          },
+          {
+            "group": "Syntaxes",
+            "pages": ["udf/introduction"]
+          },
+          {
+            "group": "Modules",
+            "pages": ["udf/introduction"]
           }
         ]
       }
@@ -62,19 +85,19 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Homepage",
+          "href": "https://soul-lang.com",
+          "icon": "house"
         },
         {
-          "anchor": "Community",
+          "anchor": "Discord",
           "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "icon": "discord"
         },
         {
-          "anchor": "Blog",
+          "anchor": "Reddit",
           "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "icon": "reddit"
         }
       ]
     }
