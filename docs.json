@@ -3,7 +3,7 @@
   "theme": "mint",
   "name": "Soul Language",
   "modeToggle": {
-    "default": "light",
+    "default": "dark",
     "isHidden": true
   },
   "colors": {
