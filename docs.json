@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Soul Language",
   "colors": {
-    "primary": "#1653A3",
-    "light": "#07C983",
-    "dark": "#1653A3"
+    "primary": "#1E90FF",
+    "light": "#1E90FF",
+    "dark": "#1E90FF"
   },
   "favicon": "/favicon.ico",
   "navigation": {
