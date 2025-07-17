@@ -1,0 +1,520 @@
+---
+title: "return"
+description: "Return statements in Soul functions"
+---
+
+# return
+
+The `return` statement is used to exit a function and optionally return a value to the caller. It immediately terminates function execution and passes control back to the calling code.
+
+## Basic Return Statement
+
+Return values from functions:
+
+```javascript
+soul add(a, b) {
+    return a + b
+}
+
+soul greet(name) {
+    return "Hello, " + name
+}
+
+// Usage
+result = add(5, 3)      // 8
+message = greet("Alice") // "Hello, Alice"
+```
+
+## Return Without Value
+
+Return without a specific value (returns null):
+
+```javascript
+soul printMessage(message) {
+    println(message)
+    return  // Explicit return without value
+}
+
+soul processData(data) {
+    if (data == null) {
+        return  // Early return
+    }
+    
+    // Process data here
+    println("Processing: " + data)
+}
+```
+
+## Early Return
+
+Use return for early exit from functions:
+
+```javascript
+soul validateUser(user) {
+    if (user == null) {
+        return "User is null"
+    }
+    
+    if (user.name == null || user.name == "") {
+        return "Name is required"
+    }
+    
+    if (user.age < 0 || user.age > 150) {
+        return "Invalid age"
+    }
+    
+    return "Valid user"
+}
+```
+
+## Return with Expressions
+
+Return the result of expressions:
+
+```javascript
+soul calculateDiscount(price, percentage) {
+    return price * (percentage / 100)
+}
+
+soul isAdult(age) {
+    return age >= 18
+}
+
+soul getFullName(firstName, lastName) {
+    return firstName + " " + lastName
+}
+```
+
+## Return with Complex Values
+
+Return objects, arrays, and complex data structures:
+
+```javascript
+soul createUser(name, email) {
+    return {
+        "name": name,
+        "email": email,
+        "isActive": true,
+        "createdAt": new Date()
+    }
+}
+
+soul getNumbers(start, end) {
+    numbers = []
+    for (i = start; i <= end; i++) {
+        numbers.push(i)
+    }
+    return numbers
+}
+```
+
+## Return in Conditional Statements
+
+Return different values based on conditions:
+
+```javascript
+soul getGrade(score) {
+    if (score >= 90) {
+        return "A"
+    } else if (score >= 80) {
+        return "B"
+    } else if (score >= 70) {
+        return "C"
+    } else if (score >= 60) {
+        return "D"
+    } else {
+        return "F"
+    }
+}
+
+soul processResult(success, data, error) {
+    if (success) {
+        return {
+            "status": "success",
+            "data": data
+        }
+    } else {
+        return {
+            "status": "error",
+            "error": error
+        }
+    }
+}
+```
+
+## Return in Loops
+
+Return from within loops:
+
+```javascript
+soul findUser(users, id) {
+    for (user in users) {
+        if (user.id == id) {
+            return user  // Found user, return immediately
+        }
+    }
+    return null  // User not found
+}
+
+soul findFirstEven(numbers) {
+    for (num in numbers) {
+        if (num % 2 == 0) {
+            return num
+        }
+    }
+    return null
+}
+```
+
+## Return with Error Handling
+
+Return error states and success states:
+
+```javascript
+soul divide(a, b) {
+    if (b == 0) {
+        return {
+            "success": false,
+            "error": "Division by zero"
+        }
+    }
+    
+    return {
+        "success": true,
+        "result": a / b
+    }
+}
+
+soul parseNumber(str) {
+    if (str == null || str == "") {
+        return {
+            "success": false,
+            "error": "Empty string"
+        }
+    }
+    
+    try {
+        num = Number(str)
+        return {
+            "success": true,
+            "value": num
+        }
+    } catch (error) {
+        return {
+            "success": false,
+            "error": "Invalid number format"
+        }
+    }
+}
+```
+
+## Return in Async Functions
+
+Return values from async functions:
+
+```javascript
+async soul fetchUserData(userId) {
+    response = await http.get("/api/users/" + userId)
+    return response.json()
+}
+
+async soul processAsync(data) {
+    if (data == null) {
+        return {
+            "success": false,
+            "error": "No data provided"
+        }
+    }
+    
+    result = await processData(data)
+    return {
+        "success": true,
+        "result": result
+    }
+}
+```
+
+## Return in Class Methods
+
+Return values from class methods:
+
+```javascript
+sanctuary User {
+    soul __genesis__(name, email) {
+        this.name = name
+        this.email = email
+        this.isActive = true
+    }
+    
+    soul getName() {
+        return this.name
+    }
+    
+    soul getInfo() {
+        return {
+            "name": this.name,
+            "email": this.email,
+            "isActive": this.isActive
+        }
+    }
+    
+    soul activate() {
+        this.isActive = true
+        return this  // Return self for chaining
+    }
+}
+```
+
+## Return for Method Chaining
+
+Return objects to enable method chaining:
+
+```javascript
+sanctuary Builder {
+    soul __genesis__() {
+        this.data = {}
+    }
+    
+    soul setName(name) {
+        this.data.name = name
+        return this  // Enable chaining
+    }
+    
+    soul setAge(age) {
+        this.data.age = age
+        return this  // Enable chaining
+    }
+    
+    soul build() {
+        return this.data
+    }
+}
+
+// Usage with method chaining
+user = Builder.new()
+    .setName("Alice")
+    .setAge(30)
+    .build()
+```
+
+## Return with Validation
+
+Return validation results:
+
+```javascript
+soul validateEmail(email) {
+    if (email == null || email == "") {
+        return {
+            "valid": false,
+            "error": "Email is required"
+        }
+    }
+    
+    if (!email.contains("@")) {
+        return {
+            "valid": false,
+            "error": "Email must contain @"
+        }
+    }
+    
+    if (!email.contains(".")) {
+        return {
+            "valid": false,
+            "error": "Email must contain domain"
+        }
+    }
+    
+    return {
+        "valid": true,
+        "email": email.toLowerCase()
+    }
+}
+```
+
+## Return with Computed Values
+
+Return computed or calculated values:
+
+```javascript
+soul calculateStatistics(numbers) {
+    if (numbers == null || numbers.length() == 0) {
+        return {
+            "count": 0,
+            "sum": 0,
+            "average": 0,
+            "min": 0,
+            "max": 0
+        }
+    }
+    
+    sum = 0
+    min = numbers[0]
+    max = numbers[0]
+    
+    for (num in numbers) {
+        sum += num
+        if (num < min) min = num
+        if (num > max) max = num
+    }
+    
+    return {
+        "count": numbers.length(),
+        "sum": sum,
+        "average": sum / numbers.length(),
+        "min": min,
+        "max": max
+    }
+}
+```
+
+## Return with Resource Cleanup
+
+Return after cleaning up resources:
+
+```javascript
+soul processFile(filename) {
+    file = null
+    
+    try {
+        file = openFile(filename)
+        
+        if (file == null) {
+            return {
+                "success": false,
+                "error": "Could not open file"
+            }
+        }
+        
+        data = file.read()
+        result = processData(data)
+        
+        return {
+            "success": true,
+            "result": result
+        }
+    } catch (error) {
+        return {
+            "success": false,
+            "error": error.toString()
+        }
+    } finally {
+        if (file != null) {
+            file.close()
+        }
+    }
+}
+```
+
+## Return Best Practices
+
+Guidelines for using return statements:
+
+```javascript
+// Good - clear return values
+soul calculatePrice(quantity, unitPrice) {
+    if (quantity <= 0) {
+        return 0
+    }
+    
+    if (unitPrice <= 0) {
+        return 0
+    }
+    
+    return quantity * unitPrice
+}
+
+// Better - comprehensive return structure
+soul calculatePrice(quantity, unitPrice) {
+    // Validate inputs
+    if (quantity == null || unitPrice == null) {
+        return {
+            "success": false,
+            "error": "Missing required parameters",
+            "price": 0
+        }
+    }
+    
+    if (quantity <= 0) {
+        return {
+            "success": false,
+            "error": "Quantity must be positive",
+            "price": 0
+        }
+    }
+    
+    if (unitPrice <= 0) {
+        return {
+            "success": false,
+            "error": "Unit price must be positive",
+            "price": 0
+        }
+    }
+    
+    // Calculate price
+    totalPrice = quantity * unitPrice
+    
+    return {
+        "success": true,
+        "price": totalPrice,
+        "quantity": quantity,
+        "unitPrice": unitPrice
+    }
+}
+```
+
+## Best Practices
+
+1. **Return early**: Use early returns to avoid deep nesting
+2. **Return meaningful values**: Make return values clear and useful
+3. **Be consistent**: Use consistent return patterns throughout your code
+4. **Handle all cases**: Ensure all code paths return appropriate values
+5. **Document return values**: Make it clear what functions return
+
+```javascript
+// Good - early return pattern
+soul processUser(user) {
+    if (user == null) {
+        return null
+    }
+    
+    if (!user.isActive) {
+        return null
+    }
+    
+    if (user.age < 18) {
+        return null
+    }
+    
+    return {
+        "name": user.name,
+        "email": user.email,
+        "status": "processed"
+    }
+}
+
+// Better - descriptive return values
+soul processUser(user) {
+    if (user == null) {
+        return { success: false, error: "User is null" }
+    }
+    
+    if (!user.isActive) {
+        return { success: false, error: "User is inactive" }
+    }
+    
+    if (user.age < 18) {
+        return { success: false, error: "User is under 18" }
+    }
+    
+    return {
+        success: true,
+        user: {
+            name: user.name,
+            email: user.email,
+            status: "processed"
+        }
+    }
+}
+```
+
+The `return` statement is essential for controlling function flow and providing results to calling code. Use it effectively to create clear, predictable, and maintainable functions.

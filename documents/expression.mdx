@@ -1,0 +1,276 @@
+---
+title: "expression"
+description: "Expression statements in Soul"
+---
+
+# expression
+
+Expression statements are standalone expressions that are evaluated for their side effects. They represent expressions that are used as statements in Soul programs.
+
+## Basic Expression Statements
+
+Simple expressions used as statements:
+
+```javascript
+// Variable assignment expressions
+x = 5
+name = "Alice"
+isActive = true
+
+// Function call expressions
+println("Hello, World!")
+processData()
+updateUser(userId, userData)
+
+// Method call expressions
+user.activate()
+list.push(item)
+string.toUpperCase()
+```
+
+## Arithmetic Expression Statements
+
+Arithmetic operations used as statements:
+
+```javascript
+// Mathematical operations
+result = 10 + 5
+product = width * height
+remainder = total % 10
+
+// Compound arithmetic expressions
+total = (price * quantity) + tax
+average = (a + b + c) / 3
+area = Math.PI * radius * radius
+```
+
+## Comparison Expression Statements
+
+Comparison operations used as statements:
+
+```javascript
+// Comparison results
+isEqual = (a == b)
+isGreater = (score > threshold)
+isValid = (age >= 18) && (age <= 65)
+
+// String comparisons
+isMatch = (userInput == expectedValue)
+isEmpty = (text.length() == 0)
+```
+
+## Logical Expression Statements
+
+Logical operations used as statements:
+
+```javascript
+// Boolean logic
+canProceed = hasPermission && isLoggedIn
+shouldSkip = isDisabled || isHidden
+isReady = !isPending && !hasErrors
+
+// Complex logical expressions
+isValidUser = (user != null) && user.isActive && (user.role == "admin")
+```
+
+## Function Call Expression Statements
+
+Function calls used as statements:
+
+```javascript
+// Built-in function calls
+println("Debug message")
+print("Status: " + status)
+
+// User-defined function calls
+initializeSystem()
+processQueue()
+cleanupResources()
+
+// Method chaining expressions
+user.setName("Bob").setEmail("bob@example.com").save()
+```
+
+## Object Property Expression Statements
+
+Property access and modification as statements:
+
+```javascript
+// Property access
+userName = user.name
+userEmail = user["email"]
+listLength = items.length()
+
+// Property modification
+user.isActive = true
+config["debug"] = false
+item.quantity += 1
+```
+
+## Array/List Expression Statements
+
+Array and list operations as statements:
+
+```javascript
+// Array element access
+firstItem = items[0]
+lastItem = items[items.length() - 1]
+
+// Array operations
+items.push("new item")
+removedItem = items.pop()
+items.sort()
+```
+
+## Conditional Expression Statements
+
+Ternary and conditional expressions as statements:
+
+```javascript
+// Ternary operator expressions
+message = isError ? "Error occurred" : "Success"
+status = (count > 0) ? "active" : "inactive"
+displayName = (user.name != "") ? user.name : "Anonymous"
+
+// Conditional assignment
+result = condition ? valueIfTrue : valueIfFalse
+```
+
+## Complex Expression Statements
+
+Multi-part expressions used as statements:
+
+```javascript
+// Combined operations
+finalScore = (baseScore * multiplier) + bonusPoints
+fullName = firstName + " " + lastName
+isEligible = (age >= minAge) && (score >= threshold) && hasPermission
+
+// Nested expressions
+result = processData(transformInput(rawData))
+output = formatter.format(calculator.compute(input))
+```
+
+## Expression Statements in Control Flow
+
+Expressions used within control structures:
+
+```javascript
+// In if statements
+if (user.isActive && user.hasPermission("read")) {
+    displayContent()
+}
+
+// In while loops
+while (queue.hasItems() && !shouldStop) {
+    processNextItem()
+}
+
+// In for loops
+for (i = 0; i < items.length(); i++) {
+    processItem(items[i])
+}
+```
+
+## Side Effect Expression Statements
+
+Expressions that produce side effects:
+
+```javascript
+// Function calls with side effects
+logger.log("Application started")
+database.connect()
+cache.clear()
+
+// Modifications with side effects
+counter++
+total += amount
+items.remove(index)
+```
+
+## Async Expression Statements
+
+Asynchronous expressions as statements:
+
+```javascript
+// Async function calls
+result = await fetchData()
+response = await api.post("/endpoint", data)
+content = await file.read()
+
+// Async method calls
+await user.save()
+await connection.close()
+await cache.invalidate()
+```
+
+## Expression Statements with Error Handling
+
+Expressions within try-catch blocks:
+
+```javascript
+try {
+    result = riskyOperation()
+    processResult(result)
+} catch (error) {
+    handleError(error)
+}
+```
+
+## Chain Expression Statements
+
+Method chaining expressions:
+
+```javascript
+// Builder pattern
+query = QueryBuilder.new()
+    .select("name", "email")
+    .from("users")
+    .where("active", true)
+    .limit(10)
+    .build()
+
+// Fluent interface
+response = HttpClient.new()
+    .setUrl("https://api.example.com")
+    .setHeader("Authorization", token)
+    .post(data)
+```
+
+## Expression Statements in Loops
+
+Expressions used in loop contexts:
+
+```javascript
+// For-in loop expressions
+for (item in collection) {
+    processItem(item)
+}
+
+// While loop expressions
+while (hasMore()) {
+    item = getNext()
+    processItem(item)
+}
+```
+
+## Best Practices
+
+1. **Keep expressions readable**: Break complex expressions into simpler parts
+2. **Use meaningful variable names**: Make expression purpose clear
+3. **Avoid side effects in comparisons**: Keep comparisons pure
+4. **Use parentheses for clarity**: Group operations logically
+
+```javascript
+// Good - clear expression statements
+isValidInput = (input != null) && (input.length() > 0)
+formattedOutput = formatter.format(processedData)
+shouldContinue = !hasErrors && hasMoreData
+
+// Better - broken down for clarity
+hasInput = (input != null) && (input.length() > 0)
+isValidInput = hasInput && input.isValid()
+shouldContinue = !hasErrors && hasMoreData
+```
+
+Expression statements form the foundation of Soul programs, allowing you to perform calculations, call functions, and manipulate data as part of your program's execution flow.

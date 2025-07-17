@@ -1,0 +1,400 @@
+---
+title: "if"
+description: "Conditional statements in Soul"
+---
+
+# if
+
+The `if` statement is used for conditional execution of code blocks. It allows your program to make decisions and execute different code paths based on whether conditions are true or false.
+
+## Basic If Statement
+
+Simple conditional execution:
+
+```javascript
+age = 18
+
+if (age >= 18) {
+    println("You are an adult")
+}
+```
+
+## If-Else Statement
+
+Execute different code blocks based on condition:
+
+```javascript
+score = 85
+
+if (score >= 90) {
+    println("Grade: A")
+} else {
+    println("Grade: B or lower")
+}
+```
+
+## If-Else If-Else Chain
+
+Multiple conditions with different outcomes:
+
+```javascript
+temperature = 75
+
+if (temperature > 80) {
+    println("It's hot")
+} else if (temperature > 60) {
+    println("It's warm")
+} else if (temperature > 40) {
+    println("It's cool")
+} else {
+    println("It's cold")
+}
+```
+
+## Nested If Statements
+
+If statements within other if statements:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 25,
+    "isActive": true,
+    "hasPermission": true
+}
+
+if (user.isActive) {
+    if (user.hasPermission) {
+        if (user.age >= 18) {
+            println("Access granted")
+        } else {
+            println("Access denied: Too young")
+        }
+    } else {
+        println("Access denied: No permission")
+    }
+} else {
+    println("Access denied: User inactive")
+}
+```
+
+## Complex Conditions
+
+Using logical operators in conditions:
+
+```javascript
+username = "alice"
+password = "secret123"
+isLoggedIn = false
+
+if (username == "alice" && password == "secret123") {
+    isLoggedIn = true
+    println("Login successful")
+} else {
+    println("Invalid credentials")
+}
+
+// Multiple conditions with OR
+if (user.isAdmin || user.isModerator || user.hasSpecialAccess) {
+    println("User has elevated privileges")
+}
+```
+
+## If with Function Calls
+
+Using function results in conditions:
+
+```javascript
+soul isValidEmail(email) {
+    return email.contains("@") && email.contains(".")
+}
+
+email = "user@example.com"
+
+if (isValidEmail(email)) {
+    println("Valid email address")
+} else {
+    println("Invalid email address")
+}
+```
+
+## If with Comparisons
+
+Different comparison operators:
+
+```javascript
+a = 10
+b = 20
+
+if (a == b) {
+    println("Equal")
+} else if (a > b) {
+    println("a is greater")
+} else {
+    println("b is greater")
+}
+
+// String comparisons
+name1 = "Alice"
+name2 = "Bob"
+
+if (name1 != name2) {
+    println("Different names")
+}
+```
+
+## If with Null Checks
+
+Checking for null or undefined values:
+
+```javascript
+userData = getUserData()
+
+if (userData != null) {
+    if (userData.name != null && userData.name != "") {
+        println("Welcome, " + userData.name)
+    } else {
+        println("Welcome, guest")
+    }
+} else {
+    println("Unable to load user data")
+}
+```
+
+## If with Array/List Conditions
+
+Checking array properties:
+
+```javascript
+items = getItems()
+
+if (items != null && items.length() > 0) {
+    println("Found " + items.length() + " items")
+    
+    for (item in items) {
+        if (item.isValid()) {
+            processItem(item)
+        }
+    }
+} else {
+    println("No items found")
+}
+```
+
+## If with Object Property Checks
+
+Checking object properties:
+
+```javascript
+config = {
+    "debug": true,
+    "timeout": 5000,
+    "retries": 3
+}
+
+if (config.debug) {
+    println("Debug mode enabled")
+}
+
+if (config.timeout > 3000) {
+    println("Long timeout configured")
+}
+```
+
+## If with Assignment
+
+Assigning values based on conditions:
+
+```javascript
+userRole = "admin"
+permissions = []
+
+if (userRole == "admin") {
+    permissions = ["read", "write", "delete", "admin"]
+} else if (userRole == "user") {
+    permissions = ["read", "write"]
+} else {
+    permissions = ["read"]
+}
+```
+
+## If with Early Returns
+
+Using if statements for early function returns:
+
+```javascript
+soul processUser(user) {
+    if (user == null) {
+        return "Error: User is null"
+    }
+    
+    if (!user.isActive) {
+        return "Error: User is inactive"
+    }
+    
+    if (user.age < 18) {
+        return "Error: User is too young"
+    }
+    
+    // Process user normally
+    return "User processed successfully"
+}
+```
+
+## If with Error Handling
+
+Conditional error handling:
+
+```javascript
+soul connectToDatabase(connectionString) {
+    if (connectionString == null || connectionString == "") {
+        throw("Invalid connection string")
+    }
+    
+    connection = attemptConnection(connectionString)
+    
+    if (connection == null) {
+        throw("Failed to connect to database")
+    }
+    
+    return connection
+}
+```
+
+## If with Range Checks
+
+Checking if values are within ranges:
+
+```javascript
+soul validateAge(age) {
+    if (age < 0) {
+        return "Age cannot be negative"
+    } else if (age > 150) {
+        return "Age seems unrealistic"
+    } else if (age < 18) {
+        return "Must be 18 or older"
+    } else {
+        return "Valid age"
+    }
+}
+```
+
+## If with Type Checking
+
+Conditional logic based on types:
+
+```javascript
+soul processValue(value) {
+    if (typeof value == "string") {
+        return "String: " + value.toUpperCase()
+    } else if (typeof value == "number") {
+        return "Number: " + (value * 2)
+    } else if (typeof value == "boolean") {
+        return "Boolean: " + (value ? "true" : "false")
+    } else {
+        return "Unknown type"
+    }
+}
+```
+
+## If with Pattern Matching
+
+Using if statements for pattern matching:
+
+```javascript
+soul handleResponse(response) {
+    if (response.status == 200) {
+        return processSuccessResponse(response)
+    } else if (response.status == 404) {
+        return handleNotFound()
+    } else if (response.status >= 400 && response.status < 500) {
+        return handleClientError(response)
+    } else if (response.status >= 500) {
+        return handleServerError(response)
+    } else {
+        return handleUnknownResponse(response)
+    }
+}
+```
+
+## If with Guard Clauses
+
+Using if statements as guard clauses:
+
+```javascript
+soul calculateDiscount(user, purchase) {
+    // Guard clauses
+    if (user == null) {
+        return 0
+    }
+    
+    if (purchase == null || purchase.amount <= 0) {
+        return 0
+    }
+    
+    if (!user.isActive) {
+        return 0
+    }
+    
+    // Main logic
+    if (user.isPremium) {
+        return purchase.amount * 0.15  // 15% discount
+    } else if (purchase.amount > 100) {
+        return purchase.amount * 0.10  // 10% discount
+    } else {
+        return purchase.amount * 0.05  // 5% discount
+    }
+}
+```
+
+## Best Practices
+
+1. **Use clear conditions**: Make conditions easy to understand
+2. **Avoid deep nesting**: Use early returns or guard clauses
+3. **Use meaningful variable names**: Make conditions self-documenting
+4. **Handle edge cases**: Consider null/undefined values
+5. **Use appropriate comparison operators**: Choose the right operator for the context
+
+```javascript
+// Good - clear and well-structured
+soul authenticateUser(username, password) {
+    if (username == null || username == "") {
+        return { success: false, message: "Username required" }
+    }
+    
+    if (password == null || password == "") {
+        return { success: false, message: "Password required" }
+    }
+    
+    user = findUserByUsername(username)
+    
+    if (user == null) {
+        return { success: false, message: "User not found" }
+    }
+    
+    if (!user.isActive) {
+        return { success: false, message: "Account disabled" }
+    }
+    
+    if (user.password != password) {
+        return { success: false, message: "Invalid password" }
+    }
+    
+    return { success: true, user: user }
+}
+
+// Better - with extracted validation functions
+soul authenticateUser(username, password) {
+    validationResult = validateCredentials(username, password)
+    if (!validationResult.isValid) {
+        return validationResult
+    }
+    
+    user = findUserByUsername(username)
+    userValidationResult = validateUser(user, password)
+    
+    return userValidationResult
+}
+```
+
+The `if` statement is fundamental to controlling program flow and making decisions in Soul applications. Use it wisely to create clear, maintainable conditional logic.

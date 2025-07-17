@@ -1,0 +1,515 @@
+---
+title: "switch"
+description: "Switch statements in Soul"
+---
+
+# switch
+
+The `switch` statement provides a way to execute different code blocks based on the value of an expression. It's a cleaner alternative to long chains of if-else statements when comparing a single value against multiple possibilities.
+
+## Basic Switch Statement
+
+Compare a value against multiple cases:
+
+```javascript
+command = "start"
+
+switch (command) {
+    case "start":
+        println("Starting application")
+        break
+    case "stop":
+        println("Stopping application")
+        break
+    case "restart":
+        println("Restarting application")
+        break
+    default:
+        println("Unknown command")
+}
+```
+
+## Switch with Multiple Values per Case
+
+Match multiple values in a single case:
+
+```javascript
+dayOfWeek = "saturday"
+
+switch (dayOfWeek) {
+    case "saturday", "sunday":
+        println("It's weekend!")
+        break
+    case "monday", "tuesday", "wednesday", "thursday", "friday":
+        println("It's a weekday")
+        break
+    default:
+        println("Invalid day")
+}
+```
+
+## Switch with Different Data Types
+
+Switch works with various data types:
+
+```javascript
+value = 42
+
+switch (value) {
+    case 0:
+        println("Zero")
+        break
+    case 1, 2, 3:
+        println("Small number")
+        break
+    case "hello":
+        println("String greeting")
+        break
+    case true:
+        println("Boolean true")
+        break
+    case null:
+        println("Null value")
+        break
+    default:
+        println("Other value: " + value)
+}
+```
+
+## Switch with Break Statements
+
+Use `break` to prevent fall-through:
+
+```javascript
+grade = "B"
+
+switch (grade) {
+    case "A":
+        println("Excellent!")
+        break  // Prevents fall-through
+    case "B":
+        println("Good job!")
+        break
+    case "C":
+        println("Average")
+        break
+    case "D":
+        println("Below average")
+        break
+    case "F":
+        println("Failed")
+        break
+    default:
+        println("Invalid grade")
+}
+```
+
+## Switch with Fall-through
+
+Intentional fall-through without break:
+
+```javascript
+userLevel = 3
+
+switch (userLevel) {
+    case 1:
+        println("Level 1 access granted")
+        // Falls through to level 2
+    case 2:
+        println("Level 2 access granted")
+        // Falls through to level 3
+    case 3:
+        println("Level 3 access granted")
+        break
+    default:
+        println("No access")
+}
+// Output for level 3: all three access messages
+```
+
+## Switch with Complex Cases
+
+Each case can contain complex logic:
+
+```javascript
+action = "process"
+
+switch (action) {
+    case "process":
+        println("Processing data...")
+        
+        // Complex processing logic
+        data = loadData()
+        if (data != null) {
+            result = transformData(data)
+            saveResult(result)
+            println("Processing complete")
+        } else {
+            println("No data to process")
+        }
+        break
+        
+    case "cleanup":
+        println("Cleaning up...")
+        
+        // Cleanup logic
+        clearCache()
+        closeConnections()
+        println("Cleanup complete")
+        break
+        
+    case "backup":
+        println("Creating backup...")
+        
+        // Backup logic
+        timestamp = getCurrentTime()
+        backupFile = "backup_" + timestamp + ".sql"
+        createBackup(backupFile)
+        println("Backup created: " + backupFile)
+        break
+        
+    default:
+        println("Unknown action: " + action)
+}
+```
+
+## Switch with Function Calls
+
+Use function calls in switch cases:
+
+```javascript
+userRole = "admin"
+
+switch (userRole) {
+    case "admin":
+        grantAdminAccess()
+        setupAdminDashboard()
+        logAdminLogin()
+        break
+        
+    case "user":
+        grantUserAccess()
+        setupUserDashboard()
+        logUserLogin()
+        break
+        
+    case "guest":
+        grantGuestAccess()
+        setupGuestView()
+        logGuestVisit()
+        break
+        
+    default:
+        denyAccess()
+        logInvalidRole(userRole)
+}
+```
+
+## Switch with Variable Assignments
+
+Assign values based on switch cases:
+
+```javascript
+status = "active"
+permissions = []
+message = ""
+
+switch (status) {
+    case "active":
+        permissions = ["read", "write", "execute"]
+        message = "Full access granted"
+        break
+        
+    case "inactive":
+        permissions = ["read"]
+        message = "Limited access"
+        break
+        
+    case "suspended":
+        permissions = []
+        message = "Access suspended"
+        break
+        
+    default:
+        permissions = []
+        message = "Invalid status"
+}
+```
+
+## Switch with Return Statements
+
+Use switch in functions with return:
+
+```javascript
+soul getHttpStatusMessage(code) {
+    switch (code) {
+        case 200:
+            return "OK"
+        case 201:
+            return "Created"
+        case 400:
+            return "Bad Request"
+        case 401:
+            return "Unauthorized"
+        case 403:
+            return "Forbidden"
+        case 404:
+            return "Not Found"
+        case 500:
+            return "Internal Server Error"
+        default:
+            return "Unknown Status Code"
+    }
+}
+
+message = getHttpStatusMessage(404)  // "Not Found"
+```
+
+## Nested Switch Statements
+
+Switch statements can be nested:
+
+```javascript
+category = "user"
+operation = "create"
+
+switch (category) {
+    case "user":
+        switch (operation) {
+            case "create":
+                println("Creating user")
+                createUser()
+                break
+            case "update":
+                println("Updating user")
+                updateUser()
+                break
+            case "delete":
+                println("Deleting user")
+                deleteUser()
+                break
+            default:
+                println("Unknown user operation")
+        }
+        break
+        
+    case "product":
+        switch (operation) {
+            case "create":
+                println("Creating product")
+                createProduct()
+                break
+            case "update":
+                println("Updating product")
+                updateProduct()
+                break
+            case "delete":
+                println("Deleting product")
+                deleteProduct()
+                break
+            default:
+                println("Unknown product operation")
+        }
+        break
+        
+    default:
+        println("Unknown category")
+}
+```
+
+## Switch with Expressions
+
+Use expressions in switch values:
+
+```javascript
+score = 85
+
+switch (true) {
+    case score >= 90:
+        println("Grade: A")
+        break
+    case score >= 80:
+        println("Grade: B")
+        break
+    case score >= 70:
+        println("Grade: C")
+        break
+    case score >= 60:
+        println("Grade: D")
+        break
+    default:
+        println("Grade: F")
+}
+```
+
+## Switch with Error Handling
+
+Handle errors in switch cases:
+
+```javascript
+errorCode = getErrorCode()
+
+switch (errorCode) {
+    case 0:
+        println("No error")
+        break
+        
+    case 1:
+        println("File not found")
+        handleFileNotFound()
+        break
+        
+    case 2:
+        println("Permission denied")
+        handlePermissionDenied()
+        break
+        
+    case 3:
+        println("Network error")
+        handleNetworkError()
+        break
+        
+    default:
+        println("Unknown error: " + errorCode)
+        handleUnknownError(errorCode)
+}
+```
+
+## Switch Performance Optimization
+
+Optimize switch statements:
+
+```javascript
+// Good - most common cases first
+switch (requestType) {
+    case "GET":  // Most common
+        handleGet()
+        break
+    case "POST":  // Second most common
+        handlePost()
+        break
+    case "PUT":
+        handlePut()
+        break
+    case "DELETE":
+        handleDelete()
+        break
+    default:
+        handleUnknown()
+}
+
+// Use switch instead of multiple if-else
+soul getFileType(extension) {
+    switch (extension.toLowerCase()) {
+        case "jpg", "jpeg", "png", "gif":
+            return "image"
+        case "mp4", "avi", "mov":
+            return "video"
+        case "mp3", "wav", "flac":
+            return "audio"
+        case "pdf", "doc", "docx":
+            return "document"
+        default:
+            return "unknown"
+    }
+}
+```
+
+## Switch vs If-Else
+
+When to use switch vs if-else:
+
+```javascript
+// Use switch for multiple exact matches
+switch (status) {
+    case "active": return "User is active"
+    case "inactive": return "User is inactive"
+    case "suspended": return "User is suspended"
+    default: return "Unknown status"
+}
+
+// Use if-else for ranges or complex conditions
+if (age < 18) {
+    return "Minor"
+} else if (age < 65) {
+    return "Adult"
+} else {
+    return "Senior"
+}
+```
+
+## Best Practices
+
+1. **Always use break**: Prevent unintended fall-through
+2. **Include default case**: Handle unexpected values
+3. **Order cases logically**: Most common cases first
+4. **Keep cases simple**: Complex logic should be in functions
+5. **Use meaningful case values**: Make switch purpose clear
+
+```javascript
+// Good - clear and well-structured
+soul processCommand(command) {
+    switch (command.toLowerCase()) {
+        case "start":
+        case "begin":
+        case "run":
+            return startApplication()
+            
+        case "stop":
+        case "end":
+        case "quit":
+            return stopApplication()
+            
+        case "pause":
+        case "suspend":
+            return pauseApplication()
+            
+        case "resume":
+        case "continue":
+            return resumeApplication()
+            
+        default:
+            return {
+                success: false,
+                error: "Unknown command: " + command
+            }
+    }
+}
+
+// Better - with validation
+soul processCommand(command) {
+    if (command == null || command == "") {
+        return {
+            success: false,
+            error: "Command cannot be empty"
+        }
+    }
+    
+    normalizedCommand = command.toLowerCase().trim()
+    
+    switch (normalizedCommand) {
+        case "start":
+        case "begin":
+        case "run":
+            return startApplication()
+            
+        case "stop":
+        case "end":
+        case "quit":
+            return stopApplication()
+            
+        case "help":
+        case "?":
+            return showHelp()
+            
+        default:
+            return {
+                success: false,
+                error: "Unknown command: " + command,
+                suggestion: "Try 'help' for available commands"
+            }
+    }
+}
+```
+
+Switch statements provide a clean, readable way to handle multiple discrete values. Use them when you need to compare a single value against several possibilities for better code organization and performance.

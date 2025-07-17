@@ -1,49 +1,125 @@
 ---
-title: "Introduction"
-description: "Welcome to the home of your new documentation"
+title: "Welcome to Soul"
+description: "A modern scripting language for AI automation and web integration"
 ---
 
 <img
   className="block dark:hidden"
   src="/images/hero-light.png"
-  alt="Hero Light"
+  alt="Soul Language Logo"
 />
 
 <img
   className="hidden dark:block"
   src="/SoulMainLogo.png"
-  alt="Hero Dark"
+  alt="Soul Language Logo"
   title=""
 />
 
-## Setting up
+## What is Soul?
 
-The first step to world-class documentation is setting up your editing environments.
+Soul is a dynamically typed, object-oriented scripting language designed for the modern automation era. Built with Go, it combines familiar syntax with powerful features specifically tailored for AI-powered automation, web scraping, and system integration.
 
-<CardGroup cols={2}>
-  <Card title="Edit Your Docs" icon="pen-to-square" href="https://mintlify.com/docs/quickstart">
-    Get your docs set up locally for easy development
+## Why Soul?
+
+<CardGroup cols={3}>
+  <Card title="AI-First Design" icon="brain">
+    Built-in support for OpenAI, Anthropic, and Gemini models with a unified API
   </Card>
-  <Card title="Preview Changes" icon="image" href="https://mintlify.com/docs/development">
-    Preview your changes before you push to make sure they're perfect
+  <Card title="Modern Concurrency" icon="bolt">
+    Powerful async/await, channels, and lightweight threads for efficient
+    parallel processing
+  </Card>
+  <Card title="Rich Standard Library" icon="cube">
+    Everything you need out-of-the-box: HTTP servers, web scraping, databases,
+    and more
   </Card>
 </CardGroup>
 
-## Make it yours
+## Quick Example
 
-Update your docs to your brand and add valuable content for the best user conversion.
+### GenAI and Automation Example
+
+```javascript
+soul genesis() {
+    // Fetch and summarize web content with AI
+    browser = Robo.createBrowser()
+    page = browser.newPage()
+    page.navigate("https://news.ycombinator.com")
+
+    title = page.findElement("title").getText()
+
+    ai = GenAI.chat("openai").model("gpt-3.5-turbo")
+    response = ai.invoke("Summarize this title: " + title)
+
+    println(response.text)
+    browser.close()
+}
+```
+
+### Concurrent Processing Example
+
+```javascript
+soul processData(name, value) {
+    println("Processing " + name + "...")
+    Concurrency.sleep(100)
+    return name + " result: " + (value * 2)
+}
+
+soul genesis() {
+    // Spawn concurrent tasks
+    task1 = Concurrency.spawn(processData, "Task A", 10)
+    task2 = Concurrency.spawn(processData, "Task B", 20)
+    task3 = Concurrency.spawn(processData, "Task C", 30)
+
+    // Wait for all results
+    result1 = await task1
+    result2 = await task2
+    result3 = await task3
+
+    println(result1)
+    println(result2)
+    println(result3)
+
+    // Use WaitGroup for synchronization
+    wg = Concurrency.waitGroup()
+    wg.add(2)
+
+    Concurrency.run(soul() {
+        println("Background job 1 running")
+        Concurrency.sleep(50)
+        wg.done()
+    })
+
+    Concurrency.run(soul() {
+        println("Background job 2 running")
+        Concurrency.sleep(75)
+        wg.done()
+    })
+
+    wg.wait()
+    println("All background jobs completed")
+}
+```
+
+## Get Started
 
 <CardGroup cols={2}>
-  <Card title="Customize Style" icon="palette" href="https://mintlify.com/docs/settings/global">
-    Customize your docs to your company's colors and brands
+  <Card title="Installation" icon="download" href="/how-to-install">
+    Install Soul and set up your development environment in minutes
   </Card>
-  <Card title="Reference APIs" icon="code" href="https://mintlify.com/docs/api-playground/openapi">
-    Automatically generate endpoints from an OpenAPI spec
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Write your first Soul program and explore the core features
   </Card>
-  <Card title="Add Components" icon="screwdriver-wrench" href="https://mintlify.com/docs/content/components/accordions">
-    Build interactive features and designs to guide your users
+</CardGroup>
+
+## Learn More
+
+<CardGroup cols={2}>
+  <Card title="Language Documentation" icon="book" href="/documents/cli-usage">
+    Explore the complete language reference and syntax guide
   </Card>
-  <Card title="Get Inspiration" icon="stars" href="https://mintlify.com/customers">
-    Check out our showcase of our favorite documentation
+  <Card title="Jet Framework" icon="server" href="/jet/welcome-to-jet">
+    Build web applications with Soul's Express.js-inspired framework
   </Card>
 </CardGroup>

@@ -1,0 +1,235 @@
+---
+title: "boolean"
+description: "Boolean literals and logic in Soul"
+---
+
+# boolean
+
+Boolean values in Soul represent logical truth values: `true` and `false`. They are fundamental for conditional logic, comparisons, and control flow.
+
+## Boolean Literals
+
+Soul supports two boolean literals:
+
+```javascript
+isActive = true
+isCompleted = false
+hasError = true
+isValid = false
+```
+
+## Boolean Operations
+
+Boolean values work with logical operators:
+
+```javascript
+// Logical AND
+result = true && false    // false
+result = true && true     // true
+
+// Logical OR
+result = true || false    // true
+result = false || false   // false
+
+// Logical NOT
+result = !true           // false
+result = !false          // true
+```
+
+## Comparison Operations
+
+Comparison operations return boolean values:
+
+```javascript
+// Equality
+result = 5 == 5          // true
+result = 5 == 3          // false
+result = "hello" == "hello"  // true
+
+// Inequality
+result = 5 != 3          // true
+result = 5 != 5          // false
+
+// Numerical comparisons
+result = 10 > 5          // true
+result = 3 < 8           // true
+result = 5 >= 5          // true
+result = 4 <= 3          // false
+```
+
+## Boolean in Conditional Statements
+
+Booleans are used in conditional logic:
+
+```javascript
+isLoggedIn = true
+hasPermission = false
+
+if (isLoggedIn) {
+    println("Welcome back!")
+}
+
+if (isLoggedIn && hasPermission) {
+    println("Access granted")
+} else {
+    println("Access denied")
+}
+```
+
+## Boolean in Loops
+
+Boolean conditions control loop execution:
+
+```javascript
+keepRunning = true
+counter = 0
+
+while (keepRunning) {
+    println("Running... " + counter)
+    counter++
+    
+    if (counter > 5) {
+        keepRunning = false
+    }
+}
+```
+
+## Boolean Functions
+
+Functions can return boolean values:
+
+```javascript
+soul isEven(number) {
+    return number % 2 == 0
+}
+
+soul isValidEmail(email) {
+    return email.contains("@") && email.contains(".")
+}
+
+soul isEmpty(value) {
+    return value == null || value == ""
+}
+
+// Usage
+if (isEven(10)) {
+    println("10 is even")
+}
+
+if (isValidEmail("user@example.com")) {
+    println("Valid email")
+}
+```
+
+## Truthy and Falsy Values
+
+Soul has truthy and falsy values for conditions:
+
+```javascript
+// Falsy values
+if (false) { }           // false
+if (null) { }            // false
+if (0) { }               // false
+if ("") { }              // false (empty string)
+
+// Truthy values
+if (true) { }            // true
+if (1) { }               // true
+if ("hello") { }         // true
+if ([]) { }              // true (empty array)
+if ({}) { }              // true (empty object)
+```
+
+## Boolean with Ternary Operator
+
+Boolean expressions work with ternary operators:
+
+```javascript
+isAdmin = true
+message = isAdmin ? "Admin access" : "User access"
+
+age = 25
+canVote = age >= 18 ? true : false
+
+status = isActive ? "Online" : "Offline"
+```
+
+## Boolean in Collections
+
+Booleans can be stored in collections:
+
+```javascript
+// Boolean array
+flags = [true, false, true, false]
+
+// Boolean in objects
+user = {
+    "name": "Alice",
+    "isActive": true,
+    "isVerified": false,
+    "hasPermissions": true
+}
+
+// Check boolean values
+if (user.isActive && user.isVerified) {
+    println("User is active and verified")
+}
+```
+
+## Complex Boolean Expressions
+
+Combine multiple boolean operations:
+
+```javascript
+soul canAccess(user, resource) {
+    return user.isActive && 
+           user.hasPermission(resource) && 
+           !user.isBlocked && 
+           resource.isAvailable
+}
+
+soul isValidUser(user) {
+    return user != null && 
+           user.name != "" && 
+           user.email.contains("@") && 
+           user.age >= 18
+}
+```
+
+## Boolean Constants
+
+Define boolean constants for clarity:
+
+```javascript
+DEBUG_MODE = true
+PRODUCTION_MODE = false
+FEATURE_ENABLED = true
+
+if (DEBUG_MODE) {
+    println("Debug information")
+}
+
+if (PRODUCTION_MODE) {
+    optimizePerformance()
+}
+```
+
+## Best Practices
+
+1. **Use meaningful names**: `isActive` instead of `flag`
+2. **Avoid double negatives**: `isEnabled` instead of `isNotDisabled`
+3. **Use explicit comparisons**: `value == true` when clarity is needed
+4. **Group complex conditions**: Use parentheses for readability
+
+```javascript
+// Good
+isValidUser = user != null && user.isActive && user.hasPermission
+canProceed = isValidUser && !isBlocked && hasRequiredFields
+
+// Clear conditional
+if (isValidUser && canProceed) {
+    processUser(user)
+}
+```
+
+Boolean values are essential for controlling program flow and making logical decisions in Soul applications.

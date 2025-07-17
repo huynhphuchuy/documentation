@@ -1,0 +1,402 @@
+---
+title: "function"
+description: "Function declarations and usage in Soul"
+---
+
+# function
+
+Functions in Soul are declared with the `soul` keyword and are first-class citizens, meaning they can be assigned to variables, passed as arguments, and returned from other functions.
+
+## Basic Function Declaration
+
+Functions are declared using the `soul` keyword followed by the function name and parameters:
+
+```javascript
+soul greet(name) {
+    return "Hello, " + name
+}
+
+soul add(a, b) {
+    return a + b
+}
+
+soul getCurrentTime() {
+    return new Date()
+}
+```
+
+## Function Parameters
+
+Functions can have zero or more parameters:
+
+```javascript
+// No parameters
+soul sayHello() {
+    return "Hello, World!"
+}
+
+// Single parameter
+soul square(x) {
+    return x * x
+}
+
+// Multiple parameters
+soul calculateArea(width, height) {
+    return width * height
+}
+```
+
+## Default Parameters
+
+Functions can have default parameter values:
+
+```javascript
+soul greetWithDefault(name, greeting) {
+    if (greeting == null) {
+        greeting = "Hello"
+    }
+    return greeting + ", " + name
+}
+
+soul createUser(name, age, isActive) {
+    if (age == null) {
+        age = 0
+    }
+    if (isActive == null) {
+        isActive = true
+    }
+    
+    return {
+        "name": name,
+        "age": age,
+        "isActive": isActive
+    }
+}
+```
+
+## Function Return Values
+
+Functions can return values using the `return` statement:
+
+```javascript
+soul multiply(x, y) {
+    return x * y
+}
+
+soul isEven(number) {
+    return number % 2 == 0
+}
+
+// Functions without explicit return return null
+soul printMessage(msg) {
+    println(msg)
+    // Implicitly returns null
+}
+```
+
+## First-Class Functions
+
+Functions can be assigned to variables and passed around:
+
+```javascript
+// Assign function to variable
+calculate = soul(a, b) {
+    return a + b
+}
+
+// Pass function as argument
+soul applyOperation(fn, x, y) {
+    return fn(x, y)
+}
+
+result = applyOperation(calculate, 5, 3)  // result = 8
+```
+
+## Anonymous Functions
+
+Functions can be created without names:
+
+```javascript
+// Anonymous function assigned to variable
+square = soul(x) {
+    return x * x
+}
+
+// Anonymous function as callback
+numbers = [1, 2, 3, 4, 5]
+doubled = numbers.map(soul(n) {
+    return n * 2
+})
+```
+
+## Higher-Order Functions
+
+Functions that take other functions as parameters:
+
+```javascript
+soul forEach(array, callback) {
+    for (item in array) {
+        callback(item)
+    }
+}
+
+soul filter(array, predicate) {
+    result = []
+    for (item in array) {
+        if (predicate(item)) {
+            result.push(item)
+        }
+    }
+    return result
+}
+
+// Usage
+numbers = [1, 2, 3, 4, 5]
+evenNumbers = filter(numbers, soul(n) {
+    return n % 2 == 0
+})
+```
+
+## Closures
+
+Functions can capture variables from their enclosing scope:
+
+```javascript
+soul createCounter() {
+    count = 0
+    return soul() {
+        count = count + 1
+        return count
+    }
+}
+
+counter1 = createCounter()
+counter2 = createCounter()
+
+println(counter1())  // 1
+println(counter1())  // 2
+println(counter2())  // 1 (separate closure)
+```
+
+## Function Scope
+
+Functions create their own scope for variables:
+
+```javascript
+globalVar = "global"
+
+soul testScope() {
+    localVar = "local"
+    println(globalVar)  // Accessible
+    println(localVar)   // Accessible
+}
+
+testScope()
+// println(localVar)  // Error: localVar not accessible outside function
+```
+
+## Recursive Functions
+
+Functions can call themselves:
+
+```javascript
+soul factorial(n) {
+    if (n <= 1) {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+soul fibonacci(n) {
+    if (n <= 1) {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+println(factorial(5))   // 120
+println(fibonacci(6))   // 8
+```
+
+## Static Functions
+
+Functions can be marked as static, typically used within classes:
+
+```javascript
+sanctuary MathUtils {
+    static soul add(a, b) {
+        return a + b
+    }
+    
+    static soul multiply(a, b) {
+        return a * b
+    }
+    
+    static soul max(a, b) {
+        return a > b ? a : b
+    }
+}
+
+result = MathUtils.add(5, 3)        // 8
+result = MathUtils.multiply(4, 6)   // 24
+result = MathUtils.max(10, 7)       // 10
+```
+
+## Async Functions
+
+Functions can be declared as async for asynchronous operations:
+
+```javascript
+async soul fetchData(url) {
+    response = await http.get(url)
+    return response.json()
+}
+
+async soul processMultipleUrls(urls) {
+    results = []
+    for (url in urls) {
+        data = await fetchData(url)
+        results.push(data)
+    }
+    return results
+}
+
+// Usage
+soul genesis() {
+    data = await fetchData("https://api.example.com/data")
+    println(data)
+}
+```
+
+## Function Expressions
+
+Functions can be used as expressions:
+
+```javascript
+// Immediately invoked function expression (IIFE)
+result = (soul(x) {
+    return x * 2
+})(5)  // result = 10
+
+// Conditional function assignment
+processor = isDebugMode ? 
+    soul(data) { return debugProcess(data) } : 
+    soul(data) { return normalProcess(data) }
+```
+
+## Function with Variable Arguments
+
+While not directly supported, you can handle variable arguments:
+
+```javascript
+soul sum() {
+    total = 0
+    args = arguments  // If supported
+    for (arg in args) {
+        total += arg
+    }
+    return total
+}
+
+// Alternative: pass an array
+soul sumArray(numbers) {
+    total = 0
+    for (number in numbers) {
+        total += number
+    }
+    return total
+}
+
+result = sumArray([1, 2, 3, 4, 5])  // 15
+```
+
+## Function Composition
+
+Combining functions to create new functionality:
+
+```javascript
+soul compose(f, g) {
+    return soul(x) {
+        return f(g(x))
+    }
+}
+
+soul double(x) {
+    return x * 2
+}
+
+soul addTen(x) {
+    return x + 10
+}
+
+doubleAndAddTen = compose(addTen, double)
+result = doubleAndAddTen(5)  // (5 * 2) + 10 = 20
+```
+
+## Function Validation
+
+Functions with input validation:
+
+```javascript
+soul divide(a, b) {
+    if (b == 0) {
+        throw("Division by zero")
+    }
+    return a / b
+}
+
+soul validateEmail(email) {
+    if (email == null || email == "") {
+        return false
+    }
+    return email.contains("@") && email.contains(".")
+}
+
+try {
+    result = divide(10, 2)  // 5
+    result = divide(10, 0)  // Throws error
+} catch (error) {
+    println("Error: " + error)
+}
+```
+
+## Best Practices
+
+1. **Use descriptive names**: `calculateTotalPrice` instead of `calc`
+2. **Keep functions focused**: Each function should do one thing well
+3. **Use parameters instead of global variables**: Makes functions more reusable
+4. **Return meaningful values**: Avoid functions that only have side effects
+5. **Handle edge cases**: Validate inputs and handle errors gracefully
+
+```javascript
+// Good
+soul calculateTax(amount, rate) {
+    if (amount < 0 || rate < 0) {
+        throw("Invalid input: amount and rate must be positive")
+    }
+    return amount * rate
+}
+
+// Better - with comprehensive validation
+soul calculateTax(amount, rate) {
+    if (amount == null || rate == null) {
+        throw("Invalid input: amount and rate cannot be null")
+    }
+    
+    if (typeof amount != "number" || typeof rate != "number") {
+        throw("Invalid input: amount and rate must be numbers")
+    }
+    
+    if (amount < 0 || rate < 0) {
+        throw("Invalid input: amount and rate must be positive")
+    }
+    
+    if (rate > 1) {
+        throw("Invalid input: rate should be between 0 and 1")
+    }
+    
+    return amount * rate
+}
+```
+
+Functions are the building blocks of Soul applications, providing reusable, modular code that can be combined to create complex functionality.

@@ -1,0 +1,310 @@
+---
+title: "for"
+description: "For loops in Soul"
+---
+
+# for
+
+The `for` loop is a control flow statement that allows code to be executed repeatedly based on a condition. Soul supports the classic C-style for loop with initialization, condition, and increment components.
+
+## Basic For Loop
+
+The standard for loop syntax with initialization, condition, and increment:
+
+```javascript
+for (i = 0; i < 5; i++) {
+    println("Iteration: " + i)
+}
+// Output: 0, 1, 2, 3, 4
+```
+
+## For Loop Components
+
+A for loop consists of three parts:
+
+```javascript
+for (initialization; condition; increment) {
+    // Loop body
+}
+
+// Example with explicit parts
+for (counter = 1; counter <= 10; counter++) {
+    println("Counter: " + counter)
+}
+```
+
+## Different Initialization Patterns
+
+Various ways to initialize the loop variable:
+
+```javascript
+// Start from 0
+for (i = 0; i < 5; i++) {
+    println("i: " + i)
+}
+
+// Start from 1
+for (i = 1; i <= 5; i++) {
+    println("i: " + i)
+}
+
+// Start from a specific value
+for (i = 10; i >= 0; i--) {
+    println("Countdown: " + i)
+}
+```
+
+## Different Increment Patterns
+
+Various ways to modify the loop variable:
+
+```javascript
+// Increment by 1
+for (i = 0; i < 10; i++) {
+    println(i)
+}
+
+// Increment by 2
+for (i = 0; i < 10; i += 2) {
+    println("Even: " + i)
+}
+
+// Decrement
+for (i = 10; i > 0; i--) {
+    println("Countdown: " + i)
+}
+
+// Multiply by 2
+for (i = 1; i < 100; i *= 2) {
+    println("Power of 2: " + i)
+}
+```
+
+## For Loops with Arrays
+
+Iterating through arrays using index:
+
+```javascript
+numbers = [10, 20, 30, 40, 50]
+
+for (i = 0; i < numbers.length(); i++) {
+    println("Index " + i + ": " + numbers[i])
+}
+```
+
+## For Loops with Strings
+
+Iterating through string characters:
+
+```javascript
+text = "Hello"
+
+for (i = 0; i < text.length(); i++) {
+    println("Character " + i + ": " + text[i])
+}
+```
+
+## Nested For Loops
+
+For loops can be nested for multi-dimensional processing:
+
+```javascript
+// Multiplication table
+for (i = 1; i <= 5; i++) {
+    for (j = 1; j <= 5; j++) {
+        result = i * j
+        print(result + "\t")
+    }
+    println("")  // New line after each row
+}
+```
+
+## For Loops with Complex Conditions
+
+Using complex conditions and multiple variables:
+
+```javascript
+// Multiple conditions
+for (i = 0, j = 10; i < j; i++, j--) {
+    println("i: " + i + ", j: " + j)
+}
+
+// Complex condition
+for (i = 0; i < 100 && isPrime(i); i++) {
+    println("Prime: " + i)
+}
+```
+
+## For Loops with Break and Continue
+
+Controlling loop execution:
+
+```javascript
+// Using break
+for (i = 0; i < 10; i++) {
+    if (i == 5) {
+        break  // Exit loop when i equals 5
+    }
+    println("i: " + i)
+}
+
+// Using continue
+for (i = 0; i < 10; i++) {
+    if (i % 2 == 0) {
+        continue  // Skip even numbers
+    }
+    println("Odd: " + i)
+}
+```
+
+## For Loops in Data Processing
+
+Common patterns for processing data:
+
+```javascript
+// Sum calculation
+numbers = [1, 2, 3, 4, 5]
+sum = 0
+
+for (i = 0; i < numbers.length(); i++) {
+    sum += numbers[i]
+}
+println("Sum: " + sum)
+
+// Finding maximum
+values = [23, 45, 12, 67, 34]
+max = values[0]
+
+for (i = 1; i < values.length(); i++) {
+    if (values[i] > max) {
+        max = values[i]
+    }
+}
+println("Maximum: " + max)
+```
+
+## For Loops with Functions
+
+Calling functions within for loops:
+
+```javascript
+soul processItem(item, index) {
+    return "Item " + index + ": " + item.toUpperCase()
+}
+
+items = ["apple", "banana", "cherry"]
+
+for (i = 0; i < items.length(); i++) {
+    processed = processItem(items[i], i)
+    println(processed)
+}
+```
+
+## For Loops with Objects
+
+Iterating through object properties using indices:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+keys = user.keys()
+for (i = 0; i < keys.length(); i++) {
+    key = keys[i]
+    value = user[key]
+    println(key + ": " + value)
+}
+```
+
+## Infinite For Loops
+
+Creating infinite loops (use with caution):
+
+```javascript
+// Infinite loop - be careful!
+for (;;) {
+    input = readInput()
+    if (input == "quit") {
+        break
+    }
+    processInput(input)
+}
+```
+
+## For Loops with Error Handling
+
+Handling errors within for loops:
+
+```javascript
+urls = ["http://example1.com", "http://example2.com", "http://example3.com"]
+
+for (i = 0; i < urls.length(); i++) {
+    try {
+        response = fetchData(urls[i])
+        processResponse(response)
+    } catch (error) {
+        println("Error fetching " + urls[i] + ": " + error)
+        continue  // Skip to next URL
+    }
+}
+```
+
+## Performance Considerations
+
+Optimizing for loop performance:
+
+```javascript
+// Cache array length
+items = getItems()
+length = items.length()
+
+for (i = 0; i < length; i++) {
+    processItem(items[i])
+}
+
+// Avoid expensive operations in loop condition
+for (i = 0; i < items.length(); i++) {  // length() called each iteration
+    processItem(items[i])
+}
+```
+
+## Best Practices
+
+1. **Use meaningful variable names**: `index` instead of `i` when clarity is important
+2. **Cache array lengths**: Store length in a variable for better performance
+3. **Use appropriate increment**: Choose the right increment pattern for your needs
+4. **Handle edge cases**: Check for empty arrays or invalid indices
+
+```javascript
+// Good - clear and efficient
+soul processUserData(users) {
+    userCount = users.length()
+    
+    for (index = 0; index < userCount; index++) {
+        user = users[index]
+        
+        if (user.isActive) {
+            processActiveUser(user)
+        }
+    }
+}
+
+// Better - with validation
+soul processUserData(users) {
+    if (users == null || users.length() == 0) {
+        return
+    }
+    
+    for (index = 0; index < users.length(); index++) {
+        user = users[index]
+        if (user != null && user.isActive) {
+            processActiveUser(user)
+        }
+    }
+}
+```
+
+The `for` loop is essential for controlled iteration and is particularly useful when you need access to the current index or want precise control over the iteration process.

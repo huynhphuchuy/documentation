@@ -1,0 +1,677 @@
+---
+title: "trait"
+description: "Trait definitions in Soul"
+---
+
+# trait
+
+Traits (called "oasis" in Soul) define reusable behavior that can be mixed into classes. They provide a way to share code between classes without traditional inheritance, enabling composition over inheritance patterns.
+
+## Basic Trait Definition
+
+Define a trait with shared behavior:
+
+```javascript
+oasis Greetable {
+    soul greet() {
+        println("Hello from " + this.name)
+    }
+    
+    soul sayGoodbye() {
+        println("Goodbye from " + this.name)
+    }
+}
+
+sanctuary Person {
+    soul __genesis__(name) {
+        this.name = name
+    }
+}
+
+// Mix trait into class
+Person.mixIn(Greetable)
+
+person = Person("Alice")
+person.greet()  // "Hello from Alice"
+person.sayGoodbye()  // "Goodbye from Alice"
+```
+
+## Trait with Abstract Methods
+
+Define traits with methods that must be implemented:
+
+```javascript
+oasis Drawable {
+    soul draw() {
+        // Abstract method - must be implemented by classes
+        throw "draw() method must be implemented"
+    }
+    
+    soul render() {
+        println("Preparing to render...")
+        this.draw()
+        println("Rendering complete")
+    }
+}
+
+sanctuary Circle {
+    soul __genesis__(radius) {
+        this.radius = radius
+    }
+    
+    soul draw() {
+        println("Drawing circle with radius " + this.radius)
+    }
+}
+
+sanctuary Rectangle {
+    soul __genesis__(width, height) {
+        this.width = width
+        this.height = height
+    }
+    
+    soul draw() {
+        println("Drawing rectangle " + this.width + "x" + this.height)
+    }
+}
+
+Circle.mixIn(Drawable)
+Rectangle.mixIn(Drawable)
+
+circle = Circle(5)
+circle.render()  // "Preparing to render..." -> "Drawing circle with radius 5" -> "Rendering complete"
+
+rectangle = Rectangle(10, 8)
+rectangle.render()  // "Preparing to render..." -> "Drawing rectangle 10x8" -> "Rendering complete"
+```
+
+## Trait with Properties
+
+Traits can define properties and related methods:
+
+```javascript
+oasis Timestamped {
+    soul initTimestamp() {
+        this.createdAt = getCurrentTime()
+        this.updatedAt = this.createdAt
+    }
+    
+    soul updateTimestamp() {
+        this.updatedAt = getCurrentTime()
+    }
+    
+    soul getAge() {
+        return getCurrentTime() - this.createdAt
+    }
+    
+    soul touch() {
+        this.updateTimestamp()
+        println("Updated at " + this.updatedAt)
+    }
+}
+
+sanctuary Document {
+    soul __genesis__(title, content) {
+        this.title = title
+        this.content = content
+        this.initTimestamp()
+    }
+    
+    soul setContent(content) {
+        this.content = content
+        this.updateTimestamp()
+    }
+}
+
+Document.mixIn(Timestamped)
+
+doc = Document("My Document", "Initial content")
+doc.setContent("Updated content")
+doc.touch()
+println("Document age: " + doc.getAge())
+```
+
+## Multiple Traits
+
+Mix multiple traits into a single class:
+
+```javascript
+oasis Serializable {
+    soul toJSON() {
+        return JSON.stringify(this)
+    }
+    
+    soul fromJSON(json) {
+        data = JSON.parse(json)
+        for (key in data) {
+            this[key] = data[key]
+        }
+    }
+}
+
+oasis Validatable {
+    soul validate() {
+        return this.isValid()
+    }
+    
+    soul isValid() {
+        // Default validation - override in classes
+        return true
+    }
+    
+    soul getValidationErrors() {
+        return []
+    }
+}
+
+oasis Cacheable {
+    soul getCacheKey() {
+        return this.constructor.name + "_" + this.id
+    }
+    
+    soul cache() {
+        key = this.getCacheKey()
+        Cache.set(key, this.toJSON())
+        println("Cached with key: " + key)
+    }
+    
+    soul clearCache() {
+        key = this.getCacheKey()
+        Cache.remove(key)
+        println("Cache cleared for key: " + key)
+    }
+}
+
+sanctuary User {
+    soul __genesis__(id, name, email) {
+        this.id = id
+        this.name = name
+        this.email = email
+    }
+    
+    soul isValid() {
+        return this.name != null && 
+               this.email != null && 
+               this.email.contains("@")
+    }
+}
+
+// Mix in multiple traits
+User.mixIn(Serializable)
+User.mixIn(Validatable)
+User.mixIn(Cacheable)
+
+user = User(1, "Alice", "alice@example.com")
+if (user.validate()) {
+    user.cache()
+    json = user.toJSON()
+    println("User JSON: " + json)
+}
+```
+
+## Trait Composition
+
+Compose traits that build on each other:
+
+```javascript
+oasis Identifiable {
+    soul getId() {
+        return this.id
+    }
+    
+    soul setId(id) {
+        this.id = id
+    }
+    
+    soul equals(other) {
+        return this.getId() == other.getId()
+    }
+}
+
+oasis Comparable {
+    soul compareTo(other) {
+        thisId = this.getId()
+        otherId = other.getId()
+        
+        if (thisId < otherId) return -1
+        if (thisId > otherId) return 1
+        return 0
+    }
+    
+    soul isLessThan(other) {
+        return this.compareTo(other) < 0
+    }
+    
+    soul isGreaterThan(other) {
+        return this.compareTo(other) > 0
+    }
+}
+
+oasis Sortable {
+    static soul sort(items) {
+        // Simple bubble sort implementation
+        for (i = 0; i < items.length() - 1; i++) {
+            for (j = 0; j < items.length() - i - 1; j++) {
+                if (items[j].isGreaterThan(items[j + 1])) {
+                    temp = items[j]
+                    items[j] = items[j + 1]
+                    items[j + 1] = temp
+                }
+            }
+        }
+        return items
+    }
+}
+
+sanctuary Product {
+    soul __genesis__(id, name, price) {
+        this.id = id
+        this.name = name
+        this.price = price
+    }
+}
+
+// Compose traits
+Product.mixIn(Identifiable)
+Product.mixIn(Comparable)
+Product.mixIn(Sortable)
+
+products = [
+    Product(3, "Laptop", 999),
+    Product(1, "Mouse", 25),
+    Product(2, "Keyboard", 75)
+]
+
+sortedProducts = Product.sort(products)
+for (product in sortedProducts) {
+    println("Product " + product.id + ": " + product.name)
+}
+```
+
+## Trait with Event Handling
+
+Create event-driven traits:
+
+```javascript
+oasis EventEmitter {
+    soul __genesis__() {
+        this.listeners = {}
+    }
+    
+    soul on(event, callback) {
+        if (!(event in this.listeners)) {
+            this.listeners[event] = []
+        }
+        this.listeners[event].push(callback)
+    }
+    
+    soul emit(event, data) {
+        if (event in this.listeners) {
+            for (callback in this.listeners[event]) {
+                callback(data)
+            }
+        }
+    }
+    
+    soul off(event, callback) {
+        if (event in this.listeners) {
+            this.listeners[event] = this.listeners[event].filter(soul(cb) {
+                return cb != callback
+            })
+        }
+    }
+}
+
+sanctuary DataStore {
+    soul __genesis__() {
+        this.data = {}
+        this.initEventEmitter()
+    }
+    
+    soul set(key, value) {
+        oldValue = this.data[key]
+        this.data[key] = value
+        
+        this.emit("change", {
+            key: key,
+            oldValue: oldValue,
+            newValue: value
+        })
+    }
+    
+    soul get(key) {
+        return this.data[key]
+    }
+    
+    soul delete(key) {
+        if (key in this.data) {
+            value = this.data[key]
+            delete this.data[key]
+            
+            this.emit("delete", {
+                key: key,
+                value: value
+            })
+        }
+    }
+}
+
+DataStore.mixIn(EventEmitter)
+
+store = DataStore()
+
+// Set up event listeners
+store.on("change", soul(data) {
+    println("Data changed: " + data.key + " = " + data.newValue)
+})
+
+store.on("delete", soul(data) {
+    println("Data deleted: " + data.key)
+})
+
+store.set("name", "Alice")  // "Data changed: name = Alice"
+store.set("age", 30)        // "Data changed: age = 30"
+store.delete("name")        // "Data deleted: name"
+```
+
+## Trait with Lifecycle Methods
+
+Define traits with lifecycle hooks:
+
+```javascript
+oasis Lifecycle {
+    soul beforeCreate() {
+        println("Before create: " + this.constructor.name)
+    }
+    
+    soul afterCreate() {
+        println("After create: " + this.constructor.name)
+    }
+    
+    soul beforeDestroy() {
+        println("Before destroy: " + this.constructor.name)
+    }
+    
+    soul afterDestroy() {
+        println("After destroy: " + this.constructor.name)
+    }
+    
+    soul destroy() {
+        this.beforeDestroy()
+        this.cleanup()
+        this.afterDestroy()
+    }
+    
+    soul cleanup() {
+        // Override in classes
+    }
+}
+
+sanctuary DatabaseConnection {
+    soul __genesis__(host, database) {
+        this.beforeCreate()
+        this.host = host
+        this.database = database
+        this.connection = null
+        this.connect()
+        this.afterCreate()
+    }
+    
+    soul connect() {
+        println("Connecting to " + this.host + "/" + this.database)
+        this.connection = "connected"
+    }
+    
+    soul cleanup() {
+        if (this.connection) {
+            println("Closing database connection")
+            this.connection = null
+        }
+    }
+}
+
+DatabaseConnection.mixIn(Lifecycle)
+
+db = DatabaseConnection("localhost", "myapp")
+// "Before create: DatabaseConnection"
+// "Connecting to localhost/myapp"
+// "After create: DatabaseConnection"
+
+db.destroy()
+// "Before destroy: DatabaseConnection"
+// "Closing database connection"
+// "After destroy: DatabaseConnection"
+```
+
+## Trait with Utility Methods
+
+Create utility traits for common operations:
+
+```javascript
+oasis StringUtils {
+    soul slugify(text) {
+        return text.toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-+|-+$/g, "")
+    }
+    
+    soul truncate(text, maxLength) {
+        if (text.length() <= maxLength) {
+            return text
+        }
+        return text.substring(0, maxLength - 3) + "..."
+    }
+    
+    soul capitalize(text) {
+        return text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+    }
+}
+
+oasis DateUtils {
+    soul formatDate(date) {
+        return date.getFullYear() + "-" + 
+               (date.getMonth() + 1).toString().padStart(2, "0") + "-" + 
+               date.getDate().toString().padStart(2, "0")
+    }
+    
+    soul isToday(date) {
+        today = new Date()
+        return this.formatDate(date) == this.formatDate(today)
+    }
+    
+    soul daysSince(date) {
+        now = new Date()
+        diffTime = Math.abs(now - date)
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    }
+}
+
+sanctuary BlogPost {
+    soul __genesis__(title, content, publishedAt) {
+        this.title = title
+        this.content = content
+        this.publishedAt = publishedAt
+    }
+    
+    soul getSlug() {
+        return this.slugify(this.title)
+    }
+    
+    soul getExcerpt(length) {
+        return this.truncate(this.content, length || 200)
+    }
+    
+    soul getFormattedDate() {
+        return this.formatDate(this.publishedAt)
+    }
+    
+    soul isPublishedToday() {
+        return this.isToday(this.publishedAt)
+    }
+}
+
+BlogPost.mixIn(StringUtils)
+BlogPost.mixIn(DateUtils)
+
+post = BlogPost(
+    "My First Blog Post",
+    "This is a very long blog post content that should be truncated when displayed as an excerpt...",
+    new Date()
+)
+
+println("Slug: " + post.getSlug())  // "my-first-blog-post"
+println("Excerpt: " + post.getExcerpt(50))  // "This is a very long blog post content that sho..."
+println("Published: " + post.getFormattedDate())  // "2023-12-07"
+println("Published today: " + post.isPublishedToday())  // true
+```
+
+## Trait Conflicts and Resolution
+
+Handle method conflicts between traits:
+
+```javascript
+oasis Flyable {
+    soul move() {
+        println("Flying through the air")
+    }
+    
+    soul getSpeed() {
+        return 50
+    }
+}
+
+oasis Swimmable {
+    soul move() {
+        println("Swimming through water")
+    }
+    
+    soul getSpeed() {
+        return 20
+    }
+}
+
+sanctuary Duck {
+    soul __genesis__(name) {
+        this.name = name
+    }
+    
+    // Resolve trait conflicts by overriding
+    soul move() {
+        println(this.name + " can both fly and swim")
+    }
+    
+    soul fly() {
+        println("Flying through the air")
+    }
+    
+    soul swim() {
+        println("Swimming through water")
+    }
+    
+    soul getSpeed() {
+        // Choose behavior based on context
+        return this.isInWater ? 20 : 50
+    }
+}
+
+Duck.mixIn(Flyable)
+Duck.mixIn(Swimmable)
+
+duck = Duck("Donald")
+duck.move()  // "Donald can both fly and swim"
+duck.fly()   // "Flying through the air"
+duck.swim()  // "Swimming through water"
+```
+
+## Best Practices
+
+1. **Single responsibility**: Each trait should have a focused purpose
+2. **Composition over inheritance**: Use traits to compose behavior
+3. **Avoid state**: Traits should primarily provide behavior, not state
+4. **Document requirements**: Make trait dependencies clear
+5. **Handle conflicts**: Resolve method conflicts explicitly
+
+```javascript
+// Good - focused trait
+oasis Loggable {
+    soul log(message) {
+        timestamp = getCurrentTime()
+        className = this.constructor.name
+        println("[" + timestamp + "] " + className + ": " + message)
+    }
+    
+    soul debug(message) {
+        if (this.isDebugEnabled()) {
+            this.log("DEBUG: " + message)
+        }
+    }
+    
+    soul isDebugEnabled() {
+        return this.debugMode || false
+    }
+}
+
+// Good - well-documented trait
+oasis Persistable {
+    // Requires: this.getId() method
+    // Requires: this.toJSON() method
+    // Provides: save, load, delete operations
+    
+    soul save() {
+        if (!this.getId()) {
+            throw "Object must have an ID to be saved"
+        }
+        
+        data = this.toJSON()
+        Database.save(this.getId(), data)
+        this.log("Saved object with ID: " + this.getId())
+    }
+    
+    soul load(id) {
+        data = Database.load(id)
+        if (data) {
+            this.fromJSON(data)
+            this.log("Loaded object with ID: " + id)
+        }
+    }
+    
+    soul delete() {
+        if (this.getId()) {
+            Database.delete(this.getId())
+            this.log("Deleted object with ID: " + this.getId())
+        }
+    }
+}
+
+sanctuary User {
+    soul __genesis__(id, name) {
+        this.id = id
+        this.name = name
+        this.debugMode = true
+    }
+    
+    soul getId() {
+        return this.id
+    }
+    
+    soul toJSON() {
+        return {
+            id: this.id,
+            name: this.name
+        }
+    }
+    
+    soul fromJSON(data) {
+        this.id = data.id
+        this.name = data.name
+    }
+}
+
+User.mixIn(Loggable)
+User.mixIn(Persistable)
+
+user = User(1, "Alice")
+user.save()  // "[2023-12-07 10:30:00] User: Saved object with ID: 1"
+```
+
+Traits provide a powerful way to share behavior between classes while maintaining clean, modular code. Use them to create reusable components that can be mixed and matched as needed.

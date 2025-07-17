@@ -1,0 +1,300 @@
+---
+title: "case"
+description: "Case statements in Soul switch constructs"
+---
+
+# case
+
+Case statements are used within switch constructs to define different execution paths based on matching values. Each case specifies one or more values to match against and the code to execute when matched.
+
+## Basic Case Usage
+
+Cases are used inside switch statements:
+
+```javascript
+command = "start"
+
+switch (command) {
+    case "start":
+        println("Starting application")
+        initialize()
+        break
+        
+    case "stop":
+        println("Stopping application")
+        cleanup()
+        break
+        
+    default:
+        println("Unknown command")
+}
+```
+
+## Multiple Values per Case
+
+A single case can match multiple values:
+
+```javascript
+dayOfWeek = "saturday"
+
+switch (dayOfWeek) {
+    case "saturday", "sunday":
+        println("It's weekend!")
+        break
+        
+    case "monday", "tuesday", "wednesday", "thursday", "friday":
+        println("It's a weekday")
+        break
+        
+    default:
+        println("Invalid day")
+}
+```
+
+## Case with Different Data Types
+
+Cases can match different types of values:
+
+```javascript
+value = 42
+
+switch (value) {
+    case 0:
+        println("Zero")
+        break
+        
+    case 1, 2, 3:
+        println("Small number")
+        break
+        
+    case "hello":
+        println("String greeting")
+        break
+        
+    case true:
+        println("Boolean true")
+        break
+        
+    default:
+        println("Other value: " + value)
+}
+```
+
+## Case with Expressions
+
+Cases can use expressions as values:
+
+```javascript
+score = 85
+
+switch (score) {
+    case 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100:
+        println("Grade: A")
+        break
+        
+    case 80, 81, 82, 83, 84, 85, 86, 87, 88, 89:
+        println("Grade: B")
+        break
+        
+    case 70, 71, 72, 73, 74, 75, 76, 77, 78, 79:
+        println("Grade: C")
+        break
+        
+    default:
+        println("Grade: F")
+}
+```
+
+## Case with Complex Logic
+
+Each case can contain complex code blocks:
+
+```javascript
+action = "process"
+
+switch (action) {
+    case "process":
+        println("Processing data...")
+        
+        // Complex processing logic
+        data = loadData()
+        if (data != null) {
+            result = transformData(data)
+            saveResult(result)
+            println("Processing complete")
+        } else {
+            println("No data to process")
+        }
+        break
+        
+    case "cleanup":
+        println("Cleaning up...")
+        
+        // Cleanup logic
+        clearCache()
+        closeConnections()
+        println("Cleanup complete")
+        break
+        
+    default:
+        println("No action specified")
+}
+```
+
+## Nested Switch Cases
+
+Cases can contain nested switch statements:
+
+```javascript
+category = "user"
+operation = "create"
+
+switch (category) {
+    case "user":
+        switch (operation) {
+            case "create":
+                println("Creating user")
+                break
+            case "update":
+                println("Updating user")
+                break
+            case "delete":
+                println("Deleting user")
+                break
+            default:
+                println("Unknown user operation")
+        }
+        break
+        
+    case "product":
+        switch (operation) {
+            case "create":
+                println("Creating product")
+                break
+            case "update":
+                println("Updating product")
+                break
+            default:
+                println("Unknown product operation")
+        }
+        break
+        
+    default:
+        println("Unknown category")
+}
+```
+
+## Fall-through Behavior
+
+Without `break`, cases fall through to the next case:
+
+```javascript
+level = 2
+
+switch (level) {
+    case 1:
+        println("Level 1 access")
+        // falls through
+        
+    case 2:
+        println("Level 2 access")
+        // falls through
+        
+    case 3:
+        println("Level 3 access")
+        break
+        
+    default:
+        println("No access")
+}
+// Output for level 2: "Level 2 access" and "Level 3 access"
+```
+
+## Case with Function Calls
+
+Cases can call functions:
+
+```javascript
+userRole = "admin"
+
+switch (userRole) {
+    case "admin":
+        grantAdminAccess()
+        setupAdminDashboard()
+        logAdminLogin()
+        break
+        
+    case "user":
+        grantUserAccess()
+        setupUserDashboard()
+        logUserLogin()
+        break
+        
+    case "guest":
+        grantGuestAccess()
+        setupGuestView()
+        break
+        
+    default:
+        denyAccess()
+        logInvalidRole(userRole)
+}
+```
+
+## Case with Variable Assignments
+
+Cases can perform variable assignments:
+
+```javascript
+status = "active"
+permissions = []
+
+switch (status) {
+    case "active":
+        permissions = ["read", "write", "execute"]
+        isEnabled = true
+        break
+        
+    case "inactive":
+        permissions = ["read"]
+        isEnabled = false
+        break
+        
+    case "suspended":
+        permissions = []
+        isEnabled = false
+        break
+        
+    default:
+        permissions = []
+        isEnabled = false
+}
+```
+
+## Best Practices
+
+1. **Always use break**: Prevent unintended fall-through
+2. **Include default case**: Handle unexpected values
+3. **Keep cases simple**: Complex logic should be in functions
+4. **Group related values**: Use multiple values per case when logical
+
+```javascript
+// Good - clear and organized
+soul handleHttpStatus(status) {
+    switch (status) {
+        case 200, 201, 202:
+            return handleSuccess()
+            
+        case 400, 401, 403:
+            return handleClientError()
+            
+        case 500, 501, 502, 503:
+            return handleServerError()
+            
+        default:
+            return handleUnknownStatus(status)
+    }
+}
+```
+
+Case statements provide a clean and efficient way to handle multiple conditional branches in Soul applications.

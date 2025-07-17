@@ -1,0 +1,505 @@
+---
+title: "string"
+description: "String literals and operations in Soul"
+---
+
+# string
+
+Strings in Soul represent sequences of characters enclosed in quotes. They support various operations for text manipulation, searching, and formatting.
+
+## Basic String Literals
+
+Create strings using single or double quotes:
+
+```javascript
+// Double quotes
+message = "Hello, World!"
+name = "Alice"
+
+// Single quotes
+greeting = 'Hello there!'
+title = 'Soul Programming Language'
+
+// Empty string
+empty = ""
+```
+
+## String Concatenation
+
+Combine strings using the `+` operator:
+
+```javascript
+firstName = "John"
+lastName = "Doe"
+fullName = firstName + " " + lastName  // "John Doe"
+
+// Multiple concatenation
+greeting = "Hello, " + firstName + " " + lastName + "!"
+```
+
+## String with Variables
+
+Include variables in strings:
+
+```javascript
+name = "Alice"
+age = 30
+message = "My name is " + name + " and I am " + age + " years old."
+
+// With expressions
+price = 19.99
+total = "The total is $" + (price * 1.1)
+```
+
+## String Escaping
+
+Use escape characters for special characters:
+
+```javascript
+// Escape quotes
+message = "She said \"Hello\" to me"
+quote = 'It\'s a beautiful day'
+
+// Other escape sequences
+newline = "Line 1\nLine 2"
+tab = "Column 1\tColumn 2"
+backslash = "Path: C:\\Users\\Alice"
+```
+
+## String Methods
+
+Common string operations:
+
+```javascript
+text = "Hello, World!"
+
+// Length
+length = text.length()              // 13
+
+// Case conversion
+upper = text.toUpperCase()          // "HELLO, WORLD!"
+lower = text.toLowerCase()          // "hello, world!"
+
+// Trimming
+spaced = "  Hello  "
+trimmed = spaced.trim()             // "Hello"
+```
+
+## String Searching
+
+Find substrings and characters:
+
+```javascript
+text = "Hello, World!"
+
+// Check if string contains substring
+hasHello = text.contains("Hello")   // true
+hasGoodbye = text.contains("Goodbye") // false
+
+// Find index of substring
+index = text.indexOf("World")       // 7
+notFound = text.indexOf("xyz")      // -1
+
+// Check start and end
+startsWithHello = text.startsWith("Hello")  // true
+endsWithExclamation = text.endsWith("!")    // true
+```
+
+## String Replacement
+
+Replace parts of strings:
+
+```javascript
+text = "Hello, World!"
+
+// Replace first occurrence
+newText = text.replace("World", "Soul")  // "Hello, Soul!"
+
+// Replace all occurrences
+repeated = "Hello Hello Hello"
+replaced = repeated.replaceAll("Hello", "Hi")  // "Hi Hi Hi"
+```
+
+## String Splitting
+
+Split strings into arrays:
+
+```javascript
+text = "apple,banana,cherry"
+fruits = text.split(",")            // ["apple", "banana", "cherry"]
+
+sentence = "Hello world from Soul"
+words = sentence.split(" ")         // ["Hello", "world", "from", "Soul"]
+
+// Split with limit
+limited = text.split(",", 2)        // ["apple", "banana"]
+```
+
+## String Slicing
+
+Extract portions of strings:
+
+```javascript
+text = "Hello, World!"
+
+// Get substring
+hello = text.substring(0, 5)        // "Hello"
+world = text.substring(7, 12)       // "World"
+
+// Get character at index
+firstChar = text[0]                 // "H"
+lastChar = text[text.length() - 1]  // "!"
+```
+
+## String Comparison
+
+Compare strings:
+
+```javascript
+str1 = "Hello"
+str2 = "hello"
+str3 = "Hello"
+
+// Exact comparison
+isEqual = (str1 == str3)            // true
+isDifferent = (str1 != str2)        // true
+
+// Case-insensitive comparison
+isSameIgnoreCase = (str1.toLowerCase() == str2.toLowerCase())  // true
+```
+
+## String Formatting
+
+Format strings with data:
+
+```javascript
+soul formatString(template, values) {
+    result = template
+    for (key, value in values) {
+        placeholder = "{" + key + "}"
+        result = result.replace(placeholder, value)
+    }
+    return result
+}
+
+// Usage
+template = "Hello {name}, you are {age} years old"
+formatted = formatString(template, {
+    "name": "Alice",
+    "age": 30
+})
+// "Hello Alice, you are 30 years old"
+```
+
+## String Validation
+
+Validate string content:
+
+```javascript
+soul isValidEmail(email) {
+    if (email == null || email == "") {
+        return false
+    }
+    
+    return email.contains("@") && email.contains(".")
+}
+
+soul isValidPassword(password) {
+    if (password == null || password.length() < 8) {
+        return false
+    }
+    
+    hasLetter = false
+    hasDigit = false
+    
+    for (i = 0; i < password.length(); i++) {
+        char = password[i]
+        if (char >= "a" && char <= "z" || char >= "A" && char <= "Z") {
+            hasLetter = true
+        }
+        if (char >= "0" && char <= "9") {
+            hasDigit = true
+        }
+    }
+    
+    return hasLetter && hasDigit
+}
+```
+
+## String Manipulation
+
+Advanced string operations:
+
+```javascript
+// Reverse string
+soul reverseString(str) {
+    if (str == null || str == "") {
+        return str
+    }
+    
+    result = ""
+    for (i = str.length() - 1; i >= 0; i--) {
+        result += str[i]
+    }
+    return result
+}
+
+// Capitalize first letter
+soul capitalize(str) {
+    if (str == null || str == "") {
+        return str
+    }
+    
+    return str[0].toUpperCase() + str.substring(1).toLowerCase()
+}
+
+// Remove all whitespace
+soul removeWhitespace(str) {
+    if (str == null) {
+        return null
+    }
+    
+    return str.replace(" ", "").replace("\t", "").replace("\n", "")
+}
+```
+
+## String Joining
+
+Join arrays into strings:
+
+```javascript
+words = ["Hello", "World", "from", "Soul"]
+sentence = words.join(" ")          // "Hello World from Soul"
+
+numbers = [1, 2, 3, 4, 5]
+numberString = numbers.join(", ")   // "1, 2, 3, 4, 5"
+
+// Custom join function
+soul joinWithAnd(items) {
+    if (items.length() == 0) {
+        return ""
+    }
+    
+    if (items.length() == 1) {
+        return items[0]
+    }
+    
+    if (items.length() == 2) {
+        return items[0] + " and " + items[1]
+    }
+    
+    result = ""
+    for (i = 0; i < items.length() - 1; i++) {
+        result += items[i] + ", "
+    }
+    result += "and " + items[items.length() - 1]
+    
+    return result
+}
+```
+
+## String Patterns
+
+Common string patterns:
+
+```javascript
+// Check if string is numeric
+soul isNumeric(str) {
+    if (str == null || str == "") {
+        return false
+    }
+    
+    for (i = 0; i < str.length(); i++) {
+        char = str[i]
+        if (char < "0" || char > "9") {
+            return false
+        }
+    }
+    
+    return true
+}
+
+// Extract numbers from string
+soul extractNumbers(str) {
+    if (str == null) {
+        return []
+    }
+    
+    numbers = []
+    current = ""
+    
+    for (i = 0; i < str.length(); i++) {
+        char = str[i]
+        if (char >= "0" && char <= "9") {
+            current += char
+        } else {
+            if (current != "") {
+                numbers.push(Number(current))
+                current = ""
+            }
+        }
+    }
+    
+    if (current != "") {
+        numbers.push(Number(current))
+    }
+    
+    return numbers
+}
+```
+
+## String Interpolation
+
+Simple string interpolation:
+
+```javascript
+soul interpolate(template, data) {
+    result = template
+    
+    for (key, value in data) {
+        pattern = "${" + key + "}"
+        while (result.contains(pattern)) {
+            result = result.replace(pattern, value.toString())
+        }
+    }
+    
+    return result
+}
+
+// Usage
+template = "Hello ${name}, welcome to ${place}!"
+message = interpolate(template, {
+    "name": "Alice",
+    "place": "Soul Programming"
+})
+// "Hello Alice, welcome to Soul Programming!"
+```
+
+## String Encoding
+
+Handle string encoding:
+
+```javascript
+soul encodeForUrl(str) {
+    if (str == null) {
+        return null
+    }
+    
+    // Simple URL encoding
+    return str.replace(" ", "%20")
+             .replace("&", "%26")
+             .replace("=", "%3D")
+}
+
+soul decodeFromUrl(str) {
+    if (str == null) {
+        return null
+    }
+    
+    return str.replace("%20", " ")
+             .replace("%26", "&")
+             .replace("%3D", "=")
+}
+```
+
+## String Utilities
+
+Utility functions for strings:
+
+```javascript
+soul padLeft(str, width, char) {
+    if (char == null) {
+        char = " "
+    }
+    
+    while (str.length() < width) {
+        str = char + str
+    }
+    
+    return str
+}
+
+soul padRight(str, width, char) {
+    if (char == null) {
+        char = " "
+    }
+    
+    while (str.length() < width) {
+        str = str + char
+    }
+    
+    return str
+}
+
+soul truncate(str, maxLength, suffix) {
+    if (suffix == null) {
+        suffix = "..."
+    }
+    
+    if (str.length() <= maxLength) {
+        return str
+    }
+    
+    return str.substring(0, maxLength - suffix.length()) + suffix
+}
+```
+
+## Best Practices
+
+1. **Use appropriate quotes**: Choose single or double quotes consistently
+2. **Escape special characters**: Handle quotes and backslashes properly
+3. **Validate input**: Check for null and empty strings
+4. **Use string methods**: Leverage built-in string operations
+5. **Handle Unicode**: Be aware of character encoding issues
+
+```javascript
+// Good - safe string operations
+soul safeStringOperation(str) {
+    if (str == null) {
+        return ""
+    }
+    
+    return str.trim().toLowerCase()
+}
+
+// Better - comprehensive string handling
+soul processUserInput(input) {
+    if (input == null) {
+        return {
+            success: false,
+            error: "Input is null"
+        }
+    }
+    
+    if (typeof input != "string") {
+        return {
+            success: false,
+            error: "Input must be a string"
+        }
+    }
+    
+    // Clean and validate input
+    cleaned = input.trim()
+    
+    if (cleaned == "") {
+        return {
+            success: false,
+            error: "Input cannot be empty"
+        }
+    }
+    
+    if (cleaned.length() > 1000) {
+        return {
+            success: false,
+            error: "Input too long"
+        }
+    }
+    
+    return {
+        success: true,
+        result: cleaned
+    }
+}
+```
+
+Strings are fundamental to most Soul applications. Use them effectively with proper validation, manipulation, and formatting to create robust text processing functionality.

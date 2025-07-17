@@ -1,0 +1,454 @@
+---
+title: "null"
+description: "Null values and null handling in Soul"
+---
+
+# null
+
+The `null` value in Soul represents the intentional absence of any value. It is a special literal that indicates that a variable has no value or that a function returns nothing meaningful.
+
+## Basic Null Usage
+
+Assign and work with null values:
+
+```javascript
+// Explicit null assignment
+value = null
+user = null
+result = null
+
+// Function returning null
+soul findUser(id) {
+    // Search logic...
+    return null  // User not found
+}
+```
+
+## Null Checking
+
+Check if values are null:
+
+```javascript
+data = getUserData()
+
+if (data == null) {
+    println("No user data available")
+} else {
+    println("User data loaded")
+}
+
+// Null check with negation
+if (data != null) {
+    processData(data)
+}
+```
+
+## Null in Conditionals
+
+Null is considered falsy in conditional statements:
+
+```javascript
+value = null
+
+if (value) {
+    println("This won't execute")
+} else {
+    println("Value is null or falsy")
+}
+
+// Explicit null check is clearer
+if (value == null) {
+    println("Value is explicitly null")
+}
+```
+
+## Null vs Other Falsy Values
+
+Distinguish null from other falsy values:
+
+```javascript
+// Different falsy values
+nullValue = null
+emptyString = ""
+zero = 0
+falseValue = false
+
+// Check specifically for null
+if (nullValue == null) {
+    println("This is null")
+}
+
+// Check for any falsy value
+if (!nullValue) {
+    println("This is falsy (could be null, false, 0, or empty string)")
+}
+```
+
+## Null in Function Returns
+
+Return null to indicate absence or failure:
+
+```javascript
+soul divide(a, b) {
+    if (b == 0) {
+        return null  // Cannot divide by zero
+    }
+    return a / b
+}
+
+result = divide(10, 0)
+if (result == null) {
+    println("Division failed")
+} else {
+    println("Result: " + result)
+}
+```
+
+## Null in Object Properties
+
+Handle null object properties:
+
+```javascript
+user = {
+    "name": "Alice",
+    "email": null,  // Email not provided
+    "age": 30
+}
+
+// Check null property
+if (user.email == null) {
+    println("Email not provided")
+} else {
+    println("Email: " + user.email)
+}
+```
+
+## Null in Arrays
+
+Handle null elements in arrays:
+
+```javascript
+items = [1, null, 3, null, 5]
+
+// Process array with null checks
+for (item in items) {
+    if (item != null) {
+        println("Item: " + item)
+    } else {
+        println("Found null item")
+    }
+}
+```
+
+## Null Coalescing
+
+Provide default values for null:
+
+```javascript
+soul getWithDefault(value, defaultValue) {
+    if (value == null) {
+        return defaultValue
+    }
+    return value
+}
+
+// Usage
+name = getWithDefault(user.name, "Unknown")
+age = getWithDefault(user.age, 0)
+```
+
+## Null Safety Patterns
+
+Safe navigation and method calls:
+
+```javascript
+soul safeAccess(object, property) {
+    if (object == null) {
+        return null
+    }
+    return object[property]
+}
+
+soul safeMethodCall(object, methodName, args) {
+    if (object == null) {
+        return null
+    }
+    
+    if (typeof object[methodName] != "function") {
+        return null
+    }
+    
+    return object[methodName](args)
+}
+
+// Usage
+user = getUser()
+name = safeAccess(user, "name")
+info = safeMethodCall(user, "getInfo", [])
+```
+
+## Null in Error Handling
+
+Use null to indicate error states:
+
+```javascript
+soul parseNumber(str) {
+    if (str == null || str == "") {
+        return null
+    }
+    
+    try {
+        return Number(str)
+    } catch (error) {
+        return null  // Parse failed
+    }
+}
+
+result = parseNumber("123")
+if (result == null) {
+    println("Invalid number")
+} else {
+    println("Number: " + result)
+}
+```
+
+## Null in Database Operations
+
+Handle null values from database queries:
+
+```javascript
+soul findUserById(id) {
+    if (id == null) {
+        return null
+    }
+    
+    user = database.query("SELECT * FROM users WHERE id = ?", id)
+    
+    if (user == null || user.length() == 0) {
+        return null  // User not found
+    }
+    
+    return user[0]
+}
+```
+
+## Null Validation
+
+Validate and handle null inputs:
+
+```javascript
+soul validateInput(input) {
+    if (input == null) {
+        return {
+            "valid": false,
+            "error": "Input cannot be null"
+        }
+    }
+    
+    if (typeof input != "string") {
+        return {
+            "valid": false,
+            "error": "Input must be a string"
+        }
+    }
+    
+    if (input.trim() == "") {
+        return {
+            "valid": false,
+            "error": "Input cannot be empty"
+        }
+    }
+    
+    return {
+        "valid": true,
+        "value": input.trim()
+    }
+}
+```
+
+## Null in Collections
+
+Filter and handle null values in collections:
+
+```javascript
+// Filter out null values
+soul filterNulls(array) {
+    result = []
+    for (item in array) {
+        if (item != null) {
+            result.push(item)
+        }
+    }
+    return result
+}
+
+// Count null values
+soul countNulls(array) {
+    count = 0
+    for (item in array) {
+        if (item == null) {
+            count++
+        }
+    }
+    return count
+}
+
+// Usage
+data = [1, null, 3, null, 5]
+cleaned = filterNulls(data)        // [1, 3, 5]
+nullCount = countNulls(data)       // 2
+```
+
+## Null in API Responses
+
+Handle null values in API responses:
+
+```javascript
+soul processApiResponse(response) {
+    if (response == null) {
+        return {
+            "success": false,
+            "error": "No response received"
+        }
+    }
+    
+    if (response.data == null) {
+        return {
+            "success": false,
+            "error": "No data in response"
+        }
+    }
+    
+    return {
+        "success": true,
+        "data": response.data
+    }
+}
+```
+
+## Null Assignment Patterns
+
+Common patterns for null assignment:
+
+```javascript
+// Initialize with null
+currentUser = null
+selectedItem = null
+lastError = null
+
+// Conditional assignment
+if (shouldReset) {
+    currentUser = null
+}
+
+// Null after cleanup
+soul cleanup() {
+    connection.close()
+    connection = null
+    
+    cache.clear()
+    cache = null
+}
+```
+
+## Null Debugging
+
+Debug null-related issues:
+
+```javascript
+soul debugNull(value, label) {
+    if (value == null) {
+        println("DEBUG: " + label + " is null")
+    } else {
+        println("DEBUG: " + label + " = " + value + " (type: " + typeof value + ")")
+    }
+}
+
+// Usage
+user = getUser()
+debugNull(user, "user")
+debugNull(user.name, "user.name")
+```
+
+## Null Best Practices
+
+Guidelines for working with null:
+
+```javascript
+// Good - explicit null checks
+soul processUser(user) {
+    if (user == null) {
+        return { error: "User is null" }
+    }
+    
+    if (user.name == null) {
+        return { error: "User name is null" }
+    }
+    
+    return { success: true, name: user.name }
+}
+
+// Better - comprehensive null handling
+soul processUser(user) {
+    // Validate input
+    if (user == null || typeof user != "object") {
+        return { 
+            success: false, 
+            error: "Invalid user object" 
+        }
+    }
+    
+    // Extract with defaults
+    name = user.name != null ? user.name : "Unknown"
+    email = user.email != null ? user.email : "No email"
+    age = user.age != null ? user.age : 0
+    
+    return {
+        success: true,
+        user: {
+            name: name,
+            email: email,
+            age: age
+        }
+    }
+}
+```
+
+## Best Practices
+
+1. **Always check for null**: Validate variables before use
+2. **Use explicit comparisons**: `value == null` is clearer than `!value`
+3. **Provide defaults**: Use default values when null is encountered
+4. **Document null returns**: Clearly indicate when functions can return null
+5. **Handle null gracefully**: Don't let null values crash your program
+
+```javascript
+// Good - safe null handling
+soul safeStringOperation(str) {
+    if (str == null) {
+        return ""
+    }
+    
+    return str.trim().toUpperCase()
+}
+
+// Better - with comprehensive validation
+soul safeStringOperation(str) {
+    if (str == null) {
+        return { success: false, error: "String is null", result: "" }
+    }
+    
+    if (typeof str != "string") {
+        return { success: false, error: "Value is not a string", result: "" }
+    }
+    
+    try {
+        result = str.trim().toUpperCase()
+        return { success: true, result: result }
+    } catch (error) {
+        return { success: false, error: error.toString(), result: "" }
+    }
+}
+```
+
+Null handling is crucial for writing robust Soul applications. Always anticipate null values and handle them appropriately to prevent runtime errors and unexpected behavior.

@@ -1,0 +1,345 @@
+---
+title: "ternary"
+description: "Ternary operator in Soul"
+---
+
+# ternary
+
+The ternary operator (also known as the conditional operator) is a concise way to write simple conditional expressions. It uses the syntax `condition ? valueIfTrue : valueIfFalse` and returns one of two values based on a boolean condition.
+
+## Basic Ternary Operator
+
+Simple conditional value assignment:
+
+```javascript
+age = 20
+status = age >= 18 ? "adult" : "minor"
+println(status)  // "adult"
+
+// Traditional if-else equivalent
+if (age >= 18) {
+    status = "adult"
+} else {
+    status = "minor"
+}
+```
+
+## Ternary with Different Data Types
+
+Return different types of values:
+
+```javascript
+// String values
+isLoggedIn = true
+greeting = isLoggedIn ? "Welcome back!" : "Please log in"
+
+// Number values
+quantity = 5
+discount = quantity > 10 ? 0.1 : 0.05
+
+// Boolean values
+hasPermission = false
+canAccess = hasPermission ? true : false
+
+// Null values
+user = getUser()
+displayName = user != null ? user.name : "Guest"
+```
+
+## Ternary in Variable Assignment
+
+Use ternary for conditional assignments:
+
+```javascript
+score = 85
+grade = score >= 90 ? "A" : 
+        score >= 80 ? "B" : 
+        score >= 70 ? "C" : 
+        score >= 60 ? "D" : "F"
+
+// Price calculation
+isPremium = true
+basePrice = 100
+finalPrice = isPremium ? basePrice * 0.9 : basePrice
+
+// Default values
+config = getConfig()
+timeout = config != null ? config.timeout : 5000
+```
+
+## Ternary in Function Arguments
+
+Pass conditional values to functions:
+
+```javascript
+level = 5
+message = formatMessage(
+    level > 3 ? "High priority" : "Normal priority",
+    level > 7 ? "urgent" : "standard"
+)
+
+// Function calls
+user = getCurrentUser()
+logActivity(
+    user != null ? user.id : "anonymous",
+    user != null ? user.name : "Unknown User"
+)
+```
+
+## Ternary in Return Statements
+
+Return conditional values from functions:
+
+```javascript
+soul getAccessLevel(user) {
+    return user.isAdmin ? "admin" : 
+           user.isModerator ? "moderator" : "user"
+}
+
+soul calculateTax(amount, region) {
+    return region == "NY" ? amount * 0.08 : 
+           region == "CA" ? amount * 0.075 : 
+           amount * 0.05
+}
+
+soul isValidEmail(email) {
+    return email != null && email.contains("@") ? true : false
+}
+```
+
+## Nested Ternary Operators
+
+Chain multiple ternary operators:
+
+```javascript
+temperature = 75
+weather = temperature > 80 ? "hot" : 
+          temperature > 60 ? "warm" : 
+          temperature > 40 ? "cool" : "cold"
+
+// User role determination
+user = getUser()
+role = user == null ? "guest" : 
+       user.isAdmin ? "admin" : 
+       user.isModerator ? "moderator" : "user"
+
+// Grade calculation
+score = 88
+letterGrade = score >= 90 ? "A" : 
+              score >= 80 ? "B" : 
+              score >= 70 ? "C" : 
+              score >= 60 ? "D" : "F"
+```
+
+## Ternary with Object Properties
+
+Use ternary for object property access:
+
+```javascript
+user = {
+    "name": "Alice",
+    "profile": {
+        "avatar": "avatar.jpg"
+    }
+}
+
+// Safe property access
+userName = user != null ? user.name : "Unknown"
+avatar = user != null && user.profile != null ? user.profile.avatar : "default.jpg"
+
+// Object creation with ternary
+person = {
+    "name": name,
+    "age": age != null ? age : 0,
+    "isActive": isActive != null ? isActive : true
+}
+```
+
+## Ternary in Array Operations
+
+Use ternary with arrays:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+results = []
+
+for (num in numbers) {
+    // Add conditional values to array
+    results.push(num > 3 ? "high" : "low")
+}
+
+// Array filtering with ternary
+items = getItems()
+filtered = items != null ? items.filter(isValid) : []
+
+// Array access with ternary
+firstItem = items.length() > 0 ? items[0] : null
+```
+
+## Ternary with Method Calls
+
+Call different methods based on conditions:
+
+```javascript
+user = getCurrentUser()
+message = user != null ? user.getWelcomeMessage() : getGuestMessage()
+
+// Method chaining with ternary
+result = data != null ? data.process().format() : getDefaultResult()
+
+// Conditional method calls
+logger = getLogger()
+shouldLog = isDebugMode()
+logMessage = shouldLog ? logger.debug("Debug info") : logger.info("Info")
+```
+
+## Ternary in String Operations
+
+Use ternary for string manipulation:
+
+```javascript
+name = "alice"
+displayName = name != null ? name.toUpperCase() : "UNKNOWN"
+
+// String concatenation
+firstName = "John"
+lastName = "Doe"
+fullName = firstName != null && lastName != null ? 
+           firstName + " " + lastName : 
+           "Name not available"
+
+// String formatting
+count = 5
+message = "You have " + count + " " + (count == 1 ? "item" : "items")
+```
+
+## Ternary with Calculations
+
+Use ternary in mathematical expressions:
+
+```javascript
+balance = 1000
+withdrawAmount = 200
+newBalance = balance >= withdrawAmount ? 
+             balance - withdrawAmount : 
+             balance
+
+// Discount calculation
+quantity = 15
+unitPrice = 10
+total = quantity * unitPrice
+discount = quantity > 10 ? total * 0.1 : 0
+finalTotal = total - discount
+
+// Min/Max operations
+a = 5
+b = 8
+maximum = a > b ? a : b
+minimum = a < b ? a : b
+```
+
+## Ternary with Error Handling
+
+Handle simple error cases:
+
+```javascript
+// Input validation
+input = getUserInput()
+processedInput = input != null && input != "" ? input.trim() : null
+
+// Error messages
+errorCode = getErrorCode()
+errorMessage = errorCode == 404 ? "Not found" : 
+               errorCode == 500 ? "Server error" : 
+               "Unknown error"
+
+// Safe operations
+divisor = 5
+result = divisor != 0 ? 100 / divisor : 0
+```
+
+## Ternary Performance Considerations
+
+Optimize ternary usage:
+
+```javascript
+// Good - simple conditions
+isActive = user != null ? user.isActive : false
+
+// Avoid - complex expressions in ternary
+// result = complexFunction() ? expensiveOperation() : anotherExpensiveOperation()
+
+// Better - evaluate once
+shouldProcess = complexFunction()
+result = shouldProcess ? expensiveOperation() : anotherExpensiveOperation()
+```
+
+## Ternary vs If-Else
+
+When to use ternary vs if-else:
+
+```javascript
+// Use ternary for simple value assignment
+status = isOnline ? "online" : "offline"
+
+// Use if-else for complex logic
+if (user.isAdmin) {
+    setupAdminDashboard()
+    logAdminAccess()
+    sendAdminNotification()
+} else {
+    setupUserDashboard()
+    logUserAccess()
+}
+
+// Use ternary for inline conditions
+message = "Hello " + (user != null ? user.name : "Guest") + "!"
+
+// Use if-else for multiple statements
+if (user != null) {
+    welcomeUser(user)
+    logUserActivity(user)
+    updateLastSeen(user)
+} else {
+    showLoginForm()
+    trackAnonymousVisit()
+}
+```
+
+## Best Practices
+
+1. **Keep it simple**: Use ternary for simple conditions only
+2. **Avoid deep nesting**: More than 2-3 levels becomes hard to read
+3. **Use parentheses**: Clarify precedence with parentheses
+4. **Consider readability**: If-else might be clearer for complex logic
+5. **Handle null values**: Always consider null cases
+
+```javascript
+// Good - simple and clear
+age = 25
+category = age >= 18 ? "adult" : "minor"
+
+// Good - with parentheses for clarity
+result = (score >= 90) ? "excellent" : (score >= 70) ? "good" : "needs improvement"
+
+// Avoid - too complex
+// complicated = condition1 ? (condition2 ? value1 : (condition3 ? value2 : value3)) : value4
+
+// Better - break down complex ternary
+if (condition1) {
+    result = condition2 ? value1 : (condition3 ? value2 : value3)
+} else {
+    result = value4
+}
+
+// Good - safe null handling
+user = getUser()
+welcomeMessage = user != null ? "Hello " + user.name : "Welcome, Guest"
+
+// Better - comprehensive null handling
+user = getUser()
+userName = (user != null && user.name != null) ? user.name : "Guest"
+welcomeMessage = "Hello " + userName
+```
+
+The ternary operator is a powerful tool for writing concise conditional expressions. Use it for simple value assignments and inline conditions, but prefer if-else statements for complex logic and multiple statements.

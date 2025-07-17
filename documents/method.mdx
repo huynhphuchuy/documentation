@@ -1,0 +1,443 @@
+---
+title: "method"
+description: "Method calls and invocation in Soul"
+---
+
+# method
+
+Method calls in Soul allow you to invoke functions that are associated with objects, classes, or built-in types. They use dot notation to access and call methods on various data types and objects.
+
+## Basic Method Calls
+
+Call methods on objects using dot notation:
+
+```javascript
+text = "Hello, World!"
+length = text.length()          // Get string length
+upper = text.toUpperCase()      // Convert to uppercase
+lower = text.toLowerCase()      // Convert to lowercase
+```
+
+## Method Calls with Arguments
+
+Pass arguments to methods:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+
+// Method with single argument
+numbers.push(6)                 // [1, 2, 3, 4, 5, 6]
+
+// Method with multiple arguments
+numbers.splice(2, 1, 10)        // Remove 1 element at index 2, insert 10
+
+// Method with no arguments
+last = numbers.pop()            // Remove and return last element
+```
+
+## String Method Calls
+
+Common string methods:
+
+```javascript
+text = "  Hello, World!  "
+
+// String manipulation
+trimmed = text.trim()           // "Hello, World!"
+replaced = text.replace("World", "Soul")  // "  Hello, Soul!  "
+split = text.split(",")         // ["  Hello", " World!  "]
+
+// String queries
+contains = text.contains("Hello")        // true
+startsWith = text.startsWith("  Hello")  // true
+endsWith = text.endsWith("!  ")         // true
+```
+
+## Array/List Method Calls
+
+Common array methods:
+
+```javascript
+items = ["apple", "banana", "cherry"]
+
+// Adding elements
+items.push("date")              // Add to end
+items.unshift("apricot")        // Add to beginning
+
+// Removing elements
+last = items.pop()              // Remove from end
+first = items.shift()           // Remove from beginning
+
+// Array queries
+length = items.length()         // Get array length
+index = items.indexOf("banana") // Find index of element
+```
+
+## Map/Object Method Calls
+
+Common map methods:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+// Map operations
+keys = user.keys()              // ["name", "age", "email"]
+values = user.values()          // ["Alice", 30, "alice@example.com"]
+hasKey = user.hasKey("name")    // true
+size = user.size()              // 3
+```
+
+## Chained Method Calls
+
+Chain multiple method calls together:
+
+```javascript
+text = "  Hello, World!  "
+
+// Chain string methods
+result = text.trim().toUpperCase().replace("WORLD", "SOUL")
+// Result: "HELLO, SOUL!"
+
+// Chain array methods
+numbers = [1, 2, 3, 4, 5]
+result = numbers.reverse().slice(0, 3).join(", ")
+// Result: "5, 4, 3"
+```
+
+## Method Calls on Class Instances
+
+Call methods on class instances:
+
+```javascript
+sanctuary User {
+    soul __genesis__(name, email) {
+        this.name = name
+        this.email = email
+    }
+    
+    soul getName() {
+        return this.name
+    }
+    
+    soul setName(newName) {
+        this.name = newName
+    }
+    
+    soul getInfo() {
+        return this.name + " (" + this.email + ")"
+    }
+}
+
+// Create instance and call methods
+user = User.new("Alice", "alice@example.com")
+name = user.getName()           // "Alice"
+user.setName("Alicia")
+info = user.getInfo()           // "Alicia (alice@example.com)"
+```
+
+## Static Method Calls
+
+Call static methods on classes:
+
+```javascript
+sanctuary MathUtils {
+    static soul max(a, b) {
+        return a > b ? a : b
+    }
+    
+    static soul min(a, b) {
+        return a < b ? a : b
+    }
+    
+    static soul abs(x) {
+        return x < 0 ? -x : x
+    }
+}
+
+// Call static methods
+maximum = MathUtils.max(10, 5)  // 10
+minimum = MathUtils.min(10, 5)  // 5
+absolute = MathUtils.abs(-7)    // 7
+```
+
+## Method Calls with Variable Arguments
+
+Methods that accept variable numbers of arguments:
+
+```javascript
+console.log("Hello")
+console.log("Value:", 42)
+console.log("Name:", "Alice", "Age:", 30)
+
+// Custom method with variable arguments
+soul logMessage() {
+    // Process all arguments
+    for (arg in arguments) {
+        print(arg + " ")
+    }
+    println("")
+}
+```
+
+## Method Calls with Callback Functions
+
+Pass functions as arguments to methods:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+
+// Method with callback (if supported)
+doubled = numbers.map(soul(x) {
+    return x * 2
+})
+
+filtered = numbers.filter(soul(x) {
+    return x % 2 == 0
+})
+```
+
+## Method Calls on Built-in Types
+
+Call methods on built-in types:
+
+```javascript
+// Number methods
+num = 3.14159
+rounded = num.round(2)          // 3.14
+stringified = num.toString()    // "3.14159"
+
+// Date methods (if available)
+now = new Date()
+year = now.getYear()
+month = now.getMonth()
+formatted = now.format("YYYY-MM-DD")
+```
+
+## Async Method Calls
+
+Call asynchronous methods:
+
+```javascript
+async soul fetchUserData(userId) {
+    response = await http.get("/api/users/" + userId)
+    return response.json()
+}
+
+// Async method call
+user = await fetchUserData(123)
+name = user.getName()
+```
+
+## Method Calls with Error Handling
+
+Handle errors in method calls:
+
+```javascript
+try {
+    result = object.riskyMethod()
+    println("Success: " + result)
+} catch (error) {
+    println("Method call failed: " + error)
+}
+
+// Safe method calling
+soul safeCall(object, methodName, args) {
+    try {
+        if (object != null && typeof object[methodName] == "function") {
+            return object[methodName](args)
+        }
+        return null
+    } catch (error) {
+        println("Error calling " + methodName + ": " + error)
+        return null
+    }
+}
+```
+
+## Dynamic Method Calls
+
+Call methods dynamically using variables:
+
+```javascript
+user = {
+    "name": "Alice",
+    "getName": soul() { return this.name },
+    "setName": soul(newName) { this.name = newName }
+}
+
+// Dynamic method call
+methodName = "getName"
+if (typeof user[methodName] == "function") {
+    result = user[methodName]()
+}
+```
+
+## Method Calls in Expressions
+
+Use method calls within expressions:
+
+```javascript
+// In conditionals
+if (text.length() > 0 && text.contains("@")) {
+    println("Valid email format")
+}
+
+// In calculations
+total = items.map(soul(item) { return item.price }).sum()
+
+// In assignments
+processedData = rawData.filter(isValid).map(transform).sort()
+```
+
+## Method Calls with Complex Arguments
+
+Pass complex expressions as arguments:
+
+```javascript
+// Function calls as arguments
+result = processor.process(
+    getData().filter(isValid),
+    getConfig().getProcessingOptions(),
+    calculateThreshold(userInput)
+)
+
+// Object literals as arguments
+api.request({
+    "url": "/api/data",
+    "method": "POST",
+    "headers": {"Content-Type": "application/json"},
+    "body": json.encode(data)
+})
+```
+
+## Method Calls on Null/Undefined
+
+Handle null object method calls:
+
+```javascript
+soul safeMethodCall(object, methodName, args) {
+    if (object == null) {
+        return null
+    }
+    
+    if (typeof object[methodName] != "function") {
+        return null
+    }
+    
+    try {
+        return object[methodName](args)
+    } catch (error) {
+        println("Method call error: " + error)
+        return null
+    }
+}
+
+// Usage
+user = getUser()  // Might return null
+name = safeMethodCall(user, "getName", [])
+```
+
+## Method Call Performance
+
+Optimize method calls:
+
+```javascript
+// Cache method references
+processor = getProcessor()
+processMethod = processor.process
+
+// Use cached method
+for (item in items) {
+    result = processMethod(item)
+}
+
+// Avoid repeated method lookups
+items = getItems()
+length = items.length()  // Cache length
+
+for (i = 0; i < length; i++) {
+    processItem(items[i])
+}
+```
+
+## Best Practices
+
+1. **Check object existence**: Verify objects exist before calling methods
+2. **Handle errors**: Use try-catch for risky method calls
+3. **Use meaningful names**: Choose descriptive method names
+4. **Chain appropriately**: Use method chaining for fluent interfaces
+5. **Validate arguments**: Check method arguments before use
+
+```javascript
+// Good - safe method calling
+soul processUserData(user) {
+    if (user == null) {
+        return null
+    }
+    
+    try {
+        // Safe method calls with validation
+        if (typeof user.getName == "function") {
+            name = user.getName()
+        } else {
+            name = "Unknown"
+        }
+        
+        if (typeof user.getEmail == "function") {
+            email = user.getEmail()
+        } else {
+            email = "No email"
+        }
+        
+        return {
+            "name": name,
+            "email": email,
+            "processed": true
+        }
+    } catch (error) {
+        println("Error processing user: " + error)
+        return null
+    }
+}
+
+// Better - with comprehensive validation
+soul processUserData(user) {
+    if (user == null || typeof user != "object") {
+        return { error: "Invalid user object" }
+    }
+    
+    result = {
+        "name": "Unknown",
+        "email": "No email",
+        "processed": false
+    }
+    
+    try {
+        if (typeof user.getName == "function") {
+            name = user.getName()
+            if (name != null && name != "") {
+                result.name = name
+            }
+        }
+        
+        if (typeof user.getEmail == "function") {
+            email = user.getEmail()
+            if (email != null && email.contains("@")) {
+                result.email = email
+            }
+        }
+        
+        result.processed = true
+        return result
+    } catch (error) {
+        result.error = "Processing error: " + error
+        return result
+    }
+}
+```
+
+Method calls are fundamental to object-oriented programming in Soul, providing a clean and intuitive way to interact with objects and their functionality.

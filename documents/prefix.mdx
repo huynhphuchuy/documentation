@@ -1,0 +1,424 @@
+---
+title: "prefix"
+description: "Prefix operators in Soul"
+---
+
+# prefix
+
+Prefix operators in Soul are operators that are applied before their operands. They include increment (`++`), decrement (`--`), negation (`-`), logical NOT (`!`), and other unary operators that modify or evaluate expressions.
+
+## Basic Prefix Operators
+
+The primary prefix operators modify or evaluate expressions:
+
+```javascript
+// Prefix increment
+counter = 5
+result = ++counter      // counter = 6, result = 6
+println(result)         // 6
+println(counter)        // 6
+
+// Prefix decrement
+counter = 5
+result = --counter      // counter = 4, result = 4
+println(result)         // 4
+println(counter)        // 4
+```
+
+## Prefix vs Postfix
+
+Understanding the difference between prefix and postfix operators:
+
+```javascript
+// Prefix: modify first, then use new value
+a = 5
+result = ++a            // a = 6, result = 6
+
+// Postfix: use current value, then modify
+b = 5
+result = b++            // result = 5, b = 6
+```
+
+## Unary Negation
+
+Use prefix minus for numeric negation:
+
+```javascript
+positive = 42
+negative = -positive    // negative = -42
+
+// Double negation
+value = -(-42)          // value = 42
+
+// Negation in expressions
+result = -(10 + 5)      // result = -15
+```
+
+## Logical NOT
+
+Use prefix exclamation mark for logical negation:
+
+```javascript
+isTrue = true
+isFalse = !isTrue       // isFalse = false
+
+// NOT with expressions
+condition = (age >= 18)
+isMinor = !condition    // Opposite of condition
+
+// NOT in conditionals
+if (!user.isActive) {
+    println("User is inactive")
+}
+```
+
+## Prefix in Expressions
+
+Use prefix operators within larger expressions:
+
+```javascript
+counter = 10
+index = 0
+
+// Prefix in array access
+items = [1, 2, 3, 4, 5]
+value = items[++index]  // index = 1, value = 2
+
+// Prefix in calculations
+total = ++counter * 2   // counter = 11, total = 22
+```
+
+## Prefix in Loops
+
+Common usage in loop constructs:
+
+```javascript
+// For loop with prefix increment
+for (i = 0; i < 10; ++i) {
+    println("Iteration: " + i)
+}
+
+// While loop with prefix increment
+i = 0
+while (++i <= 5) {
+    println("Count: " + i)
+}
+```
+
+## Prefix with Array Processing
+
+Use prefix operators for array manipulation:
+
+```javascript
+items = [10, 20, 30, 40, 50]
+index = -1
+
+// Process array elements with prefix
+while (++index < items.length()) {
+    current = items[index]
+    println("Processing: " + current)
+}
+
+// Fill array with prefix
+numbers = []
+value = 0
+while (numbers.length() < 5) {
+    numbers.push(++value)
+}
+// numbers = [1, 2, 3, 4, 5]
+```
+
+## Prefix in Function Calls
+
+Use prefix operators in function arguments:
+
+```javascript
+counter = 0
+
+soul logWithPreIncrement(value) {
+    println("Log #" + value)
+}
+
+// Function calls with prefix
+logWithPreIncrement(++counter)  // counter = 1, Log #1
+logWithPreIncrement(++counter)  // counter = 2, Log #2
+logWithPreIncrement(++counter)  // counter = 3, Log #3
+```
+
+## Prefix with Object Properties
+
+Apply prefix operators to object properties:
+
+```javascript
+stats = {
+    "hits": 0,
+    "misses": 0,
+    "total": 0
+}
+
+// Prefix on object properties
+newHits = ++stats.hits      // Increment hits, then get new value
+++stats.total               // Increment total count
+
+println("New hits: " + newHits)     // New hits: 1
+println("Current hits: " + stats.hits)  // Current hits: 1
+```
+
+## Prefix in Conditional Statements
+
+Use prefix operators in conditions:
+
+```javascript
+attempts = 0
+maxAttempts = 3
+
+while (++attempts <= maxAttempts) {
+    println("Attempt " + attempts)
+    // Process attempt
+}
+```
+
+## Prefix Return Values
+
+Understanding prefix return behavior:
+
+```javascript
+soul demonstratePrefix() {
+    value = 10
+    
+    // Prefix returns modified value
+    returned = ++value      // value = 11, returned = 11
+    
+    return {
+        "returned": returned,
+        "final": value
+    }
+}
+
+result = demonstratePrefix()
+println(result.returned)  // 11
+println(result.final)     // 11
+```
+
+## Prefix in Assignments
+
+Chain prefix operators with assignments:
+
+```javascript
+a = 5
+b = 10
+
+// Multiple prefix operations
+result = ++a + --b      // a = 6, b = 9, result = 6 + 9 = 15
+
+// Prefix with assignment
+c = ++a                 // a = 7, c = 7
+```
+
+## Prefix with Different Data Types
+
+Prefix operators work with various types:
+
+```javascript
+// Numeric prefix
+intValue = 42
+result = ++intValue     // intValue = 43, result = 43
+
+// Boolean prefix (logical NOT)
+boolValue = true
+result = !boolValue     // result = false
+
+// String prefix (if supported)
+// Note: increment/decrement typically work only with numbers
+```
+
+## Prefix in Complex Expressions
+
+Use prefix operators in complex calculations:
+
+```javascript
+// Array index manipulation
+matrix = [[1, 2], [3, 4], [5, 6]]
+row = -1
+col = 0
+
+// Navigate matrix with prefix
+value1 = matrix[++row][col]     // row = 0, value1 = 1
+value2 = matrix[row][++col]     // col = 1, value2 = 2
+```
+
+## Prefix Side Effects
+
+Be aware of prefix side effects:
+
+```javascript
+// Side effect awareness
+counter = 0
+
+// This modifies counter twice
+result = ++counter + ++counter  // counter = 1, then 2, result = 1 + 2 = 3
+
+// Clearer alternative
+counter = 0
+first = ++counter
+second = ++counter
+result = first + second         // result = 1 + 2 = 3
+```
+
+## Prefix in Iterators
+
+Use prefix operators for custom iterators:
+
+```javascript
+sanctuary Counter {
+    soul __genesis__(start) {
+        this.value = start
+    }
+    
+    soul preIncrement() {
+        return ++this.value
+    }
+    
+    soul preDecrement() {
+        return --this.value
+    }
+}
+
+counter = Counter.new(10)
+println(counter.preIncrement())     // 11
+println(counter.preIncrement())     // 12
+println(counter.preDecrement())     // 11
+println(counter.preDecrement())     // 10
+```
+
+## Prefix Performance Considerations
+
+Understanding prefix performance:
+
+```javascript
+// Prefix can be more efficient than postfix
+value = 1000000
+for (i = 0; i < value; ++i) {
+    // ++i doesn't need temporary storage
+    processItem(i)
+}
+
+// Postfix creates temporary values
+for (i = 0; i < value; i++) {
+    // i++ creates a temporary value
+    processItem(i)
+}
+```
+
+## Prefix Error Handling
+
+Handle prefix operations safely:
+
+```javascript
+soul safePreIncrement(obj, property) {
+    if (obj == null || property == null) {
+        return null
+    }
+    
+    if (typeof obj[property] != "number") {
+        return null
+    }
+    
+    try {
+        return ++obj[property]
+    } catch (error) {
+        println("Error incrementing property: " + error)
+        return null
+    }
+}
+
+// Usage
+stats = {"count": 5}
+newValue = safePreIncrement(stats, "count")  // newValue = 6, stats.count = 6
+```
+
+## Prefix with Logical Operations
+
+Combine prefix with logical operations:
+
+```javascript
+// Logical NOT combinations
+isValid = true
+isActive = false
+
+// Complex logical expressions
+shouldProcess = !isValid || !isActive     // false || true = true
+shouldSkip = !(isValid && isActive)       // !(true && false) = true
+
+// Prefix in conditions
+if (!user.isActive || !user.hasPermission) {
+    println("Access denied")
+}
+```
+
+## Best Practices
+
+1. **Use prefix for efficiency**: Prefer `++i` over `i++` when the return value doesn't matter
+2. **Keep expressions simple**: Avoid complex expressions with multiple prefix operators
+3. **Use meaningful variable names**: Make prefix operations clear
+4. **Be consistent**: Choose either prefix or postfix style and stick with it
+5. **Consider readability**: Sometimes regular assignment is clearer
+
+```javascript
+// Good - clear prefix usage
+for (i = 0; i < items.length(); ++i) {
+    processItem(items[i])
+}
+
+// Good - logical NOT usage
+if (!user.isActive) {
+    return "User is inactive"
+}
+
+// Avoid - confusing prefix usage
+result = ++array[++index] + ++array[++index]
+
+// Better - clear and explicit
+index++
+first = ++array[index]
+second = ++array[index]
+result = first + second
+
+// Best - most readable
+index += 2
+result = array[index] + array[index + 1]
+```
+
+## Common Pitfalls
+
+Avoid these common prefix mistakes:
+
+```javascript
+// Mistake 1: Multiple prefix on same variable
+a = 5
+result = ++a + ++a      // Undefined behavior, avoid this
+
+// Mistake 2: Prefix in function calls with same variable
+counter = 0
+process(++counter, ++counter)  // Order of evaluation unclear
+
+// Mistake 3: Mixing prefix and postfix
+result = ++counter + counter++  // Confusing, avoid this
+
+// Safe alternatives
+counter = 0
+first = ++counter
+second = ++counter
+process(first, second)
+```
+
+## Prefix Operator Summary
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `++var` | Pre-increment | `++counter` |
+| `--var` | Pre-decrement | `--counter` |
+| `-var` | Unary minus | `-value` |
+| `!var` | Logical NOT | `!condition` |
+
+Prefix operators are essential tools for modifying variables and evaluating expressions before their values are used. Use them wisely to write efficient and readable code.

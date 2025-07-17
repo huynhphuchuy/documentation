@@ -1,0 +1,228 @@
+---
+title: "break"
+description: "Break statements in Soul loops and switch cases"
+---
+
+# break
+
+The `break` statement is used to exit loops and switch statements prematurely. It immediately terminates the execution of the innermost loop or switch case and transfers control to the statement following the terminated construct.
+
+## Break in While Loops
+
+Use `break` to exit a while loop:
+
+```javascript
+counter = 0
+while (true) {
+    println("Counter: " + counter)
+    counter++
+    
+    if (counter >= 5) {
+        break  // Exit the loop when counter reaches 5
+    }
+}
+println("Loop finished")
+```
+
+## Break in For Loops
+
+Use `break` to exit for loops:
+
+```javascript
+for (i = 0; i < 10; i++) {
+    if (i == 5) {
+        break  // Exit when i equals 5
+    }
+    println("i: " + i)
+}
+// Output: 0, 1, 2, 3, 4
+```
+
+## Break in For-In Loops
+
+Use `break` to exit for-in loops:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+for (num in numbers) {
+    if (num > 5) {
+        break  // Stop processing when number > 5
+    }
+    println("Processing: " + num)
+}
+// Output: 1, 2, 3, 4, 5
+```
+
+## Break in Switch Statements
+
+Use `break` to prevent fall-through in switch cases:
+
+```javascript
+command = "start"
+
+switch (command) {
+    case "start":
+        println("Starting application")
+        initialize()
+        break  // Prevent fall-through to next case
+        
+    case "stop":
+        println("Stopping application")
+        cleanup()
+        break
+        
+    case "restart":
+        println("Restarting application")
+        cleanup()
+        initialize()
+        break
+        
+    default:
+        println("Unknown command")
+}
+```
+
+## Break in Nested Loops
+
+`break` only exits the innermost loop:
+
+```javascript
+for (i = 0; i < 3; i++) {
+    println("Outer loop: " + i)
+    
+    for (j = 0; j < 5; j++) {
+        if (j == 2) {
+            break  // Only exits inner loop
+        }
+        println("  Inner loop: " + j)
+    }
+}
+// Inner loop breaks at j=2, but outer loop continues
+```
+
+## Conditional Break
+
+Combine `break` with conditional logic:
+
+```javascript
+items = ["apple", "banana", "orange", "grape", "kiwi"]
+target = "orange"
+
+for (item in items) {
+    println("Checking: " + item)
+    
+    if (item == target) {
+        println("Found target: " + item)
+        break  // Exit once target is found
+    }
+}
+```
+
+## Break with User Input
+
+Use `break` to exit loops based on user input:
+
+```javascript
+while (true) {
+    input = console.read("Enter command (or 'quit' to exit): ")
+    
+    if (input == "quit") {
+        println("Goodbye!")
+        break
+    }
+    
+    processCommand(input)
+}
+```
+
+## Break in Search Operations
+
+Use `break` to exit early when search criteria are met:
+
+```javascript
+soul findUser(users, targetId) {
+    foundUser = null
+    
+    for (user in users) {
+        if (user.id == targetId) {
+            foundUser = user
+            break  // Exit once user is found
+        }
+    }
+    
+    return foundUser
+}
+```
+
+## Multiple Break Conditions
+
+Use multiple conditions with `break`:
+
+```javascript
+data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+sum = 0
+
+for (value in data) {
+    sum += value
+    
+    // Break if sum exceeds threshold or negative value found
+    if (sum > 20 || value < 0) {
+        break
+    }
+}
+
+println("Final sum: " + sum)
+```
+
+## Break vs Continue
+
+Understand the difference between `break` and `continue`:
+
+```javascript
+for (i = 0; i < 10; i++) {
+    if (i == 3) {
+        continue  // Skip rest of current iteration, continue with next
+    }
+    
+    if (i == 7) {
+        break     // Exit loop completely
+    }
+    
+    println("i: " + i)
+}
+// Output: 0, 1, 2, 4, 5, 6
+```
+
+## Best Practices
+
+1. **Use meaningful conditions**: Make break conditions clear and understandable
+2. **Avoid deep nesting**: Too many nested loops with breaks can be confusing
+3. **Document complex break logic**: Add comments for non-obvious break conditions
+4. **Consider alternatives**: Sometimes restructuring code eliminates the need for break
+
+```javascript
+// Good - clear break condition
+soul processItems(items) {
+    for (item in items) {
+        if (!item.isValid()) {
+            println("Invalid item found, stopping processing")
+            break
+        }
+        
+        processItem(item)
+    }
+}
+
+// Better - using return instead of break in functions
+soul findFirstValid(items) {
+    for (item in items) {
+        if (item.isValid()) {
+            return item  // Return instead of break
+        }
+    }
+    return null
+}
+```
+
+The `break` statement is essential for controlling loop execution and preventing unwanted fall-through in switch statements.

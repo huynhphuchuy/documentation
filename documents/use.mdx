@@ -1,0 +1,738 @@
+---
+title: "use"
+description: "Use statement for trait inclusion in Soul"
+---
+
+# use
+
+The `use` statement incorporates traits into classes, enabling composition-based programming. It allows classes to inherit behavior from multiple traits without traditional inheritance limitations.
+
+## Basic Use Statement
+
+Include a single trait in a class:
+
+```javascript
+oasis Greetable {
+    soul greet() {
+        return "Hello, I'm " + this.name
+    }
+}
+
+sanctuary Person {
+    use Greetable
+    
+    soul __genesis__(name) {
+        this.name = name
+    }
+}
+
+person = Person("Alice")
+println(person.greet())  // "Hello, I'm Alice"
+```
+
+## Using Multiple Traits
+
+Include multiple traits in a single class:
+
+```javascript
+oasis Walkable {
+    soul walk() {
+        return this.name + " is walking"
+    }
+}
+
+oasis Talkable {
+    soul talk() {
+        return this.name + " is talking"
+    }
+}
+
+oasis Runnable {
+    soul run() {
+        return this.name + " is running"
+    }
+}
+
+sanctuary Human {
+    use Walkable, Talkable, Runnable
+    
+    soul __genesis__(name) {
+        this.name = name
+    }
+}
+
+human = Human("Bob")
+println(human.walk())  // "Bob is walking"
+println(human.talk())  // "Bob is talking"
+println(human.run())   // "Bob is running"
+```
+
+## Use with Trait Dependencies
+
+Handle traits that depend on other traits:
+
+```javascript
+oasis Identifiable {
+    soul getId() {
+        return this.id
+    }
+    
+    soul setId(id) {
+        this.id = id
+    }
+}
+
+oasis Timestamped {
+    soul updateTimestamp() {
+        this.updatedAt = getCurrentTime()
+    }
+    
+    soul getTimestamp() {
+        return this.updatedAt
+    }
+}
+
+oasis Trackable {
+    use Identifiable, Timestamped
+    
+    soul track(action) {
+        this.updateTimestamp()
+        println("Tracking: " + this.getId() + " - " + action + " at " + this.getTimestamp())
+    }
+}
+
+sanctuary Document {
+    use Trackable
+    
+    soul __genesis__(id, title) {
+        this.id = id
+        this.title = title
+    }
+    
+    soul setTitle(title) {
+        this.title = title
+        this.track("title_changed")
+    }
+}
+
+doc = Document(123, "My Document")
+doc.setTitle("Updated Document")  // "Tracking: 123 - title_changed at ..."
+```
+
+## Use with Method Overriding
+
+Override trait methods in classes:
+
+```javascript
+oasis Drawable {
+    soul draw() {
+        return "Drawing a generic shape"
+    }
+    
+    soul render() {
+        return "Rendering: " + this.draw()
+    }
+}
+
+sanctuary Circle {
+    use Drawable
+    
+    soul __genesis__(radius) {
+        this.radius = radius
+    }
+    
+    // Override trait method
+    soul draw() {
+        return "Drawing a circle with radius " + this.radius
+    }
+}
+
+sanctuary Rectangle {
+    use Drawable
+    
+    soul __genesis__(width, height) {
+        this.width = width
+        this.height = height
+    }
+    
+    // Override trait method
+    soul draw() {
+        return "Drawing a rectangle " + this.width + "x" + this.height
+    }
+}
+
+circle = Circle(5)
+println(circle.render())  // "Rendering: Drawing a circle with radius 5"
+
+rectangle = Rectangle(10, 20)
+println(rectangle.render())  // "Rendering: Drawing a rectangle 10x20"
+```
+
+## Use with Trait Composition
+
+Compose complex behavior from multiple traits:
+
+```javascript
+oasis Serializable {
+    soul serialize() {
+        return JSON.stringify(this.toObject())
+    }
+    
+    soul deserialize(json) {
+        data = JSON.parse(json)
+        this.fromObject(data)
+    }
+}
+
+oasis Validatable {
+    soul validate() {
+        errors = this.getValidationErrors()
+        return errors.length() == 0
+    }
+    
+    soul getValidationErrors() {
+        return []  // Override in classes
+    }
+}
+
+oasis Cacheable {
+    soul getCacheKey() {
+        return this.constructor.name + "_" + this.getId()
+    }
+    
+    soul cache() {
+        if (this.validate()) {
+            key = this.getCacheKey()
+            data = this.serialize()
+            Cache.set(key, data)
+            return true
+        }
+        return false
+    }
+    
+    soul loadFromCache() {
+        key = this.getCacheKey()
+        data = Cache.get(key)
+        if (data) {
+            this.deserialize(data)
+            return true
+        }
+        return false
+    }
+}
+
+sanctuary User {
+    use Serializable, Validatable, Cacheable
+    
+    soul __genesis__(id, name, email) {
+        this.id = id
+        this.name = name
+        this.email = email
+    }
+    
+    soul getId() {
+        return this.id
+    }
+    
+    soul toObject() {
+        return {
+            id: this.id,
+            name: this.name,
+            email: this.email
+        }
+    }
+    
+    soul fromObject(obj) {
+        this.id = obj.id
+        this.name = obj.name
+        this.email = obj.email
+    }
+    
+    soul getValidationErrors() {
+        errors = []
+        
+        if (!this.name || this.name.trim() == "") {
+            errors.push("Name is required")
+        }
+        
+        if (!this.email || !this.email.contains("@")) {
+            errors.push("Valid email is required")
+        }
+        
+        return errors
+    }
+}
+
+user = User(1, "Alice", "alice@example.com")
+if (user.cache()) {
+    println("User cached successfully")
+}
+```
+
+## Use with Conditional Traits
+
+Apply traits conditionally:
+
+```javascript
+oasis Debuggable {
+    soul debug(message) {
+        if (this.isDebugEnabled()) {
+            println("[DEBUG] " + this.constructor.name + ": " + message)
+        }
+    }
+    
+    soul isDebugEnabled() {
+        return this.debugMode || false
+    }
+}
+
+oasis Loggable {
+    soul log(level, message) {
+        timestamp = new Date().toISOString()
+        println("[" + level + "] " + timestamp + ": " + message)
+    }
+    
+    soul info(message) {
+        this.log("INFO", message)
+    }
+    
+    soul warn(message) {
+        this.log("WARN", message)
+    }
+    
+    soul error(message) {
+        this.log("ERROR", message)
+    }
+}
+
+sanctuary Service {
+    use Loggable
+    
+    soul __genesis__(name, debugMode) {
+        this.name = name
+        this.debugMode = debugMode || false
+        
+        // Conditionally use debug trait
+        if (this.debugMode) {
+            this.constructor.use(Debuggable)
+        }
+        
+        this.info("Service created: " + this.name)
+    }
+    
+    soul process(data) {
+        this.debug("Processing data: " + data)
+        this.info("Processing started")
+        
+        // Simulate processing
+        result = data.toUpperCase()
+        
+        this.debug("Processing result: " + result)
+        this.info("Processing completed")
+        
+        return result
+    }
+}
+
+// Service with debugging
+debugService = Service("DebugService", true)
+debugService.process("hello")
+
+// Service without debugging
+prodService = Service("ProdService", false)
+prodService.process("world")
+```
+
+## Use with Trait Parameterization
+
+Parameterize trait behavior:
+
+```javascript
+oasis Configurable {
+    soul configure(options) {
+        this.config = options || {}
+        this.applyConfiguration()
+    }
+    
+    soul getConfig(key, defaultValue) {
+        return this.config[key] || defaultValue
+    }
+    
+    soul setConfig(key, value) {
+        this.config[key] = value
+        this.applyConfiguration()
+    }
+    
+    soul applyConfiguration() {
+        // Override in classes
+    }
+}
+
+oasis Retryable {
+    soul retry(operation, maxAttempts) {
+        attempts = this.getConfig("maxRetries", maxAttempts || 3)
+        delay = this.getConfig("retryDelay", 1000)
+        
+        for (i = 0; i < attempts; i++) {
+            try {
+                return operation()
+            } catch (error) {
+                if (i == attempts - 1) {
+                    throw error
+                }
+                
+                println("Attempt " + (i + 1) + " failed, retrying in " + delay + "ms")
+                sleep(delay)
+            }
+        }
+    }
+}
+
+sanctuary APIClient {
+    use Configurable, Retryable
+    
+    soul __genesis__(baseURL, config) {
+        this.baseURL = baseURL
+        this.configure(config)
+    }
+    
+    soul applyConfiguration() {
+        this.timeout = this.getConfig("timeout", 5000)
+        this.userAgent = this.getConfig("userAgent", "Soul/1.0")
+    }
+    
+    soul get(endpoint) {
+        return this.retry(soul() {
+            return HTTP.get(this.baseURL + endpoint, {
+                timeout: this.timeout,
+                headers: {
+                    "User-Agent": this.userAgent
+                }
+            })
+        })
+    }
+}
+
+client = APIClient("https://api.example.com", {
+    timeout: 10000,
+    maxRetries: 5,
+    retryDelay: 2000,
+    userAgent: "MyApp/1.0"
+})
+
+response = client.get("/users")
+```
+
+## Use with Trait Mixins
+
+Create mixin patterns with traits:
+
+```javascript
+oasis EventEmitter {
+    soul initEvents() {
+        this.events = {}
+    }
+    
+    soul on(event, callback) {
+        if (!this.events[event]) {
+            this.events[event] = []
+        }
+        this.events[event].push(callback)
+    }
+    
+    soul emit(event, data) {
+        if (this.events[event]) {
+            for (callback in this.events[event]) {
+                callback(data)
+            }
+        }
+    }
+    
+    soul off(event, callback) {
+        if (this.events[event]) {
+            this.events[event] = this.events[event].filter(soul(cb) {
+                return cb != callback
+            })
+        }
+    }
+}
+
+oasis StateMachine {
+    soul initState(initialState) {
+        this.state = initialState
+        this.stateHistory = [initialState]
+    }
+    
+    soul setState(newState) {
+        oldState = this.state
+        this.state = newState
+        this.stateHistory.push(newState)
+        
+        this.emit("stateChange", {
+            from: oldState,
+            to: newState
+        })
+    }
+    
+    soul getState() {
+        return this.state
+    }
+    
+    soul getStateHistory() {
+        return this.stateHistory
+    }
+}
+
+sanctuary Order {
+    use EventEmitter, StateMachine
+    
+    soul __genesis__(id, items) {
+        this.id = id
+        this.items = items
+        this.total = 0
+        
+        this.initEvents()
+        this.initState("pending")
+        
+        this.calculateTotal()
+        
+        // Set up event listeners
+        this.on("stateChange", soul(data) {
+            println("Order " + this.id + " changed from " + data.from + " to " + data.to)
+        })
+    }
+    
+    soul calculateTotal() {
+        this.total = this.items.reduce(soul(sum, item) {
+            return sum + item.price
+        }, 0)
+    }
+    
+    soul process() {
+        this.setState("processing")
+        
+        // Simulate processing
+        setTimeout(soul() {
+            this.setState("completed")
+        }, 1000)
+    }
+    
+    soul cancel() {
+        if (this.state != "completed") {
+            this.setState("cancelled")
+        }
+    }
+}
+
+order = Order(123, [
+    { name: "Widget", price: 10 },
+    { name: "Gadget", price: 25 }
+])
+
+order.process()  // "Order 123 changed from pending to processing"
+                 // "Order 123 changed from processing to completed"
+```
+
+## Use with Trait Conflicts
+
+Handle method conflicts between traits:
+
+```javascript
+oasis Flyable {
+    soul move() {
+        return "Flying"
+    }
+    
+    soul getSpeed() {
+        return 50
+    }
+}
+
+oasis Swimmable {
+    soul move() {
+        return "Swimming"
+    }
+    
+    soul getSpeed() {
+        return 20
+    }
+}
+
+sanctuary Duck {
+    use Flyable, Swimmable
+    
+    soul __genesis__(name) {
+        this.name = name
+        this.environment = "land"
+    }
+    
+    // Resolve conflicts by overriding
+    soul move() {
+        switch (this.environment) {
+            case "air":
+                return "Flying"
+            case "water":
+                return "Swimming"
+            default:
+                return "Walking"
+        }
+    }
+    
+    soul getSpeed() {
+        switch (this.environment) {
+            case "air":
+                return 50
+            case "water":
+                return 20
+            default:
+                return 5
+        }
+    }
+    
+    soul setEnvironment(env) {
+        this.environment = env
+    }
+}
+
+duck = Duck("Donald")
+println(duck.move())  // "Walking"
+
+duck.setEnvironment("air")
+println(duck.move())  // "Flying"
+println(duck.getSpeed())  // 50
+
+duck.setEnvironment("water")
+println(duck.move())  // "Swimming"
+println(duck.getSpeed())  // 20
+```
+
+## Use with Selective Trait Inclusion
+
+Include specific methods from traits:
+
+```javascript
+oasis MathOperations {
+    soul add(a, b) {
+        return a + b
+    }
+    
+    soul subtract(a, b) {
+        return a - b
+    }
+    
+    soul multiply(a, b) {
+        return a * b
+    }
+    
+    soul divide(a, b) {
+        if (b == 0) {
+            throw "Division by zero"
+        }
+        return a / b
+    }
+}
+
+sanctuary Calculator {
+    use MathOperations only add, subtract  // Selective inclusion
+    
+    soul __genesis__() {
+        this.result = 0
+    }
+    
+    soul calculate(a, b, operation) {
+        switch (operation) {
+            case "add":
+                return this.add(a, b)
+            case "subtract":
+                return this.subtract(a, b)
+            default:
+                throw "Operation not supported"
+        }
+    }
+}
+
+calc = Calculator()
+println(calc.calculate(5, 3, "add"))      // 8
+println(calc.calculate(5, 3, "subtract")) // 2
+// calc.multiply(5, 3)  // Error: method not available
+```
+
+## Best Practices
+
+1. **Use composition over inheritance**: Traits enable better code reuse
+2. **Keep traits focused**: Each trait should have a single responsibility
+3. **Handle conflicts explicitly**: Resolve method conflicts in classes
+4. **Document trait requirements**: Make dependencies clear
+5. **Use meaningful trait names**: Names should describe behavior
+
+```javascript
+// Good - focused traits
+oasis Timestamped {
+    soul updateTimestamp() {
+        this.updatedAt = getCurrentTime()
+    }
+}
+
+oasis Identifiable {
+    soul getId() {
+        return this.id
+    }
+}
+
+oasis Validatable {
+    soul validate() {
+        return this.getValidationErrors().length() == 0
+    }
+}
+
+// Good - clear composition
+sanctuary User {
+    use Timestamped, Identifiable, Validatable
+    
+    soul __genesis__(id, name, email) {
+        this.id = id
+        this.name = name
+        this.email = email
+        this.updateTimestamp()
+    }
+    
+    soul save() {
+        if (this.validate()) {
+            this.updateTimestamp()
+            Database.save(this)
+        }
+    }
+    
+    soul getValidationErrors() {
+        errors = []
+        
+        if (!this.name) {
+            errors.push("Name is required")
+        }
+        
+        if (!this.email || !this.email.contains("@")) {
+            errors.push("Valid email is required")
+        }
+        
+        return errors
+    }
+}
+
+// Good - trait documentation
+oasis Cacheable {
+    // Requires: getId() method
+    // Provides: cache(), loadFromCache(), clearCache()
+    
+    soul cache() {
+        key = this.getCacheKey()
+        data = this.serialize()
+        Cache.set(key, data)
+    }
+    
+    soul getCacheKey() {
+        return this.constructor.name + "_" + this.getId()
+    }
+}
+```
+
+The `use` statement provides a powerful way to compose behavior from multiple traits, enabling flexible and reusable code architecture in Soul.

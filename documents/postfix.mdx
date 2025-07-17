@@ -1,0 +1,360 @@
+---
+title: "postfix"
+description: "Postfix operators in Soul"
+---
+
+# postfix
+
+Postfix operators in Soul are operators that are applied after their operands. The most common postfix operators are increment (`++`) and decrement (`--`), which modify variables after their current value has been used.
+
+## Basic Postfix Operators
+
+The primary postfix operators modify numeric variables:
+
+```javascript
+counter = 5
+
+// Postfix increment
+result = counter++      // result = 5, counter = 6
+println(result)         // 5
+println(counter)        // 6
+
+// Postfix decrement
+counter = 5
+result = counter--      // result = 5, counter = 4
+println(result)         // 5
+println(counter)        // 4
+```
+
+## Postfix vs Prefix
+
+Understanding the difference between postfix and prefix operators:
+
+```javascript
+// Postfix: use current value, then modify
+a = 5
+result = a++            // result = 5, a = 6
+
+// Prefix: modify first, then use new value
+b = 5
+result = ++b            // result = 6, b = 6
+```
+
+## Postfix in Expressions
+
+Use postfix operators within larger expressions:
+
+```javascript
+counter = 10
+index = 0
+
+// Postfix in array access
+items = [1, 2, 3, 4, 5]
+value = items[index++]  // value = 1, index = 1
+
+// Postfix in calculations
+total = counter++ * 2   // total = 20, counter = 11
+```
+
+## Postfix in Loops
+
+Common usage in loop constructs:
+
+```javascript
+// For loop with postfix increment
+for (i = 0; i < 10; i++) {
+    println("Iteration: " + i)
+}
+
+// While loop with postfix increment
+i = 0
+while (i < 5) {
+    println("Count: " + i++)
+}
+```
+
+## Postfix with Array Processing
+
+Use postfix operators for array manipulation:
+
+```javascript
+items = [10, 20, 30, 40, 50]
+index = 0
+
+// Process array elements
+while (index < items.length()) {
+    current = items[index++]
+    println("Processing: " + current)
+}
+
+// Fill array with postfix
+numbers = []
+value = 1
+while (numbers.length() < 5) {
+    numbers.push(value++)
+}
+// numbers = [1, 2, 3, 4, 5]
+```
+
+## Postfix in Function Calls
+
+Use postfix operators in function arguments:
+
+```javascript
+counter = 0
+
+soul logWithIncrement(value) {
+    println("Log #" + value)
+}
+
+// Function calls with postfix
+logWithIncrement(counter++)  // Log #0, counter = 1
+logWithIncrement(counter++)  // Log #1, counter = 2
+logWithIncrement(counter++)  // Log #2, counter = 3
+```
+
+## Postfix with Object Properties
+
+Apply postfix operators to object properties:
+
+```javascript
+stats = {
+    "hits": 0,
+    "misses": 0,
+    "total": 0
+}
+
+// Postfix on object properties
+oldHits = stats.hits++      // Get current hits, then increment
+stats.total++               // Increment total count
+
+println("Previous hits: " + oldHits)  // Previous hits: 0
+println("Current hits: " + stats.hits)  // Current hits: 1
+```
+
+## Postfix in Conditional Statements
+
+Use postfix operators in conditions:
+
+```javascript
+attempts = 0
+maxAttempts = 3
+
+while (attempts++ < maxAttempts) {
+    println("Attempt " + attempts)
+    // Process attempt
+}
+```
+
+## Postfix Return Values
+
+Understanding postfix return behavior:
+
+```javascript
+soul demonstratePostfix() {
+    value = 10
+    
+    // Postfix returns original value
+    returned = value++      // returned = 10, value = 11
+    
+    return {
+        "returned": returned,
+        "final": value
+    }
+}
+
+result = demonstratePostfix()
+println(result.returned)  // 10
+println(result.final)     // 11
+```
+
+## Postfix in Assignments
+
+Chain postfix operators with assignments:
+
+```javascript
+a = 5
+b = 10
+
+// Multiple postfix operations
+result = a++ + b--      // result = 5 + 10 = 15
+                        // a = 6, b = 9
+
+// Postfix with assignment
+c = a++                 // c = 6, a = 7
+```
+
+## Postfix with Different Data Types
+
+Postfix operators work with various numeric types:
+
+```javascript
+// Integer postfix
+intValue = 42
+result = intValue++     // result = 42, intValue = 43
+
+// Float postfix
+floatValue = 3.14
+result = floatValue++   // result = 3.14, floatValue = 4.14
+
+// Note: Postfix typically works only with numeric types
+```
+
+## Postfix in Complex Expressions
+
+Use postfix operators in complex calculations:
+
+```javascript
+// Array index manipulation
+matrix = [[1, 2], [3, 4], [5, 6]]
+row = 0
+col = 0
+
+// Navigate matrix with postfix
+value1 = matrix[row++][col]     // value1 = 1, row = 1
+value2 = matrix[row][col++]     // value2 = 3, col = 1
+value3 = matrix[row][col]       // value3 = 4
+```
+
+## Postfix Side Effects
+
+Be aware of postfix side effects:
+
+```javascript
+// Side effect awareness
+counter = 0
+
+// This modifies counter twice
+result = counter++ + counter++  // result = 0 + 1 = 1, counter = 2
+
+// Clearer alternative
+counter = 0
+first = counter++
+second = counter++
+result = first + second         // result = 0 + 1 = 1
+```
+
+## Postfix in Iterators
+
+Use postfix operators for custom iterators:
+
+```javascript
+sanctuary Counter {
+    soul __genesis__(start) {
+        this.value = start
+    }
+    
+    soul next() {
+        return this.value++
+    }
+    
+    soul previous() {
+        return this.value--
+    }
+}
+
+counter = Counter.new(10)
+println(counter.next())     // 10
+println(counter.next())     // 11
+println(counter.previous()) // 12
+println(counter.previous()) // 11
+```
+
+## Postfix Performance Considerations
+
+Understanding postfix performance:
+
+```javascript
+// Postfix creates temporary values
+value = 1000000
+for (i = 0; i < value; i++) {
+    // Each i++ creates a temporary value
+    processItem(i)
+}
+
+// Sometimes prefix is more efficient
+for (i = 0; i < value; ++i) {
+    // ++i doesn't need temporary storage
+    processItem(i)
+}
+```
+
+## Postfix Error Handling
+
+Handle postfix operations safely:
+
+```javascript
+soul safeIncrement(obj, property) {
+    if (obj == null || property == null) {
+        return null
+    }
+    
+    if (typeof obj[property] != "number") {
+        return null
+    }
+    
+    try {
+        return obj[property]++
+    } catch (error) {
+        println("Error incrementing property: " + error)
+        return null
+    }
+}
+
+// Usage
+stats = {"count": 5}
+oldValue = safeIncrement(stats, "count")  // oldValue = 5, stats.count = 6
+```
+
+## Best Practices
+
+1. **Use sparingly**: Postfix operators can make code harder to read
+2. **Avoid in complex expressions**: Split complex expressions for clarity
+3. **Be aware of side effects**: Understand when variables are modified
+4. **Use meaningful variable names**: Make postfix operations clear
+5. **Consider alternatives**: Sometimes regular assignment is clearer
+
+```javascript
+// Good - clear postfix usage
+for (i = 0; i < items.length(); i++) {
+    processItem(items[i])
+}
+
+// Avoid - confusing postfix usage
+result = array[index++] + array[index++] + array[index++]
+
+// Better - clear and explicit
+first = array[index++]
+second = array[index++]
+third = array[index++]
+result = first + second + third
+
+// Best - most readable
+result = array[index] + array[index + 1] + array[index + 2]
+index += 3
+```
+
+## Common Pitfalls
+
+Avoid these common postfix mistakes:
+
+```javascript
+// Mistake 1: Multiple postfix on same variable
+a = 5
+result = a++ + a++      // Undefined behavior, avoid this
+
+// Mistake 2: Postfix in function calls with same variable
+counter = 0
+process(counter++, counter++)  // Order of evaluation unclear
+
+// Mistake 3: Postfix in complex expressions
+array[index++] = array[index++]  // Dangerous, avoid this
+
+// Safe alternatives
+counter = 0
+first = counter++
+second = counter++
+process(first, second)
+```
+
+Postfix operators are powerful tools for incrementing and decrementing variables, but they should be used judiciously to maintain code clarity and avoid subtle bugs.

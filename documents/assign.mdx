@@ -1,0 +1,97 @@
+---
+title: "assign"
+description: "Variable assignment in Soul"
+---
+
+# assign
+
+Assignment is the fundamental way to store values in variables in Soul. The language supports several types of assignment operations.
+
+## Basic Assignment
+
+Soul uses the `=` operator for basic assignment. Variables are dynamically typed and created upon first assignment.
+
+```javascript
+name = "Alice";
+age = 30;
+isStudent = true;
+```
+
+## Compound Assignment
+
+Soul supports compound assignment operators that combine arithmetic operations with assignment:
+
+```javascript
+count = 10;
+count += 5; // count = count + 5 → 15
+count -= 3; // count = count - 3 → 12
+count *= 2; // count = count * 2 → 24
+count /= 4; // count = count / 4 → 6
+count %= 3; // count = count % 3 → 0
+```
+
+## Assignment to Collections
+
+You can assign values to list elements and map properties:
+
+```javascript
+// List assignment
+numbers = [1, 2, 3];
+numbers[0] = 10; // First element becomes 10
+
+// Map assignment
+user = { name: "Bob", age: 25 };
+user["email"] = "bob@example.com";
+user.age = 26; // Dot notation also works
+```
+
+## Multiple Assignment Patterns
+
+Soul supports various assignment patterns for different data structures:
+
+```javascript
+// Simple assignments
+x = 5;
+y = x + 10;
+
+// Object property assignment
+person = {};
+person.name = "Charlie";
+person["occupation"] = "Developer";
+
+// Nested assignments
+data = { users: [] };
+data.users[0] = { id: 1, name: "Dave" };
+```
+
+## Assignment in Control Flow
+
+Assignments can be used within control flow structures:
+
+```javascript
+if ((result = calculateValue())) {
+  println("Result: " + result);
+}
+
+while ((line = readNextLine())) {
+  processLine(line);
+}
+```
+
+## Best Practices
+
+1. **Use descriptive variable names**: `userCount` instead of `c`
+2. **Initialize variables**: Assign initial values when declaring variables
+3. **Consistent naming**: Use camelCase for variable names
+4. **Avoid reassigning different types**: Keep variable types consistent when possible
+
+```javascript
+// Good
+userCount = 0;
+userName = "guest";
+isLoggedIn = false;
+
+// Avoid
+x = 5;
+x = "now a string"; // Type changed
+```

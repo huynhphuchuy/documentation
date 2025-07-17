@@ -1,0 +1,285 @@
+---
+title: "continue"
+description: "Continue statements in Soul loops"
+---
+
+# continue
+
+The `continue` statement is used to skip the rest of the current iteration of a loop and move to the next iteration. It only affects the innermost loop and transfers control to the loop's condition check.
+
+## Continue in While Loops
+
+Use `continue` to skip the current iteration in while loops:
+
+```javascript
+counter = 0
+while (counter < 10) {
+    counter++
+    
+    if (counter % 2 == 0) {
+        continue  // Skip even numbers
+    }
+    
+    println("Odd number: " + counter)
+}
+// Output: 1, 3, 5, 7, 9
+```
+
+## Continue in For Loops
+
+Use `continue` to skip iterations in for loops:
+
+```javascript
+for (i = 0; i < 10; i++) {
+    if (i == 3 || i == 7) {
+        continue  // Skip when i is 3 or 7
+    }
+    
+    println("i: " + i)
+}
+// Output: 0, 1, 2, 4, 5, 6, 8, 9
+```
+
+## Continue in For-In Loops
+
+Use `continue` to skip elements in for-in loops:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+for (num in numbers) {
+    if (num <= 5) {
+        continue  // Skip numbers 5 and below
+    }
+    
+    println("Processing: " + num)
+}
+// Output: 6, 7, 8, 9, 10
+```
+
+## Continue with Conditions
+
+Combine `continue` with complex conditions:
+
+```javascript
+students = [
+    {"name": "Alice", "grade": 85},
+    {"name": "Bob", "grade": 60},
+    {"name": "Charlie", "grade": 92},
+    {"name": "Dave", "grade": 45}
+]
+
+for (student in students) {
+    if (student.grade < 70) {
+        continue  // Skip students with failing grades
+    }
+    
+    println("Honor student: " + student.name + " (Grade: " + student.grade + ")")
+}
+// Output: Alice (85), Charlie (92)
+```
+
+## Continue in Nested Loops
+
+`continue` only affects the innermost loop:
+
+```javascript
+for (i = 0; i < 3; i++) {
+    println("Outer loop: " + i)
+    
+    for (j = 0; j < 5; j++) {
+        if (j == 2) {
+            continue  // Only skips inner loop iteration
+        }
+        
+        println("  Inner loop: " + j)
+    }
+}
+// Inner loop skips j=2, but outer loop continues normally
+```
+
+## Continue with Multiple Conditions
+
+Use multiple conditions to determine when to continue:
+
+```javascript
+data = [1, -2, 3, 0, 5, -7, 8, 9, -10]
+
+for (value in data) {
+    // Skip negative numbers and zero
+    if (value <= 0) {
+        continue
+    }
+    
+    // Skip even numbers
+    if (value % 2 == 0) {
+        continue
+    }
+    
+    println("Positive odd number: " + value)
+}
+// Output: 1, 3, 5, 9
+```
+
+## Continue in Data Processing
+
+Use `continue` to skip invalid data:
+
+```javascript
+userData = [
+    {"name": "Alice", "email": "alice@example.com"},
+    {"name": "", "email": "invalid@example.com"},
+    {"name": "Bob", "email": ""},
+    {"name": "Charlie", "email": "charlie@example.com"}
+]
+
+for (user in userData) {
+    // Skip users with missing name or email
+    if (user.name == "" || user.email == "") {
+        continue
+    }
+    
+    println("Valid user: " + user.name + " - " + user.email)
+}
+// Output: Alice and Charlie
+```
+
+## Continue vs Break
+
+Understanding the difference between `continue` and `break`:
+
+```javascript
+for (i = 0; i < 10; i++) {
+    if (i == 3) {
+        continue  // Skip i=3, continue with i=4
+    }
+    
+    if (i == 7) {
+        break     // Exit loop completely
+    }
+    
+    println("i: " + i)
+}
+// Output: 0, 1, 2, 4, 5, 6
+```
+
+## Continue in Search Operations
+
+Use `continue` to skip non-matching items:
+
+```javascript
+soul findUsers(users, criteria) {
+    results = []
+    
+    for (user in users) {
+        // Skip inactive users
+        if (!user.isActive) {
+            continue
+        }
+        
+        // Skip users without required permission
+        if (!user.hasPermission(criteria.permission)) {
+            continue
+        }
+        
+        results.push(user)
+    }
+    
+    return results
+}
+```
+
+## Continue with Logging
+
+Use `continue` to skip processing while still logging:
+
+```javascript
+orders = [
+    {"id": 1, "status": "pending"},
+    {"id": 2, "status": "cancelled"},
+    {"id": 3, "status": "completed"},
+    {"id": 4, "status": "pending"}
+]
+
+for (order in orders) {
+    if (order.status == "cancelled") {
+        println("Skipping cancelled order: " + order.id)
+        continue
+    }
+    
+    println("Processing order: " + order.id)
+    processOrder(order)
+}
+```
+
+## Continue in Validation
+
+Use `continue` to skip invalid entries:
+
+```javascript
+soul validateAndProcess(items) {
+    processedCount = 0
+    
+    for (item in items) {
+        // Skip null items
+        if (item == null) {
+            continue
+        }
+        
+        // Skip items without required fields
+        if (!item.hasRequiredFields()) {
+            continue
+        }
+        
+        // Skip items that fail validation
+        if (!item.isValid()) {
+            continue
+        }
+        
+        processItem(item)
+        processedCount++
+    }
+    
+    return processedCount
+}
+```
+
+## Best Practices
+
+1. **Use meaningful conditions**: Make continue conditions clear and understandable
+2. **Combine with logging**: Log skipped items when debugging
+3. **Keep conditions simple**: Complex conditions should be extracted to functions
+4. **Document skip reasons**: Add comments explaining why items are skipped
+
+```javascript
+// Good - clear continue usage
+soul processValidItems(items) {
+    for (item in items) {
+        // Skip items that don't meet basic requirements
+        if (!item.isValid() || !item.isActive()) {
+            continue
+        }
+        
+        // Process valid items
+        result = processItem(item)
+        saveResult(result)
+    }
+}
+
+// Better - with validation function
+soul processValidItems(items) {
+    for (item in items) {
+        if (!shouldProcessItem(item)) {
+            continue
+        }
+        
+        processItem(item)
+    }
+}
+
+soul shouldProcessItem(item) {
+    return item.isValid() && item.isActive() && item.hasRequiredData()
+}
+```
+
+The `continue` statement is useful for skipping specific iterations while maintaining loop execution flow.

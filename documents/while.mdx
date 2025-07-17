@@ -1,0 +1,620 @@
+---
+title: "while"
+description: "While loops in Soul"
+---
+
+# while
+
+The `while` loop executes a block of code repeatedly as long as a specified condition remains true. It's useful for creating loops where the number of iterations is not known beforehand.
+
+## Basic While Loop
+
+Execute code while a condition is true:
+
+```javascript
+count = 0
+
+while (count < 5) {
+    println("Count: " + count)
+    count = count + 1
+}
+
+println("Loop finished")
+// Output: Count: 0, Count: 1, Count: 2, Count: 3, Count: 4, Loop finished
+```
+
+## While Loop with Complex Conditions
+
+Use multiple conditions in while loops:
+
+```javascript
+balance = 100
+transactions = [20, -50, 30, -40, 10]
+index = 0
+
+while (index < transactions.length() && balance > 0) {
+    transaction = transactions[index]
+    balance = balance + transaction
+    
+    println("Transaction " + (index + 1) + ": " + transaction + ", Balance: " + balance)
+    index = index + 1
+}
+
+if (balance <= 0) {
+    println("Account balance is zero or negative")
+}
+```
+
+## While Loop with User Input
+
+Create interactive loops:
+
+```javascript
+soul getUserInput() {
+    // Simulated user input
+    responses = ["hello", "world", "exit"]
+    static currentIndex = 0
+    
+    if (currentIndex < responses.length()) {
+        response = responses[currentIndex]
+        currentIndex = currentIndex + 1
+        return response
+    }
+    
+    return "exit"
+}
+
+input = ""
+
+while (input != "exit") {
+    input = getUserInput()
+    
+    if (input == "exit") {
+        println("Goodbye!")
+        break
+    }
+    
+    println("You said: " + input)
+}
+```
+
+## While Loop with Break
+
+Exit loops early with break:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+index = 0
+target = 7
+
+while (index < numbers.length()) {
+    current = numbers[index]
+    println("Checking: " + current)
+    
+    if (current == target) {
+        println("Found target: " + target)
+        break
+    }
+    
+    index = index + 1
+}
+
+if (index == numbers.length()) {
+    println("Target not found")
+}
+```
+
+## While Loop with Continue
+
+Skip iterations with continue:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+index = 0
+
+while (index < numbers.length()) {
+    current = numbers[index]
+    index = index + 1
+    
+    // Skip even numbers
+    if (current % 2 == 0) {
+        continue
+    }
+    
+    println("Odd number: " + current)
+}
+// Output: Odd number: 1, Odd number: 3, Odd number: 5, Odd number: 7, Odd number: 9
+```
+
+## While Loop for Data Processing
+
+Process data until a condition is met:
+
+```javascript
+soul processData(data) {
+    processed = []
+    index = 0
+    
+    while (index < data.length()) {
+        item = data[index]
+        
+        // Process valid items
+        if (item != null && item.length() > 0) {
+            processedItem = item.toUpperCase()
+            processed.push(processedItem)
+        }
+        
+        index = index + 1
+    }
+    
+    return processed
+}
+
+rawData = ["hello", "", "world", null, "soul", "language"]
+result = processData(rawData)
+
+println("Processed data: " + result)
+// ["HELLO", "WORLD", "SOUL", "LANGUAGE"]
+```
+
+## While Loop with Counters
+
+Use counters for controlled loops:
+
+```javascript
+soul countdown(start) {
+    current = start
+    
+    while (current > 0) {
+        println("Countdown: " + current)
+        current = current - 1
+        
+        // Simulate delay
+        sleep(1000)
+    }
+    
+    println("Blast off!")
+}
+
+countdown(5)
+// Output: Countdown: 5, Countdown: 4, Countdown: 3, Countdown: 2, Countdown: 1, Blast off!
+```
+
+## While Loop with Accumulation
+
+Accumulate values in loops:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+index = 0
+sum = 0
+product = 1
+
+while (index < numbers.length()) {
+    current = numbers[index]
+    sum = sum + current
+    product = product * current
+    index = index + 1
+}
+
+println("Sum: " + sum)        // 15
+println("Product: " + product) // 120
+```
+
+## While Loop with Validation
+
+Validate input until correct:
+
+```javascript
+soul validatePassword(password) {
+    return password.length() >= 8 && 
+           password.match(/[A-Z]/) && 
+           password.match(/[0-9]/)
+}
+
+soul getPassword() {
+    // Simulated password attempts
+    attempts = ["weak", "StrongPass", "StrongPass123"]
+    static attemptIndex = 0
+    
+    if (attemptIndex < attempts.length()) {
+        password = attempts[attemptIndex]
+        attemptIndex = attemptIndex + 1
+        return password
+    }
+    
+    return "StrongPass123"
+}
+
+password = ""
+attempts = 0
+maxAttempts = 3
+
+while (!validatePassword(password) && attempts < maxAttempts) {
+    password = getPassword()
+    attempts = attempts + 1
+    
+    if (validatePassword(password)) {
+        println("Password accepted")
+    } else {
+        println("Password rejected. Attempt " + attempts + " of " + maxAttempts)
+    }
+}
+
+if (attempts == maxAttempts && !validatePassword(password)) {
+    println("Maximum attempts reached. Access denied.")
+}
+```
+
+## While Loop with State Management
+
+Manage state in loops:
+
+```javascript
+soul StateMachine() {
+    state = "idle"
+    counter = 0
+    
+    while (state != "finished") {
+        switch (state) {
+            case "idle":
+                println("Starting process...")
+                state = "processing"
+                break
+                
+            case "processing":
+                println("Processing... " + counter)
+                counter = counter + 1
+                
+                if (counter >= 3) {
+                    state = "validating"
+                }
+                break
+                
+            case "validating":
+                println("Validating results...")
+                if (counter == 3) {
+                    state = "finished"
+                } else {
+                    state = "error"
+                }
+                break
+                
+            case "error":
+                println("Error occurred, restarting...")
+                counter = 0
+                state = "idle"
+                break
+        }
+    }
+    
+    println("Process completed successfully")
+}
+
+StateMachine()
+```
+
+## While Loop with Nested Loops
+
+Create nested while loops:
+
+```javascript
+soul printMultiplicationTable(size) {
+    i = 1
+    
+    while (i <= size) {
+        j = 1
+        row = ""
+        
+        while (j <= size) {
+            product = i * j
+            row = row + product.toString().padStart(4, " ")
+            j = j + 1
+        }
+        
+        println(row)
+        i = i + 1
+    }
+}
+
+printMultiplicationTable(5)
+// Output: multiplication table 5x5
+```
+
+## While Loop with Array Processing
+
+Process arrays with while loops:
+
+```javascript
+soul findLargestElement(array) {
+    if (array.length() == 0) {
+        return null
+    }
+    
+    largest = array[0]
+    index = 1
+    
+    while (index < array.length()) {
+        current = array[index]
+        
+        if (current > largest) {
+            largest = current
+        }
+        
+        index = index + 1
+    }
+    
+    return largest
+}
+
+numbers = [3, 7, 2, 9, 1, 5]
+largest = findLargestElement(numbers)
+println("Largest element: " + largest)  // 9
+```
+
+## While Loop with String Processing
+
+Process strings character by character:
+
+```javascript
+soul reverseString(str) {
+    reversed = ""
+    index = str.length() - 1
+    
+    while (index >= 0) {
+        reversed = reversed + str.charAt(index)
+        index = index - 1
+    }
+    
+    return reversed
+}
+
+soul countVowels(str) {
+    vowels = "aeiouAEIOU"
+    count = 0
+    index = 0
+    
+    while (index < str.length()) {
+        char = str.charAt(index)
+        
+        if (vowels.contains(char)) {
+            count = count + 1
+        }
+        
+        index = index + 1
+    }
+    
+    return count
+}
+
+text = "Hello World"
+println("Reversed: " + reverseString(text))  // "dlroW olleH"
+println("Vowels: " + countVowels(text))      // 3
+```
+
+## While Loop with Error Handling
+
+Handle errors within loops:
+
+```javascript
+soul processItems(items) {
+    index = 0
+    processed = []
+    errors = []
+    
+    while (index < items.length()) {
+        item = items[index]
+        
+        try {
+            result = processItem(item)
+            processed.push(result)
+        } catch (error) {
+            errors.push({
+                index: index,
+                item: item,
+                error: error.message
+            })
+        }
+        
+        index = index + 1
+    }
+    
+    return {
+        processed: processed,
+        errors: errors
+    }
+}
+
+soul processItem(item) {
+    if (item == null) {
+        throw "Item cannot be null"
+    }
+    
+    if (item.length() == 0) {
+        throw "Item cannot be empty"
+    }
+    
+    return item.toUpperCase()
+}
+
+items = ["hello", "", "world", null, "soul"]
+result = processItems(items)
+
+println("Processed: " + result.processed)  // ["HELLO", "WORLD", "SOUL"]
+println("Errors: " + result.errors.length())  // 2
+```
+
+## While Loop with Resource Management
+
+Manage resources in loops:
+
+```javascript
+soul processFiles(filenames) {
+    index = 0
+    results = []
+    
+    while (index < filenames.length()) {
+        filename = filenames[index]
+        file = null
+        
+        try {
+            file = FileSystem.open(filename)
+            content = file.read()
+            
+            result = {
+                filename: filename,
+                size: content.length(),
+                processed: true
+            }
+            
+            results.push(result)
+            
+        } catch (error) {
+            result = {
+                filename: filename,
+                error: error.message,
+                processed: false
+            }
+            
+            results.push(result)
+            
+        } finally {
+            if (file != null) {
+                file.close()
+            }
+        }
+        
+        index = index + 1
+    }
+    
+    return results
+}
+
+files = ["config.json", "data.csv", "missing.txt"]
+results = processFiles(files)
+
+for (result in results) {
+    if (result.processed) {
+        println("Processed " + result.filename + " (" + result.size + " bytes)")
+    } else {
+        println("Failed to process " + result.filename + ": " + result.error)
+    }
+}
+```
+
+## While Loop Performance Considerations
+
+Optimize while loops for performance:
+
+```javascript
+// Good - efficient loop
+soul efficientSearch(array, target) {
+    index = 0
+    
+    while (index < array.length()) {
+        if (array[index] == target) {
+            return index
+        }
+        index = index + 1
+    }
+    
+    return -1  // Not found
+}
+
+// Good - batch processing
+soul batchProcess(items, batchSize) {
+    index = 0
+    results = []
+    
+    while (index < items.length()) {
+        batch = []
+        batchEnd = Math.min(index + batchSize, items.length())
+        
+        // Process batch
+        while (index < batchEnd) {
+            batch.push(items[index])
+            index = index + 1
+        }
+        
+        processedBatch = processBatch(batch)
+        results.push(...processedBatch)
+    }
+    
+    return results
+}
+
+// Avoid - infinite loops
+soul avoidInfiniteLoop() {
+    counter = 0
+    maxIterations = 1000
+    
+    while (someCondition() && counter < maxIterations) {
+        // Process logic
+        counter = counter + 1
+    }
+    
+    if (counter >= maxIterations) {
+        println("Loop terminated due to iteration limit")
+    }
+}
+```
+
+## Best Practices
+
+1. **Always modify loop variable**: Ensure the condition can eventually become false
+2. **Use break and continue**: Control loop flow explicitly
+3. **Handle edge cases**: Check for empty arrays, null values
+4. **Limit iterations**: Prevent infinite loops with counters
+5. **Clean up resources**: Use proper resource management
+
+```javascript
+// Good - safe while loop
+soul safeWhileLoop(data) {
+    if (data == null || data.length() == 0) {
+        return []
+    }
+    
+    results = []
+    index = 0
+    maxIterations = 1000
+    iterations = 0
+    
+    while (index < data.length() && iterations < maxIterations) {
+        item = data[index]
+        
+        if (item != null) {
+            processedItem = processItem(item)
+            results.push(processedItem)
+        }
+        
+        index = index + 1
+        iterations = iterations + 1
+    }
+    
+    if (iterations >= maxIterations) {
+        println("Warning: Loop terminated due to iteration limit")
+    }
+    
+    return results
+}
+
+// Good - clear loop structure
+soul clearLoopStructure() {
+    count = 0
+    target = 10
+    
+    while (count < target) {
+        println("Processing item " + count)
+        
+        // Clear increment
+        count = count + 1
+        
+        // Clear exit condition
+        if (count >= target) {
+            break
+        }
+    }
+}
+```
+
+While loops provide flexible iteration control in Soul, allowing you to create dynamic loops that respond to changing conditions during execution.

@@ -1,0 +1,374 @@
+---
+title: "for_in"
+description: "For-in loops in Soul"
+---
+
+# for_in
+
+The `for...in` loop is the most idiomatic way to iterate over collections in Soul. It provides a clean syntax for iterating through lists, maps, and other iterable objects without managing indices manually.
+
+## Basic For-In with Lists
+
+Iterate through list elements:
+
+```javascript
+fruits = ["apple", "banana", "cherry", "date"]
+
+for (fruit in fruits) {
+    println("Fruit: " + fruit)
+}
+// Output: apple, banana, cherry, date
+```
+
+## For-In with Maps
+
+Iterate through map key-value pairs:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York"
+}
+
+for (key, value in user) {
+    println(key + ": " + value)
+}
+// Output: name: Alice, age: 30, city: New York
+```
+
+## For-In with Key Only (Maps)
+
+Iterate through map keys only:
+
+```javascript
+config = {
+    "debug": true,
+    "timeout": 5000,
+    "retries": 3
+}
+
+for (key in config) {
+    println("Setting: " + key + " = " + config[key])
+}
+```
+
+## For-In with Value Only (Lists)
+
+The standard pattern for lists:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+
+for (num in numbers) {
+    result = num * 2
+    println("Double: " + result)
+}
+```
+
+## For-In with Index and Value
+
+Some collections may provide both index and value:
+
+```javascript
+items = ["first", "second", "third"]
+
+for (index, item in items) {
+    println("Index " + index + ": " + item)
+}
+```
+
+## For-In with Nested Collections
+
+Iterate through nested data structures:
+
+```javascript
+users = [
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 30},
+    {"name": "Charlie", "age": 35}
+]
+
+for (user in users) {
+    println("User: " + user.name + " (Age: " + user.age + ")")
+}
+```
+
+## For-In with String Characters
+
+Iterate through string characters:
+
+```javascript
+text = "Hello"
+
+for (char in text) {
+    println("Character: " + char)
+}
+// Output: H, e, l, l, o
+```
+
+## For-In with Break and Continue
+
+Control loop execution:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+for (num in numbers) {
+    if (num == 5) {
+        break  // Exit when number is 5
+    }
+    
+    if (num % 2 == 0) {
+        continue  // Skip even numbers
+    }
+    
+    println("Odd number: " + num)
+}
+// Output: 1, 3
+```
+
+## For-In with Complex Data
+
+Process complex data structures:
+
+```javascript
+orders = [
+    {"id": 1, "customer": "Alice", "total": 150.00},
+    {"id": 2, "customer": "Bob", "total": 75.50},
+    {"id": 3, "customer": "Charlie", "total": 200.00}
+]
+
+totalRevenue = 0
+
+for (order in orders) {
+    totalRevenue += order.total
+    println("Order " + order.id + ": $" + order.total)
+}
+
+println("Total Revenue: $" + totalRevenue)
+```
+
+## For-In with Filtering
+
+Filter elements during iteration:
+
+```javascript
+products = [
+    {"name": "Laptop", "price": 999, "category": "Electronics"},
+    {"name": "Book", "price": 15, "category": "Literature"},
+    {"name": "Phone", "price": 599, "category": "Electronics"}
+]
+
+for (product in products) {
+    if (product.category == "Electronics") {
+        println("Electronic: " + product.name + " - $" + product.price)
+    }
+}
+```
+
+## For-In with Transformations
+
+Transform data during iteration:
+
+```javascript
+names = ["alice", "bob", "charlie"]
+capitalizedNames = []
+
+for (name in names) {
+    capitalizedName = name.toUpperCase()
+    capitalizedNames.push(capitalizedName)
+}
+
+for (name in capitalizedNames) {
+    println("Capitalized: " + name)
+}
+```
+
+## For-In with Function Calls
+
+Call functions for each element:
+
+```javascript
+soul processUser(user) {
+    return "Processed: " + user.name + " (" + user.email + ")"
+}
+
+users = [
+    {"name": "Alice", "email": "alice@example.com"},
+    {"name": "Bob", "email": "bob@example.com"}
+]
+
+for (user in users) {
+    result = processUser(user)
+    println(result)
+}
+```
+
+## For-In with Maps and Complex Keys
+
+Iterate through maps with complex structures:
+
+```javascript
+cache = {
+    "user:123": {"name": "Alice", "lastSeen": "2023-01-01"},
+    "user:456": {"name": "Bob", "lastSeen": "2023-01-02"},
+    "user:789": {"name": "Charlie", "lastSeen": "2023-01-03"}
+}
+
+for (key, userData in cache) {
+    println("Key: " + key)
+    println("User: " + userData.name + " (Last seen: " + userData.lastSeen + ")")
+}
+```
+
+## For-In with Nested Loops
+
+Nested for-in loops for multi-dimensional data:
+
+```javascript
+departments = {
+    "Engineering": ["Alice", "Bob", "Charlie"],
+    "Marketing": ["Dave", "Eve"],
+    "Sales": ["Frank", "Grace", "Henry"]
+}
+
+for (department, employees in departments) {
+    println("Department: " + department)
+    
+    for (employee in employees) {
+        println("  Employee: " + employee)
+    }
+}
+```
+
+## For-In with Error Handling
+
+Handle errors during iteration:
+
+```javascript
+urls = ["http://example1.com", "http://example2.com", "invalid-url"]
+
+for (url in urls) {
+    try {
+        response = fetchData(url)
+        println("Success: " + url)
+    } catch (error) {
+        println("Error with " + url + ": " + error)
+    }
+}
+```
+
+## For-In with Conditional Logic
+
+Complex conditional processing:
+
+```javascript
+students = [
+    {"name": "Alice", "grade": 85, "subject": "Math"},
+    {"name": "Bob", "grade": 92, "subject": "Science"},
+    {"name": "Charlie", "grade": 78, "subject": "Math"}
+]
+
+for (student in students) {
+    if (student.subject == "Math" && student.grade >= 80) {
+        println("Honor student: " + student.name + " (Grade: " + student.grade + ")")
+    }
+}
+```
+
+## For-In with Accumulation
+
+Accumulate values during iteration:
+
+```javascript
+expenses = [
+    {"category": "Food", "amount": 50},
+    {"category": "Transport", "amount": 30},
+    {"category": "Food", "amount": 25},
+    {"category": "Entertainment", "amount": 40}
+]
+
+categoryTotals = {}
+
+for (expense in expenses) {
+    category = expense.category
+    amount = expense.amount
+    
+    if (categoryTotals[category] == null) {
+        categoryTotals[category] = 0
+    }
+    
+    categoryTotals[category] += amount
+}
+
+for (category, total in categoryTotals) {
+    println(category + ": $" + total)
+}
+```
+
+## For-In Performance Tips
+
+Optimize for-in loop performance:
+
+```javascript
+// Cache expensive operations outside the loop
+items = getItems()
+processor = createProcessor()
+
+for (item in items) {
+    processor.process(item)  // Reuse processor
+}
+
+// Avoid creating objects in loops
+for (item in items) {
+    // Good - reuse variables
+    result = processItem(item)
+    
+    // Avoid - creates new object each iteration
+    // config = {"setting": "value"}
+}
+```
+
+## Best Practices
+
+1. **Use for-in for collections**: It's more readable than index-based loops
+2. **Use meaningful variable names**: `user` instead of `u`
+3. **Handle null/undefined**: Check for valid data before processing
+4. **Use break/continue appropriately**: Control flow when needed
+
+```javascript
+// Good - clear and safe
+soul processValidUsers(users) {
+    if (users == null) {
+        return
+    }
+    
+    for (user in users) {
+        if (user == null || !user.isActive) {
+            continue
+        }
+        
+        processUser(user)
+    }
+}
+
+// Better - with error handling
+soul processValidUsers(users) {
+    if (users == null || users.length() == 0) {
+        return
+    }
+    
+    for (user in users) {
+        try {
+            if (user != null && user.isActive) {
+                processUser(user)
+            }
+        } catch (error) {
+            println("Error processing user: " + error)
+        }
+    }
+}
+```
+
+The `for...in` loop is the preferred way to iterate over collections in Soul, providing clean, readable code that's less error-prone than manual index management.

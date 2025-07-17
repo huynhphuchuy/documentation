@@ -1,0 +1,638 @@
+---
+title: "try"
+description: "Try-catch error handling in Soul"
+---
+
+# try
+
+The `try-catch` statement provides structured error handling in Soul. It allows you to catch and handle exceptions that occur during program execution, with optional `finally` blocks for cleanup code.
+
+## Basic Try-Catch
+
+Handle exceptions with try-catch:
+
+```javascript
+try {
+    result = divide(10, 0)
+    println("Result: " + result)
+} catch (error) {
+    println("Error occurred: " + error.message)
+}
+
+println("Program continues...")
+```
+
+## Try-Catch with Finally
+
+Use finally for cleanup code:
+
+```javascript
+file = null
+
+try {
+    file = openFile("data.txt")
+    data = file.read()
+    println("File content: " + data)
+} catch (error) {
+    println("Failed to read file: " + error.message)
+} finally {
+    if (file != null) {
+        file.close()
+        println("File closed")
+    }
+}
+```
+
+## Throwing Custom Exceptions
+
+Throw custom exceptions with throw:
+
+```javascript
+soul validateAge(age) {
+    if (age < 0) {
+        throw "Age cannot be negative"
+    }
+    
+    if (age > 150) {
+        throw "Age seems unrealistic"
+    }
+    
+    return age
+}
+
+try {
+    userAge = validateAge(-5)
+    println("Age is valid: " + userAge)
+} catch (error) {
+    println("Validation failed: " + error)
+}
+```
+
+## Try-Catch with Different Error Types
+
+Handle different types of errors:
+
+```javascript
+soul processData(data) {
+    if (data == null) {
+        throw {
+            type: "NullError",
+            message: "Data cannot be null"
+        }
+    }
+    
+    if (data.length() == 0) {
+        throw {
+            type: "EmptyError",
+            message: "Data cannot be empty"
+        }
+    }
+    
+    if (data.length() > 1000) {
+        throw {
+            type: "SizeError",
+            message: "Data too large"
+        }
+    }
+    
+    return data.toUpperCase()
+}
+
+try {
+    result = processData("")
+    println("Processed: " + result)
+} catch (error) {
+    switch (error.type) {
+        case "NullError":
+            println("Null data error: " + error.message)
+            break
+        case "EmptyError":
+            println("Empty data error: " + error.message)
+            break
+        case "SizeError":
+            println("Size error: " + error.message)
+            break
+        default:
+            println("Unknown error: " + error.message)
+    }
+}
+```
+
+## Nested Try-Catch
+
+Handle nested error scenarios:
+
+```javascript
+soul connectToDatabase() {
+    try {
+        connection = Database.connect("localhost", 5432)
+        
+        try {
+            result = connection.query("SELECT * FROM users")
+            return result
+        } catch (queryError) {
+            println("Query failed: " + queryError.message)
+            throw "Database query failed"
+        }
+        
+    } catch (connectionError) {
+        println("Connection failed: " + connectionError.message)
+        throw "Database connection failed"
+    } finally {
+        if (connection != null) {
+            connection.close()
+        }
+    }
+}
+
+try {
+    users = connectToDatabase()
+    println("Found " + users.length() + " users")
+} catch (error) {
+    println("Database operation failed: " + error)
+}
+```
+
+## Try-Catch in Functions
+
+Use try-catch in function error handling:
+
+```javascript
+soul parseJSON(jsonString) {
+    try {
+        data = JSON.parse(jsonString)
+        return {
+            success: true,
+            data: data
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        }
+    }
+}
+
+soul safeFileOperation(filename) {
+    try {
+        file = openFile(filename)
+        content = file.read()
+        file.close()
+        
+        parseResult = parseJSON(content)
+        if (parseResult.success) {
+            return parseResult.data
+        } else {
+            throw "Invalid JSON format: " + parseResult.error
+        }
+        
+    } catch (error) {
+        return {
+            error: true,
+            message: error.toString()
+        }
+    }
+}
+
+result = safeFileOperation("config.json")
+if (result.error) {
+    println("Error: " + result.message)
+} else {
+    println("Config loaded successfully")
+}
+```
+
+## Try-Catch with Resource Management
+
+Manage resources with try-catch:
+
+```javascript
+soul downloadFile(url, filename) {
+    httpClient = null
+    fileStream = null
+    
+    try {
+        httpClient = HTTP.createClient()
+        response = httpClient.get(url)
+        
+        if (response.statusCode != 200) {
+            throw "HTTP Error: " + response.statusCode
+        }
+        
+        fileStream = FileSystem.createWriteStream(filename)
+        fileStream.write(response.body)
+        
+        println("File downloaded successfully: " + filename)
+        return true
+        
+    } catch (error) {
+        println("Download failed: " + error.message)
+        return false
+        
+    } finally {
+        if (httpClient != null) {
+            httpClient.close()
+        }
+        if (fileStream != null) {
+            fileStream.close()
+        }
+    }
+}
+
+success = downloadFile("https://example.com/data.json", "data.json")
+if (success) {
+    println("Ready to process downloaded file")
+}
+```
+
+## Try-Catch with Async Operations
+
+Handle errors in asynchronous code:
+
+```javascript
+soul fetchUserData(userId) {
+    try {
+        // Simulated async operation
+        user = await Database.findUser(userId)
+        
+        if (user == null) {
+            throw "User not found: " + userId
+        }
+        
+        profile = await ProfileService.getProfile(user.profileId)
+        
+        return {
+            user: user,
+            profile: profile
+        }
+        
+    } catch (error) {
+        println("Failed to fetch user data: " + error)
+        throw error  // Re-throw to caller
+    }
+}
+
+soul processUser(userId) {
+    try {
+        userData = await fetchUserData(userId)
+        println("User: " + userData.user.name)
+        println("Profile: " + userData.profile.bio)
+        
+    } catch (error) {
+        println("Error processing user: " + error)
+        // Handle error gracefully
+        return null
+    }
+}
+
+spawn processUser(123)
+```
+
+## Try-Catch with Validation
+
+Validate data with structured error handling:
+
+```javascript
+oasis ValidationError {
+    soul __genesis__(field, message) {
+        this.field = field
+        this.message = message
+        this.type = "ValidationError"
+    }
+    
+    soul toString() {
+        return "ValidationError: " + this.field + " - " + this.message
+    }
+}
+
+soul validateUser(userData) {
+    if (!userData.name || userData.name.trim() == "") {
+        throw ValidationError("name", "Name is required")
+    }
+    
+    if (!userData.email || !userData.email.contains("@")) {
+        throw ValidationError("email", "Valid email is required")
+    }
+    
+    if (!userData.age || userData.age < 18) {
+        throw ValidationError("age", "Age must be 18 or older")
+    }
+    
+    return userData
+}
+
+soul createUser(userData) {
+    try {
+        validatedData = validateUser(userData)
+        
+        user = User(
+            validatedData.name,
+            validatedData.email,
+            validatedData.age
+        )
+        
+        user.save()
+        return user
+        
+    } catch (error) {
+        if (error.type == "ValidationError") {
+            println("Validation failed for field '" + error.field + "': " + error.message)
+        } else {
+            println("Unexpected error: " + error)
+        }
+        return null
+    }
+}
+
+// Test validation
+newUser = createUser({
+    name: "",
+    email: "invalid-email",
+    age: 16
+})
+
+if (newUser == null) {
+    println("User creation failed")
+}
+```
+
+## Try-Catch with Retry Logic
+
+Implement retry logic with try-catch:
+
+```javascript
+soul retryOperation(operation, maxAttempts, delay) {
+    attempts = 0
+    
+    while (attempts < maxAttempts) {
+        try {
+            result = operation()
+            return result  // Success
+            
+        } catch (error) {
+            attempts = attempts + 1
+            
+            if (attempts >= maxAttempts) {
+                throw "Operation failed after " + maxAttempts + " attempts: " + error
+            }
+            
+            println("Attempt " + attempts + " failed: " + error + ". Retrying...")
+            
+            if (delay > 0) {
+                sleep(delay)
+            }
+        }
+    }
+}
+
+soul unreliableNetworkCall() {
+    // Simulated unreliable operation
+    if (Math.random() > 0.7) {
+        return "Success!"
+    } else {
+        throw "Network timeout"
+    }
+}
+
+try {
+    result = retryOperation(
+        unreliableNetworkCall,
+        3,     // max attempts
+        1000   // 1 second delay
+    )
+    
+    println("Operation succeeded: " + result)
+    
+} catch (error) {
+    println("Operation failed completely: " + error)
+}
+```
+
+## Try-Catch with Cleanup Patterns
+
+Implement resource cleanup patterns:
+
+```javascript
+soul withDatabase(callback) {
+    connection = null
+    
+    try {
+        connection = Database.connect()
+        result = callback(connection)
+        return result
+        
+    } catch (error) {
+        println("Database operation failed: " + error)
+        throw error
+        
+    } finally {
+        if (connection != null) {
+            connection.close()
+            println("Database connection closed")
+        }
+    }
+}
+
+soul withFileSystem(filename, callback) {
+    file = null
+    
+    try {
+        file = FileSystem.open(filename)
+        result = callback(file)
+        return result
+        
+    } catch (error) {
+        println("File operation failed: " + error)
+        throw error
+        
+    } finally {
+        if (file != null) {
+            file.close()
+            println("File closed")
+        }
+    }
+}
+
+try {
+    // Use database with automatic cleanup
+    users = withDatabase(soul(db) {
+        return db.query("SELECT * FROM users WHERE active = true")
+    })
+    
+    // Use file system with automatic cleanup
+    config = withFileSystem("config.json", soul(file) {
+        content = file.read()
+        return JSON.parse(content)
+    })
+    
+    println("Found " + users.length() + " active users")
+    println("Config loaded: " + config.appName)
+    
+} catch (error) {
+    println("Application setup failed: " + error)
+}
+```
+
+## Error Logging and Monitoring
+
+Implement comprehensive error logging:
+
+```javascript
+soul Logger {
+    static soul logError(error, context) {
+        timestamp = new Date().toISOString()
+        
+        logEntry = {
+            timestamp: timestamp,
+            error: error.toString(),
+            context: context,
+            stack: error.stack || "No stack trace available"
+        }
+        
+        // Log to console
+        println("[ERROR] " + timestamp + ": " + error)
+        
+        // Log to file (simulated)
+        ErrorLog.write(JSON.stringify(logEntry))
+        
+        // Send to monitoring service (simulated)
+        MonitoringService.sendError(logEntry)
+    }
+}
+
+soul criticalOperation() {
+    try {
+        // Simulated critical operation
+        data = loadCriticalData()
+        result = processData(data)
+        saveCriticalResult(result)
+        
+        return result
+        
+    } catch (error) {
+        Logger.logError(error, {
+            operation: "criticalOperation",
+            timestamp: new Date(),
+            severity: "HIGH"
+        })
+        
+        // Attempt fallback
+        try {
+            fallbackResult = performFallback()
+            Logger.logError("Fallback successful", {
+                operation: "fallback",
+                severity: "MEDIUM"
+            })
+            return fallbackResult
+            
+        } catch (fallbackError) {
+            Logger.logError(fallbackError, {
+                operation: "fallback",
+                severity: "CRITICAL"
+            })
+            throw "Critical operation completely failed"
+        }
+    }
+}
+```
+
+## Try-Catch Best Practices
+
+1. **Specific error handling**: Catch specific error types
+2. **Proper cleanup**: Always use finally for cleanup
+3. **Don't suppress errors**: Log or handle errors appropriately
+4. **Fail fast**: Validate inputs early and fail fast
+5. **Resource management**: Ensure resources are properly released
+
+```javascript
+// Good - specific error handling
+soul parseUserInput(input) {
+    try {
+        if (input == null || input.trim() == "") {
+            throw {
+                type: "ValidationError",
+                message: "Input cannot be empty"
+            }
+        }
+        
+        data = JSON.parse(input)
+        
+        if (!data.userId) {
+            throw {
+                type: "ValidationError",
+                message: "User ID is required"
+            }
+        }
+        
+        return data
+        
+    } catch (error) {
+        if (error.type == "ValidationError") {
+            println("Validation error: " + error.message)
+            return null
+        } else {
+            println("Parse error: " + error.message)
+            return null
+        }
+    }
+}
+
+// Good - resource management
+soul processFile(filename) {
+    file = null
+    
+    try {
+        file = FileSystem.open(filename)
+        
+        if (file.size() > MAX_FILE_SIZE) {
+            throw "File too large: " + file.size() + " bytes"
+        }
+        
+        content = file.read()
+        return processContent(content)
+        
+    } catch (error) {
+        println("File processing failed: " + error)
+        return null
+        
+    } finally {
+        if (file != null) {
+            file.close()
+        }
+    }
+}
+
+// Good - error context
+soul apiCall(endpoint, data) {
+    try {
+        response = HTTP.post(endpoint, data)
+        
+        if (response.status >= 400) {
+            throw {
+                type: "HttpError",
+                status: response.status,
+                message: response.body
+            }
+        }
+        
+        return response.body
+        
+    } catch (error) {
+        errorContext = {
+            endpoint: endpoint,
+            data: data,
+            error: error
+        }
+        
+        Logger.logError(error, errorContext)
+        
+        // Return appropriate error response
+        return {
+            success: false,
+            error: error.message || error.toString()
+        }
+    }
+}
+```
+
+Try-catch statements provide robust error handling capabilities in Soul, enabling you to build resilient applications that handle failures gracefully while maintaining clean resource management.

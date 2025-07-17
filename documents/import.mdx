@@ -1,0 +1,366 @@
+---
+title: "import"
+description: "Import statements in Soul"
+---
+
+# import
+
+The `import` statement is used to include external modules, libraries, and other Soul files into your program. It enables code reuse and modular programming by allowing you to use functionality defined in other files.
+
+## Basic Import
+
+Import an entire module:
+
+```javascript
+import "console"
+import "math"
+import "json"
+```
+
+## Import with Alias
+
+Import a module with a custom name:
+
+```javascript
+import "http" as HttpClient
+import "database" as DB
+import "utilities" as Utils
+
+// Usage
+server = HttpClient.createServer()
+connection = DB.connect()
+result = Utils.formatData(data)
+```
+
+## Import from Relative Paths
+
+Import from local files using relative paths:
+
+```javascript
+import "./utils.soul"
+import "../helpers/formatter.soul"
+import "../../config/settings.soul"
+```
+
+## Import from Absolute Paths
+
+Import using absolute paths:
+
+```javascript
+import "/src/modules/logger.soul"
+import "/lib/validation.soul"
+import "/config/database.soul"
+```
+
+## Import with Path Aliases
+
+Using path aliases defined in `soul.json`:
+
+```javascript
+// If soul.json has: "@/": "./src/"
+import "@/components/button.soul"
+import "@/utils/helper.soul"
+import "@/models/user.soul"
+
+// If soul.json has: "@components/": "./src/components/"
+import "@components/modal.soul"
+import "@components/form.soul"
+```
+
+## Import from soul_modules
+
+Import from installed packages:
+
+```javascript
+import "lodash"
+import "moment"
+import "axios"
+import "express"
+```
+
+## Import Standard Library Modules
+
+Import built-in Soul modules:
+
+```javascript
+import "console"
+import "math"
+import "json"
+import "io"
+import "os"
+import "time"
+import "crypto"
+import "http"
+import "sqlite"
+```
+
+## Import with Specific Exports
+
+Import specific functions or classes:
+
+```javascript
+import { log, error } from "console"
+import { add, subtract, multiply } from "math"
+import { encode, decode } from "json"
+
+// Usage
+log("Hello, World!")
+result = add(5, 3)
+jsonString = encode(data)
+```
+
+## Import with Mixed Exports
+
+Combine default and named imports:
+
+```javascript
+import Logger, { log, error } from "logger"
+import Database, { connect, query } from "database"
+import Validator, { validateEmail, validatePhone } from "validator"
+
+// Usage
+logger = Logger.new()
+connection = connect("database.db")
+isValid = validateEmail("user@example.com")
+```
+
+## Import with Destructuring
+
+Destructure imported objects:
+
+```javascript
+import { 
+    createServer, 
+    middleware, 
+    Router 
+} from "http"
+
+import { 
+    User, 
+    Product, 
+    Order 
+} from "@/models"
+```
+
+## Conditional Imports
+
+Import modules conditionally:
+
+```javascript
+soul loadModule(moduleName) {
+    if (moduleName == "development") {
+        import "dev-tools"
+    } else if (moduleName == "production") {
+        import "prod-optimizations"
+    }
+}
+```
+
+## Dynamic Imports
+
+Import modules at runtime:
+
+```javascript
+soul loadUserModule(userType) {
+    if (userType == "admin") {
+        AdminModule = import("admin-module")
+        return AdminModule
+    } else {
+        UserModule = import("user-module")
+        return UserModule
+    }
+}
+```
+
+## Import Error Handling
+
+Handle import errors gracefully:
+
+```javascript
+try {
+    import "optional-module"
+    hasOptionalModule = true
+} catch (error) {
+    println("Optional module not available: " + error)
+    hasOptionalModule = false
+}
+```
+
+## Import with Module Configuration
+
+Configure imported modules:
+
+```javascript
+import "database" as DB
+import "logger" as Logger
+
+// Configure after import
+DB.configure({
+    "host": "localhost",
+    "port": 5432,
+    "database": "myapp"
+})
+
+Logger.configure({
+    "level": "info",
+    "format": "json"
+})
+```
+
+## Import in Different Contexts
+
+### In Main Files
+```javascript
+// main.soul
+import "console"
+import "./config.soul"
+import "./app.soul"
+
+soul genesis() {
+    console.log("Application starting...")
+    app.start()
+}
+```
+
+### In Module Files
+```javascript
+// utils.soul
+import "math"
+import "json"
+
+soul formatNumber(num) {
+    return math.round(num, 2)
+}
+
+soul parseConfig(jsonString) {
+    return json.decode(jsonString)
+}
+```
+
+### In Class Files
+```javascript
+// user.soul
+import "crypto"
+import "validator"
+
+sanctuary User {
+    soul __genesis__(email, password) {
+        if (!validator.isEmail(email)) {
+            throw("Invalid email")
+        }
+        
+        this.email = email
+        this.passwordHash = crypto.hash(password)
+    }
+}
+```
+
+## Import Best Practices
+
+### Organize Imports
+```javascript
+// Standard library imports first
+import "console"
+import "json"
+import "http"
+
+// Third-party imports
+import "lodash"
+import "moment"
+
+// Local imports
+import "./config.soul"
+import "./utils.soul"
+import "@/models/user.soul"
+```
+
+### Use Aliases for Clarity
+```javascript
+import "very-long-module-name" as ShortName
+import "conflicting-name" as ConflictingAlias
+import "@/services/user-service" as UserService
+```
+
+### Import Only What You Need
+```javascript
+// Good - specific imports
+import { log, error } from "console"
+import { add, subtract } from "math"
+
+// Avoid - importing everything
+import * as Console from "console"
+import * as Math from "math"
+```
+
+## Common Import Patterns
+
+### Configuration Module
+```javascript
+// config.soul
+export DATABASE_URL = "localhost:5432"
+export API_KEY = "your-api-key"
+export DEBUG_MODE = true
+
+// main.soul
+import { DATABASE_URL, API_KEY } from "./config.soul"
+```
+
+### Utility Module
+```javascript
+// utils.soul
+soul formatDate(date) {
+    return date.toISOString()
+}
+
+soul generateId() {
+    return crypto.randomUUID()
+}
+
+// main.soul
+import { formatDate, generateId } from "./utils.soul"
+```
+
+### Service Module
+```javascript
+// user-service.soul
+import "database" as DB
+
+soul createUser(userData) {
+    return DB.insert("users", userData)
+}
+
+soul findUser(id) {
+    return DB.findById("users", id)
+}
+
+// main.soul
+import { createUser, findUser } from "./user-service.soul"
+```
+
+## Module Resolution
+
+Soul resolves imports in the following order:
+
+1. **Relative paths**: `./`, `../`
+2. **Path aliases**: `@/`, `@components/`
+3. **soul_modules**: Installed packages
+4. **Standard library**: Built-in modules
+
+## Import Debugging
+
+Debug import issues:
+
+```javascript
+soul debugImport(modulePath) {
+    try {
+        module = import(modulePath)
+        console.log("Successfully imported: " + modulePath)
+        return module
+    } catch (error) {
+        console.error("Failed to import " + modulePath + ": " + error)
+        return null
+    }
+}
+```
+
+The `import` statement is essential for organizing your Soul applications into modular, reusable components. Use it to structure your code effectively and leverage external libraries and modules.

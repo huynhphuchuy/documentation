@@ -1,0 +1,431 @@
+---
+title: "list"
+description: "List literals and operations in Soul"
+---
+
+# list
+
+Lists in Soul are ordered collections of elements that can hold values of any type. They are created using square brackets `[]` and provide dynamic resizing and various methods for manipulation.
+
+## Basic List Creation
+
+Create lists with square bracket notation:
+
+```javascript
+// Empty list
+empty = []
+
+// List with elements
+numbers = [1, 2, 3, 4, 5]
+names = ["Alice", "Bob", "Charlie"]
+mixed = [1, "hello", true, null]
+```
+
+## List with Different Data Types
+
+Lists can contain mixed data types:
+
+```javascript
+mixedList = [
+    42,
+    "string",
+    true,
+    null,
+    [1, 2, 3],
+    {"key": "value"}
+]
+```
+
+## Accessing List Elements
+
+Use index notation to access elements:
+
+```javascript
+fruits = ["apple", "banana", "cherry"]
+
+first = fruits[0]        // "apple"
+second = fruits[1]       // "banana"
+last = fruits[2]         // "cherry"
+
+// Using length for last element
+lastIndex = fruits.length() - 1
+lastFruit = fruits[lastIndex]
+```
+
+## Modifying List Elements
+
+Change elements using index assignment:
+
+```javascript
+colors = ["red", "green", "blue"]
+
+colors[0] = "yellow"     // ["yellow", "green", "blue"]
+colors[2] = "purple"     // ["yellow", "green", "purple"]
+```
+
+## List Methods
+
+Common list operations:
+
+```javascript
+items = [1, 2, 3]
+
+// Add elements
+items.push(4)           // [1, 2, 3, 4]
+items.push(5, 6)        // [1, 2, 3, 4, 5, 6]
+
+// Remove elements
+last = items.pop()      // Returns 6, list becomes [1, 2, 3, 4, 5]
+first = items.shift()   // Returns 1, list becomes [2, 3, 4, 5]
+
+// Add to beginning
+items.unshift(0)        // [0, 2, 3, 4, 5]
+
+// Get length
+length = items.length() // 5
+```
+
+## List Concatenation
+
+Combine lists together:
+
+```javascript
+list1 = [1, 2, 3]
+list2 = [4, 5, 6]
+
+// Concatenate lists
+combined = list1 + list2        // [1, 2, 3, 4, 5, 6]
+
+// Using concat method (if available)
+combined = list1.concat(list2)  // [1, 2, 3, 4, 5, 6]
+```
+
+## List Slicing
+
+Extract portions of lists:
+
+```javascript
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+// Slice methods (if available)
+portion = numbers.slice(2, 5)   // [2, 3, 4]
+fromIndex = numbers.slice(3)    // [3, 4, 5, 6, 7, 8, 9]
+```
+
+## Nested Lists
+
+Lists can contain other lists:
+
+```javascript
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+// Access nested elements
+element = matrix[1][2]  // 6
+row = matrix[0]         // [1, 2, 3]
+
+// Modify nested elements
+matrix[0][0] = 10       // Changes 1 to 10
+```
+
+## List Iteration
+
+Iterate through list elements:
+
+```javascript
+items = ["apple", "banana", "cherry"]
+
+// For-in loop
+for (item in items) {
+    println("Item: " + item)
+}
+
+// Traditional for loop
+for (i = 0; i < items.length(); i++) {
+    println("Index " + i + ": " + items[i])
+}
+```
+
+## List Searching
+
+Find elements in lists:
+
+```javascript
+numbers = [10, 20, 30, 40, 50]
+
+// Linear search
+soul findElement(list, target) {
+    for (i = 0; i < list.length(); i++) {
+        if (list[i] == target) {
+            return i
+        }
+    }
+    return -1
+}
+
+index = findElement(numbers, 30)  // 2
+```
+
+## List Filtering
+
+Filter elements based on conditions:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Filter even numbers
+soul filterEven(list) {
+    result = []
+    for (num in list) {
+        if (num % 2 == 0) {
+            result.push(num)
+        }
+    }
+    return result
+}
+
+evenNumbers = filterEven(numbers)  // [2, 4, 6, 8, 10]
+```
+
+## List Mapping
+
+Transform list elements:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+
+// Double each number
+soul doubleNumbers(list) {
+    result = []
+    for (num in list) {
+        result.push(num * 2)
+    }
+    return result
+}
+
+doubled = doubleNumbers(numbers)  // [2, 4, 6, 8, 10]
+```
+
+## List Reduction
+
+Reduce list to a single value:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+
+// Sum all numbers
+soul sum(list) {
+    total = 0
+    for (num in list) {
+        total += num
+    }
+    return total
+}
+
+total = sum(numbers)  // 15
+```
+
+## List Sorting
+
+Sort list elements:
+
+```javascript
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+
+// Simple bubble sort
+soul bubbleSort(list) {
+    n = list.length()
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (list[j] > list[j + 1]) {
+                // Swap elements
+                temp = list[j]
+                list[j] = list[j + 1]
+                list[j + 1] = temp
+            }
+        }
+    }
+    return list
+}
+
+sorted = bubbleSort(numbers)  // [1, 1, 2, 3, 4, 5, 6, 9]
+```
+
+## List of Objects
+
+Work with lists containing objects:
+
+```javascript
+users = [
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 30},
+    {"name": "Charlie", "age": 35}
+]
+
+// Access object properties
+firstName = users[0]["name"]        // "Alice"
+firstAge = users[0]["age"]          // 25
+
+// Modify object properties
+users[1]["age"] = 31
+
+// Filter objects
+soul findUsersByAge(users, minAge) {
+    result = []
+    for (user in users) {
+        if (user["age"] >= minAge) {
+            result.push(user)
+        }
+    }
+    return result
+}
+
+adults = findUsersByAge(users, 30)
+```
+
+## List Validation
+
+Validate list contents:
+
+```javascript
+soul validateNumberList(list) {
+    if (list == null) {
+        return false
+    }
+    
+    for (item in list) {
+        if (typeof item != "number") {
+            return false
+        }
+    }
+    
+    return true
+}
+
+soul validateNonEmpty(list) {
+    return list != null && list.length() > 0
+}
+```
+
+## List Utilities
+
+Common list utility functions:
+
+```javascript
+// Check if list contains element
+soul contains(list, element) {
+    for (item in list) {
+        if (item == element) {
+            return true
+        }
+    }
+    return false
+}
+
+// Get unique elements
+soul unique(list) {
+    result = []
+    for (item in list) {
+        if (!contains(result, item)) {
+            result.push(item)
+        }
+    }
+    return result
+}
+
+// Reverse list
+soul reverse(list) {
+    result = []
+    for (i = list.length() - 1; i >= 0; i--) {
+        result.push(list[i])
+    }
+    return result
+}
+```
+
+## List Performance
+
+Optimize list operations:
+
+```javascript
+// Pre-allocate known size (if supported)
+largeList = []
+
+// Cache length in loops
+items = getItems()
+length = items.length()
+
+for (i = 0; i < length; i++) {
+    processItem(items[i])
+}
+
+// Batch operations
+soul batchProcess(items) {
+    results = []
+    for (item in items) {
+        result = processItem(item)
+        results.push(result)
+    }
+    return results
+}
+```
+
+## Best Practices
+
+1. **Check for null/empty**: Always validate lists before use
+2. **Use appropriate methods**: Choose the right operation for your needs
+3. **Cache length**: Store list length in variables for performance
+4. **Handle bounds**: Check indices before accessing elements
+5. **Use meaningful names**: Make list purpose clear
+
+```javascript
+// Good - clear and safe
+soul processUserData(users) {
+    if (users == null || users.length() == 0) {
+        return []
+    }
+    
+    processedUsers = []
+    
+    for (user in users) {
+        if (user != null && user.isValid()) {
+            processedUser = processUser(user)
+            processedUsers.push(processedUser)
+        }
+    }
+    
+    return processedUsers
+}
+
+// Better - with error handling
+soul processUserData(users) {
+    if (users == null || users.length() == 0) {
+        return { success: false, error: "No users provided" }
+    }
+    
+    processedUsers = []
+    errors = []
+    
+    for (user in users) {
+        try {
+            if (user != null && user.isValid()) {
+                processedUser = processUser(user)
+                processedUsers.push(processedUser)
+            }
+        } catch (error) {
+            errors.push("Error processing user: " + error)
+        }
+    }
+    
+    return { 
+        success: true, 
+        users: processedUsers, 
+        errors: errors 
+    }
+}
+```
+
+Lists are fundamental data structures in Soul, providing flexible and powerful ways to store and manipulate collections of data.

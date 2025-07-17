@@ -1,0 +1,308 @@
+---
+title: "class"
+description: "Class definitions using sanctuary keyword in Soul"
+---
+
+# class
+
+Classes in Soul are defined using the `sanctuary` keyword and provide object-oriented programming capabilities. They encapsulate data and behavior, support inheritance, and can be extended with traits.
+
+## Basic Class Definition
+
+Classes are declared with the `sanctuary` keyword:
+
+```javascript
+sanctuary User {
+    soul __genesis__(name, email) {
+        this.name = name
+        this.email = email
+        this.isActive = true
+    }
+    
+    soul getInfo() {
+        return this.name + " (" + this.email + ")"
+    }
+    
+    soul activate() {
+        this.isActive = true
+    }
+    
+    soul deactivate() {
+        this.isActive = false
+    }
+}
+```
+
+## Creating Class Instances
+
+Instances are created using the `.new()` method:
+
+```javascript
+user = User.new("Alice", "alice@example.com")
+println(user.getInfo())  // "Alice (alice@example.com)"
+
+user.deactivate()
+println(user.isActive)   // false
+```
+
+## Constructor Method
+
+The `__genesis__` method is the constructor and is called when creating new instances:
+
+```javascript
+sanctuary Vehicle {
+    soul __genesis__(make, model, year) {
+        this.make = make
+        this.model = model
+        this.year = year
+        this.mileage = 0
+    }
+    
+    soul drive(miles) {
+        this.mileage += miles
+        return "Drove " + miles + " miles"
+    }
+}
+
+car = Vehicle.new("Toyota", "Camry", 2023)
+println(car.drive(100))  // "Drove 100 miles"
+```
+
+## Class Inheritance
+
+Classes can inherit from other classes using `extends`:
+
+```javascript
+sanctuary Animal {
+    soul __genesis__(name, species) {
+        this.name = name
+        this.species = species
+    }
+    
+    soul speak() {
+        return this.name + " makes a sound"
+    }
+}
+
+sanctuary Dog extends Animal {
+    soul __genesis__(name, breed) {
+        super.__genesis__(name, "Dog")
+        this.breed = breed
+    }
+    
+    soul speak() {
+        return this.name + " barks"
+    }
+    
+    soul wagTail() {
+        return this.name + " wags tail"
+    }
+}
+
+dog = Dog.new("Buddy", "Golden Retriever")
+println(dog.speak())     // "Buddy barks"
+println(dog.wagTail())   // "Buddy wags tail"
+```
+
+## Using Super
+
+The `super` keyword calls methods from the parent class:
+
+```javascript
+sanctuary Employee extends User {
+    soul __genesis__(name, email, department) {
+        super.__genesis__(name, email)  // Call parent constructor
+        this.department = department
+        this.salary = 0
+    }
+    
+    soul getInfo() {
+        baseInfo = super.getInfo()    // Call parent method
+        return baseInfo + " - " + this.department
+    }
+    
+    soul setSalary(amount) {
+        this.salary = amount
+    }
+}
+
+employee = Employee.new("Bob", "bob@company.com", "Engineering")
+println(employee.getInfo())  // "Bob (bob@company.com) - Engineering"
+```
+
+## Static Methods
+
+Classes can have static methods that belong to the class rather than instances:
+
+```javascript
+sanctuary MathUtils {
+    static soul add(a, b) {
+        return a + b
+    }
+    
+    static soul multiply(a, b) {
+        return a * b
+    }
+    
+    static soul factorial(n) {
+        if (n <= 1) return 1
+        return n * MathUtils.factorial(n - 1)
+    }
+}
+
+result = MathUtils.add(5, 3)        // 8
+result = MathUtils.multiply(4, 6)   // 24
+result = MathUtils.factorial(5)     // 120
+```
+
+## Class with Traits
+
+Classes can use traits for code reuse:
+
+```javascript
+oasis Timestamped {
+    soul setCreatedAt() {
+        this.createdAt = new Date()
+    }
+    
+    soul setUpdatedAt() {
+        this.updatedAt = new Date()
+    }
+}
+
+sanctuary Document uses Timestamped {
+    soul __genesis__(title, content) {
+        this.title = title
+        this.content = content
+        this.setCreatedAt()
+    }
+    
+    soul update(newContent) {
+        this.content = newContent
+        this.setUpdatedAt()
+    }
+}
+
+doc = Document.new("My Document", "Initial content")
+doc.update("Updated content")
+```
+
+## Private-like Methods
+
+While Soul doesn't have true private methods, you can use naming conventions:
+
+```javascript
+sanctuary BankAccount {
+    soul __genesis__(accountNumber, initialBalance) {
+        this.accountNumber = accountNumber
+        this.balance = initialBalance
+    }
+    
+    // Public method
+    soul deposit(amount) {
+        if (this._validateAmount(amount)) {
+            this.balance += amount
+            return true
+        }
+        return false
+    }
+    
+    // "Private" method (by convention)
+    soul _validateAmount(amount) {
+        return amount > 0 && amount <= 10000
+    }
+    
+    soul getBalance() {
+        return this.balance
+    }
+}
+
+account = BankAccount.new("123456", 1000)
+account.deposit(500)  // Public method
+// account._validateAmount(100)  // Should not be called externally
+```
+
+## Class Properties
+
+Properties can be accessed and modified directly:
+
+```javascript
+sanctuary Rectangle {
+    soul __genesis__(width, height) {
+        this.width = width
+        this.height = height
+    }
+    
+    soul getArea() {
+        return this.width * this.height
+    }
+    
+    soul getPerimeter() {
+        return 2 * (this.width + this.height)
+    }
+}
+
+rect = Rectangle.new(5, 3)
+println(rect.width)         // 5
+println(rect.getArea())     // 15
+
+rect.width = 8              // Modify property
+println(rect.getArea())     // 24
+```
+
+## Class Methods Calling Other Methods
+
+Methods can call other methods within the same class:
+
+```javascript
+sanctuary Calculator {
+    soul add(a, b) {
+        return a + b
+    }
+    
+    soul subtract(a, b) {
+        return a - b
+    }
+    
+    soul addThenSubtract(a, b, c) {
+        sum = this.add(a, b)
+        return this.subtract(sum, c)
+    }
+}
+
+calc = Calculator.new()
+result = calc.addThenSubtract(10, 5, 3)  // (10 + 5) - 3 = 12
+```
+
+## Best Practices
+
+1. **Use meaningful class names**: `UserManager` instead of `Manager`
+2. **Initialize all properties**: Set initial values in `__genesis__`
+3. **Use super appropriately**: Call parent methods when extending classes
+4. **Keep methods focused**: Each method should have a single responsibility
+
+```javascript
+// Good class design
+sanctuary Product {
+    soul __genesis__(name, price, category) {
+        this.name = name
+        this.price = price
+        this.category = category
+        this.isAvailable = true
+    }
+    
+    soul applyDiscount(percentage) {
+        if (percentage > 0 && percentage <= 100) {
+            this.price = this.price * (1 - percentage / 100)
+            return true
+        }
+        return false
+    }
+    
+    soul isAffordable(budget) {
+        return this.price <= budget
+    }
+}
+```
+
+Classes provide a powerful way to organize and structure your Soul applications using object-oriented principles.

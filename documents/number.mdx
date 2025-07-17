@@ -1,0 +1,487 @@
+---
+title: "number"
+description: "Number literals and arithmetic in Soul"
+---
+
+# number
+
+Numbers in Soul represent numeric values using high-precision decimal arithmetic. They can be integers or floating-point numbers and support all standard arithmetic operations.
+
+## Basic Number Literals
+
+Create numbers with literal notation:
+
+```javascript
+// Integer numbers
+age = 25
+count = 100
+negative = -42
+
+// Floating-point numbers
+pi = 3.14159
+temperature = 98.6
+precise = 0.000001
+
+// Scientific notation
+large = 1e6          // 1,000,000
+small = 1e-6         // 0.000001
+```
+
+## Arithmetic Operations
+
+Perform basic arithmetic with numbers:
+
+```javascript
+a = 10
+b = 3
+
+// Basic operations
+sum = a + b          // 13
+difference = a - b   // 7
+product = a * b      // 30
+quotient = a / b     // 3.333...
+remainder = a % b    // 1
+
+// Compound operations
+result = (a + b) * 2 - 1    // 25
+```
+
+## Number Precision
+
+Soul uses high-precision decimal arithmetic to avoid floating-point errors:
+
+```javascript
+// Precise decimal arithmetic
+price1 = 0.1
+price2 = 0.2
+total = price1 + price2     // 0.3 (exact, not 0.30000000000000004)
+
+// Large number precision
+largeNumber = 999999999999999999999
+result = largeNumber + 1    // Maintains precision
+```
+
+## Number Methods
+
+Common number operations:
+
+```javascript
+num = 3.14159
+
+// Rounding
+rounded = num.round()       // 3
+rounded2 = num.round(2)     // 3.14
+
+// Absolute value
+absolute = (-5).abs()       // 5
+
+// String conversion
+str = num.toString()        // "3.14159"
+```
+
+## Number Comparisons
+
+Compare numbers using comparison operators:
+
+```javascript
+a = 10
+b = 20
+
+// Comparison operators
+isEqual = (a == b)          // false
+isNotEqual = (a != b)       // true
+isLess = (a < b)           // true
+isGreater = (a > b)        // false
+isLessOrEqual = (a <= b)   // true
+isGreaterOrEqual = (a >= b) // false
+```
+
+## Number Validation
+
+Check if values are valid numbers:
+
+```javascript
+soul isNumber(value) {
+    return typeof value == "number"
+}
+
+soul isInteger(value) {
+    return typeof value == "number" && value % 1 == 0
+}
+
+soul isPositive(value) {
+    return typeof value == "number" && value > 0
+}
+
+// Usage
+value = 42
+if (isNumber(value)) {
+    println("Value is a number")
+}
+```
+
+## Number Parsing
+
+Convert strings to numbers:
+
+```javascript
+soul parseNumber(str) {
+    if (str == null || str == "") {
+        return null
+    }
+    
+    try {
+        return Number(str)
+    } catch (error) {
+        return null
+    }
+}
+
+// Usage
+num1 = parseNumber("123")       // 123
+num2 = parseNumber("3.14")      // 3.14
+num3 = parseNumber("abc")       // null
+```
+
+## Number Formatting
+
+Format numbers for display:
+
+```javascript
+soul formatNumber(num, decimals) {
+    if (decimals == null) {
+        decimals = 2
+    }
+    return num.toFixed(decimals)
+}
+
+soul formatCurrency(amount, currency) {
+    if (currency == null) {
+        currency = "$"
+    }
+    return currency + formatNumber(amount, 2)
+}
+
+// Usage
+price = 123.456
+formatted = formatNumber(price, 2)      // "123.46"
+currency = formatCurrency(price, "$")   // "$123.46"
+```
+
+## Mathematical Operations
+
+Common mathematical functions:
+
+```javascript
+soul max(a, b) {
+    return a > b ? a : b
+}
+
+soul min(a, b) {
+    return a < b ? a : b
+}
+
+soul power(base, exponent) {
+    result = 1
+    for (i = 0; i < exponent; i++) {
+        result *= base
+    }
+    return result
+}
+
+soul sqrt(num) {
+    if (num < 0) {
+        return null
+    }
+    
+    // Simple approximation
+    guess = num / 2
+    for (i = 0; i < 10; i++) {
+        guess = (guess + num / guess) / 2
+    }
+    return guess
+}
+
+// Usage
+maximum = max(10, 20)           // 20
+minimum = min(10, 20)           // 10
+squared = power(5, 2)           // 25
+squareRoot = sqrt(16)           // 4
+```
+
+## Number Ranges
+
+Work with number ranges:
+
+```javascript
+soul isInRange(value, min, max) {
+    return value >= min && value <= max
+}
+
+soul clamp(value, min, max) {
+    if (value < min) {
+        return min
+    }
+    if (value > max) {
+        return max
+    }
+    return value
+}
+
+// Usage
+age = 25
+if (isInRange(age, 18, 65)) {
+    println("Age is valid")
+}
+
+temperature = 150
+safeTemp = clamp(temperature, 0, 100)  // 100
+```
+
+## Number Sequences
+
+Generate number sequences:
+
+```javascript
+soul range(start, end, step) {
+    if (step == null) {
+        step = 1
+    }
+    
+    result = []
+    current = start
+    
+    while (current <= end) {
+        result.push(current)
+        current += step
+    }
+    
+    return result
+}
+
+// Usage
+numbers = range(1, 10)          // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = range(2, 10, 2)         // [2, 4, 6, 8, 10]
+```
+
+## Number Aggregation
+
+Calculate aggregate values:
+
+```javascript
+soul sum(numbers) {
+    total = 0
+    for (num in numbers) {
+        total += num
+    }
+    return total
+}
+
+soul average(numbers) {
+    if (numbers.length() == 0) {
+        return 0
+    }
+    return sum(numbers) / numbers.length()
+}
+
+soul findMax(numbers) {
+    if (numbers.length() == 0) {
+        return null
+    }
+    
+    maximum = numbers[0]
+    for (num in numbers) {
+        if (num > maximum) {
+            maximum = num
+        }
+    }
+    return maximum
+}
+
+// Usage
+values = [1, 2, 3, 4, 5]
+total = sum(values)             // 15
+avg = average(values)           // 3
+maximum = findMax(values)       // 5
+```
+
+## Number Constants
+
+Define useful number constants:
+
+```javascript
+// Mathematical constants
+PI = 3.14159265359
+E = 2.71828182846
+
+// Practical constants
+MAX_SAFE_INTEGER = 9007199254740991
+MIN_SAFE_INTEGER = -9007199254740991
+EPSILON = 0.000001
+
+// Application constants
+DEFAULT_TIMEOUT = 5000
+MAX_RETRIES = 3
+DEFAULT_PAGE_SIZE = 20
+```
+
+## Number Utilities
+
+Utility functions for numbers:
+
+```javascript
+soul isEven(num) {
+    return num % 2 == 0
+}
+
+soul isOdd(num) {
+    return num % 2 == 1
+}
+
+soul factorial(n) {
+    if (n <= 1) {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+soul fibonacci(n) {
+    if (n <= 1) {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+// Usage
+if (isEven(10)) {
+    println("10 is even")
+}
+
+fact5 = factorial(5)            // 120
+fib6 = fibonacci(6)             // 8
+```
+
+## Number Conversion
+
+Convert between different number representations:
+
+```javascript
+soul toHex(num) {
+    // Convert to hexadecimal string
+    digits = "0123456789ABCDEF"
+    result = ""
+    
+    while (num > 0) {
+        result = digits[num % 16] + result
+        num = Math.floor(num / 16)
+    }
+    
+    return result == "" ? "0" : result
+}
+
+soul toBinary(num) {
+    // Convert to binary string
+    result = ""
+    
+    while (num > 0) {
+        result = (num % 2) + result
+        num = Math.floor(num / 2)
+    }
+    
+    return result == "" ? "0" : result
+}
+
+// Usage
+hex = toHex(255)                // "FF"
+binary = toBinary(8)            // "1000"
+```
+
+## Number Error Handling
+
+Handle number-related errors:
+
+```javascript
+soul safeDivide(a, b) {
+    if (b == 0) {
+        return {
+            success: false,
+            error: "Division by zero"
+        }
+    }
+    
+    return {
+        success: true,
+        result: a / b
+    }
+}
+
+soul safeParseNumber(str) {
+    if (str == null || str == "") {
+        return {
+            success: false,
+            error: "Empty string"
+        }
+    }
+    
+    try {
+        num = Number(str)
+        return {
+            success: true,
+            result: num
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: "Invalid number format"
+        }
+    }
+}
+```
+
+## Best Practices
+
+1. **Use appropriate precision**: Choose the right precision for your use case
+2. **Validate inputs**: Check for null and invalid numbers
+3. **Handle edge cases**: Consider zero, negative numbers, and infinity
+4. **Use constants**: Define meaningful constants for magic numbers
+5. **Format for display**: Format numbers appropriately for user interfaces
+
+```javascript
+// Good - comprehensive number handling
+soul calculatePrice(quantity, unitPrice, taxRate) {
+    // Validate inputs
+    if (quantity == null || unitPrice == null || taxRate == null) {
+        return { success: false, error: "Missing required parameters" }
+    }
+    
+    if (!isNumber(quantity) || !isNumber(unitPrice) || !isNumber(taxRate)) {
+        return { success: false, error: "All parameters must be numbers" }
+    }
+    
+    if (quantity <= 0) {
+        return { success: false, error: "Quantity must be positive" }
+    }
+    
+    if (unitPrice < 0) {
+        return { success: false, error: "Unit price cannot be negative" }
+    }
+    
+    if (taxRate < 0 || taxRate > 1) {
+        return { success: false, error: "Tax rate must be between 0 and 1" }
+    }
+    
+    // Calculate price
+    subtotal = quantity * unitPrice
+    tax = subtotal * taxRate
+    total = subtotal + tax
+    
+    return {
+        success: true,
+        subtotal: subtotal,
+        tax: tax,
+        total: total
+    }
+}
+```
+
+Numbers are fundamental to most Soul applications. Use them with proper validation, error handling, and appropriate precision for reliable and accurate calculations.

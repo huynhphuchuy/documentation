@@ -1,0 +1,268 @@
+---
+title: "channel"
+description: "Channel communication in Soul concurrency"
+---
+
+# channel
+
+Channels provide a safe way for concurrent goroutines to communicate with each other in Soul. They allow you to send and receive values between different parts of your concurrent program, preventing race conditions and ensuring thread-safe data sharing.
+
+## Creating Channels
+
+Channels are created using the `Concurrency.createChannel()` function:
+
+```javascript
+// Unbuffered channel (synchronous)
+ch = Concurrency.createChannel()
+
+// Buffered channel with capacity of 5
+bufferedCh = Concurrency.createChannel(5)
+
+// Buffered channel with capacity of 10
+largeCh = Concurrency.createChannel(10)
+```
+
+## Channel Send Operations
+
+Send values to channels using the `<-` operator or the `send()` method:
+
+```javascript
+ch = Concurrency.createChannel(3)
+
+// Send using arrow syntax
+ch <- "hello"
+ch <- 42
+ch <- true
+
+// Send using method syntax
+ch.send("world")
+ch.send(100)
+```
+
+## Channel Receive Operations
+
+Receive values from channels using the `<-` operator or the `receive()` method:
+
+```javascript
+ch = Concurrency.createChannel()
+
+// Send a value in another goroutine
+Concurrency.run(soul() {
+    ch <- "message from goroutine"
+})
+
+// Receive using arrow syntax
+message = <-ch
+println("Received: " + message)
+
+// Receive using method syntax
+value = ch.receive()
+println("Received: " + value)
+```
+
+## Buffered vs Unbuffered Channels
+
+### Unbuffered Channels (Synchronous)
+```javascript
+// Unbuffered channel - blocks until receiver is ready
+ch = Concurrency.createChannel()
+
+Concurrency.run(soul() {
+    ch <- "sync message"  // Blocks until someone receives
+})
+
+message = <-ch  // Blocks until someone sends
+println(message)
+```
+
+### Buffered Channels (Asynchronous)
+```javascript
+// Buffered channel - doesn't block until buffer is full
+ch = Concurrency.createChannel(2)
+
+ch <- "message 1"  // Doesn't block
+ch <- "message 2"  // Doesn't block
+// ch <- "message 3"  // Would block since buffer is full
+
+msg1 = <-ch  // "message 1"
+msg2 = <-ch  // "message 2"
+```
+
+## Select Statements
+
+Select statements allow you to work with multiple channel operations:
+
+```javascript
+ch1 = Concurrency.createChannel()
+ch2 = Concurrency.createChannel()
+
+// Send to channels in separate goroutines
+Concurrency.run(soul() {
+    Concurrency.sleep(100)
+    ch1 <- "from channel 1"
+})
+
+Concurrency.run(soul() {
+    Concurrency.sleep(200)
+    ch2 <- "from channel 2"
+})
+
+// Wait for the first available channel
+select {
+    case msg1 = <-ch1:
+        println("Received from ch1: " + msg1)
+    case msg2 = <-ch2:
+        println("Received from ch2: " + msg2)
+}
+```
+
+## Channel Patterns
+
+### Producer-Consumer Pattern
+```javascript
+soul producer(ch) {
+    for (i = 0; i < 5; i++) {
+        ch <- "item " + i
+        println("Produced: item " + i)
+        Concurrency.sleep(100)
+    }
+    ch.close()
+}
+
+soul consumer(ch) {
+    while (!ch.isClosed()) {
+        item = <-ch
+        println("Consumed: " + item)
+    }
+}
+
+// Usage
+ch = Concurrency.createChannel(2)
+Concurrency.run(producer, ch)
+Concurrency.run(consumer, ch)
+```
+
+### Fan-Out Pattern
+```javascript
+soul fanOut(input, output1, output2) {
+    for (value in input) {
+        // Send to both output channels
+        output1 <- value
+        output2 <- value
+    }
+}
+
+input = Concurrency.createChannel()
+output1 = Concurrency.createChannel()
+output2 = Concurrency.createChannel()
+
+Concurrency.run(fanOut, input, output1, output2)
+```
+
+### Worker Pool Pattern
+```javascript
+soul worker(id, jobs, results) {
+    for (job in jobs) {
+        println("Worker " + id + " processing job " + job)
+        Concurrency.sleep(100)  // Simulate work
+        results <- "Result from worker " + id + " for job " + job
+    }
+}
+
+soul genesis() {
+    jobs = Concurrency.createChannel(5)
+    results = Concurrency.createChannel(5)
+    
+    // Start 3 workers
+    for (i = 1; i <= 3; i++) {
+        Concurrency.run(worker, i, jobs, results)
+    }
+    
+    // Send jobs
+    for (j = 1; j <= 5; j++) {
+        jobs <- j
+    }
+    jobs.close()
+    
+    // Collect results
+    for (r = 1; r <= 5; r++) {
+        result = <-results
+        println(result)
+    }
+}
+```
+
+## Channel Methods
+
+Channels support several useful methods:
+
+```javascript
+ch = Concurrency.createChannel(5)
+
+// Send and receive
+ch.send("hello")
+message = ch.receive()
+
+// Check channel state
+println("Length: " + ch.length())    // Current buffer size
+println("Capacity: " + ch.capacity()) // Maximum buffer size
+println("Closed: " + ch.isClosed())   // Whether channel is closed
+
+// Close channel
+ch.close()
+```
+
+## Channel with Select and Timeout
+
+```javascript
+ch = Concurrency.createChannel()
+timeout = Concurrency.createChannel()
+
+// Set up timeout
+Concurrency.run(soul() {
+    Concurrency.sleep(1000)  // 1 second timeout
+    timeout <- true
+})
+
+// Wait for either data or timeout
+select {
+    case data = <-ch:
+        println("Received data: " + data)
+    case <-timeout:
+        println("Operation timed out")
+}
+```
+
+## Best Practices
+
+1. **Close channels when done**: Always close channels when no more data will be sent
+2. **Use buffered channels for async**: When you don't need synchronous communication
+3. **Use select for multiple channels**: Don't block on single channel operations
+4. **Handle channel closure**: Check if channels are closed before sending
+
+```javascript
+// Good - proper channel usage
+soul channelExample() {
+    ch = Concurrency.createChannel(3)
+    
+    // Producer
+    Concurrency.run(soul() {
+        for (i = 0; i < 5; i++) {
+            ch <- "data " + i
+        }
+        ch.close()  // Important: close when done
+    })
+    
+    // Consumer
+    while (!ch.isClosed()) {
+        select {
+            case data = <-ch:
+                println("Processing: " + data)
+            default:
+                Concurrency.sleep(10)  // Prevent busy waiting
+        }
+    }
+}
+```
+
+Channels are fundamental to Soul's concurrency model, providing a safe and efficient way to coordinate between concurrent operations.

@@ -7,6 +7,16 @@
     "light": "#1E90FF",
     "dark": "#1E90FF"
   },
+  "appearance": {
+    "default": "dark",
+    "strict": true
+  },
+  "background": {
+    "image": {
+      "light": "https://mintlify.s3.us-west-1.amazonaws.com/release0-13d037a7/images/background.png",
+      "dark": "https://mintlify.s3.us-west-1.amazonaws.com/release0-13d037a7/images/background.png"
+    }
+  },
   "favicon": "/favicon.ico",
   "navigation": {
     "tabs": [
@@ -15,7 +25,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["index", "howtoinstall", "quickstart"]
+            "pages": ["index", "how-to-install", "quickstart"]
           },
           {
             "group": "Essentials",
@@ -34,12 +44,48 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Welcome",
+            "group": "CLI Usage",
             "pages": ["documents/introduction"]
           },
           {
             "group": "Syntaxes",
-            "pages": ["documents/introduction"]
+            "pages": [
+              "documents/assign",
+              "documents/async",
+              "documents/boolean",
+              "documents/break",
+              "documents/case",
+              "documents/channel",
+              "documents/class",
+              "documents/continue",
+              "documents/expression",
+              "documents/for",
+              "documents/for_in",
+              "documents/function",
+              "documents/identifier",
+              "documents/if",
+              "documents/import",
+              "documents/import_from",
+              "documents/index",
+              "documents/list",
+              "documents/map",
+              "documents/method",
+              "documents/null",
+              "documents/number",
+              "documents/postfix",
+              "documents/prefix",
+              "documents/property",
+              "documents/return",
+              "documents/static",
+              "documents/string",
+              "documents/switch",
+              "documents/ternary",
+              "documents/this",
+              "documents/trait",
+              "documents/try",
+              "documents/use",
+              "documents/while"
+            ]
           },
           {
             "group": "Modules",
@@ -85,17 +131,7 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Homepage",
-          "href": "https://soul-lang.com",
-          "icon": "house"
-        },
-        {
-          "anchor": "Discord",
-          "href": "https://mintlify.com/community",
-          "icon": "discord"
-        },
-        {
-          "anchor": "Reddit",
+          "anchor": "Community",
           "href": "https://mintlify.com/blog",
           "icon": "reddit"
         }
@@ -109,13 +145,13 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Feedback",
+        "href": "mailto:huynhphuchuy@live.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
+      "label": "Support",
       "href": "https://dashboard.mintlify.com"
     }
   },

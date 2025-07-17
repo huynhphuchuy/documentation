@@ -1,0 +1,169 @@
+---
+title: "async"
+description: "Asynchronous programming in Soul"
+---
+
+# async
+
+Soul provides powerful asynchronous programming capabilities through `async` functions and `await` expressions, enabling non-blocking operations and efficient handling of I/O-bound tasks.
+
+## Async Functions
+
+Async functions are declared using the `async soul` keywords and automatically return a Promise:
+
+```javascript
+async soul fetchUserData(userId) {
+    response = await http.get("https://api.example.com/users/" + userId)
+    return response.json()
+}
+
+async soul processFile(filename) {
+    content = await io.read(filename)
+    processedContent = content.toUpperCase()
+    await io.write(filename + ".processed", processedContent)
+    return "File processed successfully"
+}
+```
+
+## Await Expressions
+
+The `await` keyword is used to wait for async operations to complete:
+
+```javascript
+async soul example() {
+    // Await a network request
+    data = await fetchUserData(123)
+    
+    // Await file operations
+    content = await io.read("config.json")
+    
+    // Await AI operations
+    ai = GenAI.chat("openai").model("gpt-3.5-turbo")
+    response = await ai.invoke("Analyze this data: " + data)
+    
+    return response
+}
+```
+
+## Function Parameters
+
+Async functions support parameters with default values:
+
+```javascript
+async soul fetchWithRetry(url, maxRetries, delay) {
+    if (!maxRetries) maxRetries = 3
+    if (!delay) delay = 1000
+    
+    for (i = 0; i < maxRetries; i++) {
+        try {
+            return await http.get(url)
+        } catch (error) {
+            if (i === maxRetries - 1) throw error
+            await Concurrency.sleep(delay)
+        }
+    }
+}
+```
+
+## Error Handling
+
+Async functions work seamlessly with try-catch blocks:
+
+```javascript
+async soul handleAsyncOperation() {
+    try {
+        result = await riskyAsyncOperation()
+        return result
+    } catch (error) {
+        println("Error occurred: " + error)
+        return null
+    }
+}
+```
+
+## Calling Async Functions
+
+Async functions must be called with `await` or handled as promises:
+
+```javascript
+// In another async function
+async soul caller() {
+    result = await fetchUserData(123)
+    println("User data: " + result)
+}
+
+// In genesis (main function)
+soul genesis() {
+    user = await fetchUserData(123)
+    println("User: " + user.name)
+}
+```
+
+## Combining with Concurrency
+
+Async functions work well with Soul's concurrency features:
+
+```javascript
+async soul parallelProcessing() {
+    // Spawn multiple async operations
+    task1 = Concurrency.spawn(fetchUserData, 1)
+    task2 = Concurrency.spawn(fetchUserData, 2)
+    task3 = Concurrency.spawn(fetchUserData, 3)
+    
+    // Wait for all to complete
+    user1 = await task1
+    user2 = await task2
+    user3 = await task3
+    
+    return [user1, user2, user3]
+}
+```
+
+## Common Use Cases
+
+### Network Operations
+```javascript
+async soul apiCall(endpoint) {
+    response = await http.get("https://api.example.com/" + endpoint)
+    return response.json()
+}
+```
+
+### File Operations
+```javascript
+async soul readConfig() {
+    content = await io.read("config.json")
+    return json.decode(content)
+}
+```
+
+### AI Integration
+```javascript
+async soul generateResponse(prompt) {
+    ai = GenAI.chat("openai").model("gpt-4")
+    response = await ai.invoke(prompt)
+    return response.text
+}
+```
+
+## Best Practices
+
+1. **Use async for I/O operations**: Network requests, file operations, AI calls
+2. **Handle errors properly**: Always wrap await calls in try-catch when needed
+3. **Don't block unnecessarily**: Use async/await for truly asynchronous operations
+4. **Combine with concurrency**: Use `Concurrency.spawn` for parallel async operations
+
+```javascript
+// Good - proper async usage
+async soul goodExample() {
+    try {
+        data = await fetchData()
+        result = await processData(data)
+        await saveResult(result)
+        return "Success"
+    } catch (error) {
+        println("Error: " + error)
+        return "Failed"
+    }
+}
+```

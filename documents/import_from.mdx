@@ -1,0 +1,371 @@
+---
+title: "import_from"
+description: "Import from statements in Soul"
+---
+
+# import_from
+
+The `import...from` statement allows you to import specific exports from modules, providing more granular control over what functionality you bring into your program. This helps reduce namespace pollution and makes dependencies explicit.
+
+## Basic Import From
+
+Import specific functions or classes from a module:
+
+```javascript
+import { log, error } from "console"
+import { add, subtract, multiply } from "math"
+import { encode, decode } from "json"
+
+// Usage
+log("Hello, World!")
+result = add(5, 3)
+jsonString = encode(data)
+```
+
+## Import From with Aliases
+
+Import specific items with custom names:
+
+```javascript
+import { log as print, error as printError } from "console"
+import { add as sum, subtract as diff } from "math"
+import { encode as stringify, decode as parse } from "json"
+
+// Usage
+print("Hello, World!")
+result = sum(5, 3)
+jsonString = stringify(data)
+```
+
+## Import From Local Files
+
+Import from local Soul files:
+
+```javascript
+import { User, Product } from "./models.soul"
+import { validateEmail, validatePhone } from "./validators.soul"
+import { formatDate, generateId } from "../utils/helpers.soul"
+
+// Usage
+user = User.new("alice@example.com")
+isValid = validateEmail(user.email)
+```
+
+## Import From Path Aliases
+
+Use path aliases for cleaner imports:
+
+```javascript
+// If soul.json has: "@/": "./src/"
+import { Button, Modal } from "@/components/ui.soul"
+import { ApiClient } from "@/services/api.soul"
+import { UserModel } from "@/models/user.soul"
+
+// If soul.json has: "@utils/": "./src/utils/"
+import { formatCurrency, formatDate } from "@utils/formatters.soul"
+```
+
+## Import Multiple Items
+
+Import multiple specific items:
+
+```javascript
+import { 
+    createServer, 
+    middleware, 
+    Router,
+    static,
+    json
+} from "http"
+
+import { 
+    User, 
+    Product, 
+    Order, 
+    Category 
+} from "@/models"
+```
+
+## Import Everything
+
+Import all exports from a module:
+
+```javascript
+import * from "math"
+import * from "utils"
+import * from "@/helpers"
+
+// All exports are now available in current scope
+result = add(5, 3)  // From math
+formatted = formatDate(new Date())  // From utils
+```
+
+## Import From with Mixed Exports
+
+Combine default and named imports:
+
+```javascript
+import Database, { connect, query, transaction } from "database"
+import Logger, { log, error, debug } from "logger"
+import Validator, { validateEmail, validatePhone } from "validator"
+
+// Usage
+db = Database.new()
+connection = connect("database.db")
+isValid = validateEmail("user@example.com")
+```
+
+## Import From Standard Library
+
+Import specific functions from built-in modules:
+
+```javascript
+import { read, write, exists } from "io"
+import { get, post, put, delete } from "http"
+import { hash, encrypt, decrypt } from "crypto"
+import { now, sleep, format } from "time"
+
+// Usage
+content = read("file.txt")
+response = get("https://api.example.com")
+hashedPassword = hash("password")
+```
+
+## Import From with Destructuring
+
+Destructure complex exports:
+
+```javascript
+import { 
+    database: { connect, query },
+    cache: { get, set, clear },
+    logger: { log, error }
+} from "services"
+
+// Usage
+connection = connect()
+result = query("SELECT * FROM users")
+cached = get("user:123")
+```
+
+## Conditional Import From
+
+Import different items based on conditions:
+
+```javascript
+soul loadEnvironmentConfig() {
+    if (process.env == "development") {
+        import { devConfig, devLogger } from "./dev-config.soul"
+        return { config: devConfig, logger: devLogger }
+    } else {
+        import { prodConfig, prodLogger } from "./prod-config.soul"
+        return { config: prodConfig, logger: prodLogger }
+    }
+}
+```
+
+## Import From with Error Handling
+
+Handle import errors gracefully:
+
+```javascript
+try {
+    import { OptionalFeature } from "optional-module"
+    hasOptionalFeature = true
+} catch (error) {
+    println("Optional feature not available: " + error)
+    hasOptionalFeature = false
+    OptionalFeature = null
+}
+
+soul useOptionalFeature() {
+    if (hasOptionalFeature && OptionalFeature) {
+        return OptionalFeature.doSomething()
+    } else {
+        return fallbackImplementation()
+    }
+}
+```
+
+## Import From with Type Checking
+
+Import and validate types:
+
+```javascript
+import { User, Product, Order } from "@/models"
+
+soul validateUserData(userData) {
+    if (typeof userData != "object") {
+        throw("Invalid user data: must be object")
+    }
+    
+    user = User.new(userData)
+    return user.validate()
+}
+```
+
+## Import From in Different Contexts
+
+### In Service Files
+```javascript
+// user-service.soul
+import { connect, query } from "database"
+import { hash } from "crypto"
+import { validateEmail } from "validator"
+
+soul createUser(userData) {
+    if (!validateEmail(userData.email)) {
+        throw("Invalid email")
+    }
+    
+    userData.passwordHash = hash(userData.password)
+    delete userData.password
+    
+    db = connect()
+    return query("INSERT INTO users VALUES (?)", userData)
+}
+```
+
+### In Controller Files
+```javascript
+// user-controller.soul
+import { createUser, findUser, updateUser } from "./user-service.soul"
+import { validateRequest } from "./middleware.soul"
+import { sendResponse } from "./response-helper.soul"
+
+soul handleCreateUser(request, response) {
+    validation = validateRequest(request)
+    if (!validation.isValid) {
+        return sendResponse(response, 400, validation.errors)
+    }
+    
+    user = createUser(request.body)
+    return sendResponse(response, 201, user)
+}
+```
+
+### In Utility Files
+```javascript
+// formatters.soul
+import { format } from "time"
+import { round } from "math"
+
+soul formatCurrency(amount, currency) {
+    if (currency == null) currency = "USD"
+    rounded = round(amount, 2)
+    return currency + " " + rounded
+}
+
+soul formatDateTime(date) {
+    return format(date, "YYYY-MM-DD HH:mm:ss")
+}
+```
+
+## Import From Best Practices
+
+### 1. Import Only What You Need
+```javascript
+// Good - specific imports
+import { log, error } from "console"
+import { add, subtract } from "math"
+
+// Avoid - importing everything
+import * from "console"
+import * from "math"
+```
+
+### 2. Use Meaningful Aliases
+```javascript
+// Good - clear aliases
+import { log as consoleLog, error as consoleError } from "console"
+import { User as UserModel } from "@/models/user.soul"
+
+// Avoid - confusing aliases
+import { log as l, error as e } from "console"
+```
+
+### 3. Group Related Imports
+```javascript
+// Good - grouped by purpose
+import { log, error, debug } from "console"
+import { add, subtract, multiply, divide } from "math"
+import { encode, decode } from "json"
+
+// Avoid - scattered imports
+import { log } from "console"
+import { add } from "math"
+import { error } from "console"
+```
+
+### 4. Use Consistent Naming
+```javascript
+// Good - consistent with module naming
+import { validateEmail, validatePhone } from "validator"
+import { formatDate, formatCurrency } from "formatter"
+
+// Avoid - inconsistent naming
+import { validateEmail, checkPhone } from "validator"
+```
+
+## Common Import From Patterns
+
+### Configuration Module
+```javascript
+// config.soul
+export DATABASE_URL = "localhost:5432"
+export API_KEY = "your-api-key"
+export DEBUG_MODE = true
+
+// main.soul
+import { DATABASE_URL, API_KEY, DEBUG_MODE } from "./config.soul"
+```
+
+### Utilities Module
+```javascript
+// utils.soul
+soul formatDate(date) { /* ... */ }
+soul generateId() { /* ... */ }
+soul validateInput(input) { /* ... */ }
+
+// main.soul
+import { formatDate, generateId } from "./utils.soul"
+```
+
+### Models Module
+```javascript
+// models.soul
+sanctuary User { /* ... */ }
+sanctuary Product { /* ... */ }
+sanctuary Order { /* ... */ }
+
+// main.soul
+import { User, Product, Order } from "./models.soul"
+```
+
+## Import From Resolution
+
+Soul resolves import from statements in the same order as regular imports:
+
+1. **Relative paths**: `./`, `../`
+2. **Path aliases**: `@/`, `@components/`
+3. **soul_modules**: Installed packages
+4. **Standard library**: Built-in modules
+
+## Import From Debugging
+
+Debug import from issues:
+
+```javascript
+soul debugImportFrom(modulePath, items) {
+    try {
+        import items from modulePath
+        console.log("Successfully imported " + items.join(", ") + " from " + modulePath)
+        return true
+    } catch (error) {
+        console.error("Failed to import from " + modulePath + ": " + error)
+        return false
+    }
+}
+```
+
+The `import...from` statement provides precise control over what functionality you import into your Soul applications, leading to cleaner, more maintainable code with explicit dependencies.

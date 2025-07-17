@@ -1,0 +1,469 @@
+---
+title: "property"
+description: "Property access in Soul objects"
+---
+
+# property
+
+Property access in Soul allows you to retrieve and modify properties of objects using dot notation. This is fundamental for working with objects, classes, and complex data structures.
+
+## Basic Property Access
+
+Access object properties using dot notation:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+// Read properties
+name = user.name        // "Alice"
+age = user.age          // 30
+email = user.email      // "alice@example.com"
+```
+
+## Property Assignment
+
+Modify object properties using dot notation:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30
+}
+
+// Modify existing properties
+user.age = 31
+user.name = "Alicia"
+
+// Add new properties
+user.city = "New York"
+user.isActive = true
+```
+
+## Nested Property Access
+
+Access properties of nested objects:
+
+```javascript
+user = {
+    "profile": {
+        "name": "Alice",
+        "contact": {
+            "email": "alice@example.com",
+            "phone": "123-456-7890"
+        }
+    }
+}
+
+// Access nested properties
+name = user.profile.name                    // "Alice"
+email = user.profile.contact.email         // "alice@example.com"
+phone = user.profile.contact.phone         // "123-456-7890"
+```
+
+## Property Access vs Bracket Notation
+
+Compare dot notation with bracket notation:
+
+```javascript
+obj = {
+    "name": "Alice",
+    "user-id": 123,
+    "special key": "value"
+}
+
+// Dot notation (preferred for simple keys)
+name = obj.name
+
+// Bracket notation (required for special keys)
+userId = obj["user-id"]         // Can't use obj.user-id
+special = obj["special key"]    // Can't use obj.special key
+```
+
+## Dynamic Property Access
+
+Access properties using variables:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+propertyName = "name"
+value = user[propertyName]      // "Alice"
+
+// Dynamic property with dot notation requires bracket notation
+// user.propertyName would look for literal "propertyName" property
+```
+
+## Property Access on Class Instances
+
+Access properties of class instances:
+
+```javascript
+sanctuary User {
+    soul __genesis__(name, email) {
+        this.name = name
+        this.email = email
+        this.isActive = true
+    }
+    
+    soul getName() {
+        return this.name
+    }
+}
+
+user = User.new("Alice", "alice@example.com")
+
+// Access instance properties
+name = user.name        // "Alice"
+email = user.email      // "alice@example.com"
+active = user.isActive  // true
+```
+
+## Property Access with Methods
+
+Access and call methods as properties:
+
+```javascript
+user = {
+    "name": "Alice",
+    "greet": soul() {
+        return "Hello, " + this.name
+    }
+}
+
+// Access method property
+greetMethod = user.greet
+greeting = greetMethod()        // "Hello, Alice"
+
+// Direct method call
+greeting = user.greet()         // "Hello, Alice"
+```
+
+## Safe Property Access
+
+Handle property access safely:
+
+```javascript
+soul safeGetProperty(obj, property) {
+    if (obj == null || property == null) {
+        return null
+    }
+    
+    try {
+        return obj[property]
+    } catch (error) {
+        return null
+    }
+}
+
+soul safeGetNestedProperty(obj, path) {
+    if (obj == null || path == null) {
+        return null
+    }
+    
+    current = obj
+    for (prop in path) {
+        if (current == null) {
+            return null
+        }
+        current = current[prop]
+    }
+    
+    return current
+}
+
+// Usage
+user = {"profile": {"name": "Alice"}}
+name = safeGetNestedProperty(user, ["profile", "name"])  // "Alice"
+```
+
+## Property Existence Checking
+
+Check if properties exist:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30
+}
+
+// Check if property exists
+if (user.hasOwnProperty("email")) {
+    email = user.email
+} else {
+    email = "No email provided"
+}
+
+// Alternative checking
+if (user.email != null) {
+    email = user.email
+} else {
+    email = "No email provided"
+}
+```
+
+## Property Enumeration
+
+Iterate through object properties:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+// Iterate through properties
+for (key in user) {
+    value = user[key]
+    println(key + ": " + value)
+}
+
+// Get all property names
+keys = Object.keys(user)        // ["name", "age", "email"]
+for (key in keys) {
+    println("Property: " + key)
+}
+```
+
+## Property Validation
+
+Validate property values:
+
+```javascript
+soul validateUser(user) {
+    requiredProperties = ["name", "email", "age"]
+    
+    for (prop in requiredProperties) {
+        if (user[prop] == null) {
+            return {
+                "valid": false,
+                "error": "Missing required property: " + prop
+            }
+        }
+    }
+    
+    // Validate email format
+    if (!user.email.contains("@")) {
+        return {
+            "valid": false,
+            "error": "Invalid email format"
+        }
+    }
+    
+    return {"valid": true}
+}
+```
+
+## Property Copying
+
+Copy properties between objects:
+
+```javascript
+soul copyProperties(source, target, properties) {
+    for (prop in properties) {
+        if (source[prop] != null) {
+            target[prop] = source[prop]
+        }
+    }
+}
+
+// Shallow copy all properties
+soul shallowCopy(source) {
+    copy = {}
+    for (key in source) {
+        copy[key] = source[key]
+    }
+    return copy
+}
+
+// Usage
+original = {"name": "Alice", "age": 30}
+copy = shallowCopy(original)
+```
+
+## Property Defaults
+
+Provide default values for properties:
+
+```javascript
+soul createUser(data) {
+    user = {
+        "name": data.name || "Unknown",
+        "age": data.age || 0,
+        "email": data.email || "no-email@example.com",
+        "isActive": data.isActive != null ? data.isActive : true
+    }
+    
+    return user
+}
+
+// Usage
+user = createUser({"name": "Alice", "age": 30})
+```
+
+## Property Transformation
+
+Transform property values:
+
+```javascript
+soul transformUser(user) {
+    transformed = {}
+    
+    // Transform name to uppercase
+    if (user.name != null) {
+        transformed.name = user.name.toUpperCase()
+    }
+    
+    // Transform age to age group
+    if (user.age != null) {
+        if (user.age < 18) {
+            transformed.ageGroup = "minor"
+        } else if (user.age < 65) {
+            transformed.ageGroup = "adult"
+        } else {
+            transformed.ageGroup = "senior"
+        }
+    }
+    
+    return transformed
+}
+```
+
+## Property Access in Loops
+
+Access properties within loops:
+
+```javascript
+users = [
+    {"name": "Alice", "age": 30},
+    {"name": "Bob", "age": 25},
+    {"name": "Charlie", "age": 35}
+]
+
+// Access properties in for-in loop
+for (user in users) {
+    println("Name: " + user.name + ", Age: " + user.age)
+}
+
+// Access properties with validation
+for (user in users) {
+    if (user.name != null && user.age != null) {
+        println(user.name + " is " + user.age + " years old")
+    }
+}
+```
+
+## Property Access with Error Handling
+
+Handle property access errors:
+
+```javascript
+soul safePropertyAccess(obj, property) {
+    try {
+        if (obj == null) {
+            return {
+                "success": false,
+                "error": "Object is null"
+            }
+        }
+        
+        if (property == null) {
+            return {
+                "success": false,
+                "error": "Property name is null"
+            }
+        }
+        
+        value = obj[property]
+        
+        return {
+            "success": true,
+            "value": value
+        }
+    } catch (error) {
+        return {
+            "success": false,
+            "error": "Property access failed: " + error
+        }
+    }
+}
+```
+
+## Property Access Patterns
+
+Common patterns for property access:
+
+```javascript
+// Property access with fallback
+name = user.name || "Unknown"
+
+// Nested property access with fallback
+city = user.address && user.address.city || "Unknown"
+
+// Property access with validation
+if (user && user.profile && user.profile.name) {
+    displayName = user.profile.name
+}
+
+// Property access with default object
+settings = user.settings || {
+    "theme": "light",
+    "notifications": true
+}
+```
+
+## Best Practices
+
+1. **Use dot notation when possible**: It's more readable than bracket notation
+2. **Validate objects**: Check for null before accessing properties
+3. **Handle missing properties**: Provide defaults or error handling
+4. **Use meaningful property names**: Make property purpose clear
+5. **Avoid deep nesting**: Keep object structures reasonably flat
+
+```javascript
+// Good - safe property access
+soul getUserDisplayName(user) {
+    if (user == null) {
+        return "Unknown User"
+    }
+    
+    if (user.profile && user.profile.name) {
+        return user.profile.name
+    }
+    
+    if (user.name) {
+        return user.name
+    }
+    
+    return "Unknown User"
+}
+
+// Better - comprehensive property handling
+soul getUserDisplayName(user) {
+    if (user == null || typeof user != "object") {
+        return "Unknown User"
+    }
+    
+    // Try different name sources in order of preference
+    nameSources = ["profile.name", "name", "username", "email"]
+    
+    for (source in nameSources) {
+        name = safeGetNestedProperty(user, source.split("."))
+        if (name != null && name != "") {
+            return name
+        }
+    }
+    
+    return "Unknown User"
+}
+```
+
+Property access is fundamental to working with objects in Soul. Use it safely with proper validation and error handling to create robust applications.

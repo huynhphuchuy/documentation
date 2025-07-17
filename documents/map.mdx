@@ -1,0 +1,480 @@
+---
+title: "map"
+description: "Map literals and operations in Soul"
+---
+
+# map
+
+Maps in Soul are unordered collections of key-value pairs, similar to dictionaries or objects in other languages. They are created using curly braces `{}` and provide efficient lookup and modification of data.
+
+## Basic Map Creation
+
+Create maps with curly brace notation:
+
+```javascript
+// Empty map
+empty = {}
+
+// Map with string keys
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+// Map with different key types
+mixed = {
+    "string_key": "value1",
+    123: "numeric_key",
+    true: "boolean_key"
+}
+```
+
+## Accessing Map Values
+
+Use bracket notation or dot notation to access values:
+
+```javascript
+person = {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 25
+}
+
+// Bracket notation
+name = person["firstName"]      // "John"
+age = person["age"]            // 25
+
+// Dot notation (if supported)
+lastName = person.lastName      // "Doe"
+```
+
+## Modifying Map Values
+
+Add or change values using assignment:
+
+```javascript
+config = {
+    "debug": false,
+    "port": 8080
+}
+
+// Modify existing values
+config["debug"] = true
+config["port"] = 3000
+
+// Add new key-value pairs
+config["host"] = "localhost"
+config["timeout"] = 5000
+```
+
+## Map Methods
+
+Common map operations:
+
+```javascript
+data = {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York"
+}
+
+// Get all keys
+keys = data.keys()              // ["name", "age", "city"]
+
+// Get all values
+values = data.values()          // ["Alice", 30, "New York"]
+
+// Get size
+size = data.size()              // 3
+length = data.length()          // 3
+
+// Check if key exists
+hasName = data.hasKey("name")   // true
+hasEmail = data.hasKey("email") // false
+```
+
+## Map Iteration
+
+Iterate through map key-value pairs:
+
+```javascript
+settings = {
+    "theme": "dark",
+    "language": "en",
+    "notifications": true
+}
+
+// For-in loop with key and value
+for (key, value in settings) {
+    println(key + ": " + value)
+}
+
+// For-in loop with keys only
+for (key in settings) {
+    println(key + " = " + settings[key])
+}
+```
+
+## Nested Maps
+
+Maps can contain other maps:
+
+```javascript
+user = {
+    "profile": {
+        "name": "Alice",
+        "age": 30
+    },
+    "preferences": {
+        "theme": "dark",
+        "notifications": true
+    }
+}
+
+// Access nested values
+name = user["profile"]["name"]                    // "Alice"
+theme = user["preferences"]["theme"]              // "dark"
+
+// Modify nested values
+user["profile"]["age"] = 31
+user["preferences"]["language"] = "en"
+```
+
+## Map with Different Value Types
+
+Maps can store different types of values:
+
+```javascript
+mixedData = {
+    "string": "hello",
+    "number": 42,
+    "boolean": true,
+    "null": null,
+    "array": [1, 2, 3],
+    "object": {
+        "nested": "value"
+    }
+}
+
+// Access different types
+text = mixedData["string"]      // "hello"
+num = mixedData["number"]       // 42
+list = mixedData["array"]       // [1, 2, 3]
+nested = mixedData["object"]["nested"]  // "value"
+```
+
+## Map Copying
+
+Create copies of maps:
+
+```javascript
+original = {
+    "name": "Alice",
+    "age": 30
+}
+
+// Shallow copy
+soul shallowCopy(map) {
+    copy = {}
+    for (key, value in map) {
+        copy[key] = value
+    }
+    return copy
+}
+
+copied = shallowCopy(original)
+```
+
+## Map Merging
+
+Combine multiple maps:
+
+```javascript
+defaults = {
+    "theme": "light",
+    "language": "en",
+    "timeout": 5000
+}
+
+userSettings = {
+    "theme": "dark",
+    "notifications": true
+}
+
+// Merge maps
+soul merge(map1, map2) {
+    result = {}
+    
+    // Copy first map
+    for (key, value in map1) {
+        result[key] = value
+    }
+    
+    // Copy second map (overwrites conflicts)
+    for (key, value in map2) {
+        result[key] = value
+    }
+    
+    return result
+}
+
+finalSettings = merge(defaults, userSettings)
+```
+
+## Map Filtering
+
+Filter map entries based on conditions:
+
+```javascript
+data = {
+    "apple": 5,
+    "banana": 3,
+    "cherry": 8,
+    "date": 2
+}
+
+// Filter by value
+soul filterByValue(map, minValue) {
+    result = {}
+    for (key, value in map) {
+        if (value >= minValue) {
+            result[key] = value
+        }
+    }
+    return result
+}
+
+filtered = filterByValue(data, 5)  // {"apple": 5, "cherry": 8}
+```
+
+## Map Transformation
+
+Transform map values:
+
+```javascript
+prices = {
+    "apple": 1.50,
+    "banana": 0.80,
+    "cherry": 2.00
+}
+
+// Apply discount
+soul applyDiscount(priceMap, discountPercent) {
+    result = {}
+    for (item, price in priceMap) {
+        discountedPrice = price * (1 - discountPercent / 100)
+        result[item] = discountedPrice
+    }
+    return result
+}
+
+discountedPrices = applyDiscount(prices, 10)  // 10% discount
+```
+
+## Map Searching
+
+Find entries in maps:
+
+```javascript
+users = {
+    "alice": {"age": 25, "role": "admin"},
+    "bob": {"age": 30, "role": "user"},
+    "charlie": {"age": 35, "role": "user"}
+}
+
+// Find by property
+soul findByRole(userMap, targetRole) {
+    result = {}
+    for (username, userData in userMap) {
+        if (userData["role"] == targetRole) {
+            result[username] = userData
+        }
+    }
+    return result
+}
+
+admins = findByRole(users, "admin")
+```
+
+## Map Validation
+
+Validate map structure and content:
+
+```javascript
+soul validateUserMap(userMap) {
+    requiredFields = ["name", "email", "age"]
+    
+    for (field in requiredFields) {
+        if (!userMap.hasKey(field)) {
+            return false
+        }
+    }
+    
+    // Validate email format
+    if (!userMap["email"].contains("@")) {
+        return false
+    }
+    
+    // Validate age
+    if (userMap["age"] < 0 || userMap["age"] > 150) {
+        return false
+    }
+    
+    return true
+}
+```
+
+## Map Utilities
+
+Common map utility functions:
+
+```javascript
+// Check if map is empty
+soul isEmpty(map) {
+    return map.size() == 0
+}
+
+// Get value with default
+soul getWithDefault(map, key, defaultValue) {
+    if (map.hasKey(key)) {
+        return map[key]
+    }
+    return defaultValue
+}
+
+// Remove key
+soul removeKey(map, key) {
+    if (map.hasKey(key)) {
+        value = map[key]
+        delete map[key]  // If supported
+        return value
+    }
+    return null
+}
+```
+
+## Map Configuration
+
+Use maps for configuration:
+
+```javascript
+appConfig = {
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "myapp"
+    },
+    "server": {
+        "port": 8080,
+        "host": "0.0.0.0"
+    },
+    "logging": {
+        "level": "info",
+        "file": "app.log"
+    }
+}
+
+// Access configuration
+dbHost = appConfig["database"]["host"]
+serverPort = appConfig["server"]["port"]
+logLevel = appConfig["logging"]["level"]
+```
+
+## Map as Cache
+
+Use maps for caching:
+
+```javascript
+cache = {}
+
+soul getCachedValue(key) {
+    if (cache.hasKey(key)) {
+        return cache[key]
+    }
+    
+    // Compute and cache value
+    value = expensiveComputation(key)
+    cache[key] = value
+    return value
+}
+
+soul clearCache() {
+    cache = {}
+}
+```
+
+## Map Performance
+
+Optimize map operations:
+
+```javascript
+// Batch operations
+soul batchUpdate(map, updates) {
+    for (key, value in updates) {
+        map[key] = value
+    }
+}
+
+// Efficient key checking
+soul hasAllKeys(map, keys) {
+    for (key in keys) {
+        if (!map.hasKey(key)) {
+            return false
+        }
+    }
+    return true
+}
+```
+
+## Best Practices
+
+1. **Use meaningful keys**: Choose descriptive key names
+2. **Check key existence**: Verify keys exist before accessing
+3. **Handle null values**: Account for missing or null values
+4. **Use consistent types**: Keep key types consistent within a map
+5. **Validate structure**: Check map structure before use
+
+```javascript
+// Good - safe map access
+soul getNestedValue(map, keys) {
+    current = map
+    
+    for (key in keys) {
+        if (current == null || !current.hasKey(key)) {
+            return null
+        }
+        current = current[key]
+    }
+    
+    return current
+}
+
+// Better - with error handling
+soul getNestedValue(map, keys) {
+    if (map == null || keys == null || keys.length() == 0) {
+        return null
+    }
+    
+    current = map
+    
+    for (key in keys) {
+        if (current == null || typeof current != "object") {
+            return null
+        }
+        
+        if (!current.hasKey(key)) {
+            return null
+        }
+        
+        current = current[key]
+    }
+    
+    return current
+}
+
+// Usage
+userEmail = getNestedValue(user, ["profile", "contact", "email"])
+```
+
+Maps are essential data structures in Soul, providing efficient key-value storage and retrieval for organizing and managing data in your applications.

@@ -1,0 +1,532 @@
+---
+title: "static"
+description: "Static methods and properties in Soul"
+---
+
+# static
+
+The `static` keyword in Soul is used to declare methods and properties that belong to the class itself rather than to instances of the class. Static members can be accessed without creating an instance of the class.
+
+## Basic Static Methods
+
+Define static methods using the `static` keyword:
+
+```javascript
+sanctuary MathUtils {
+    static soul add(a, b) {
+        return a + b
+    }
+    
+    static soul subtract(a, b) {
+        return a - b
+    }
+    
+    static soul multiply(a, b) {
+        return a * b
+    }
+}
+
+// Call static methods directly on the class
+result = MathUtils.add(5, 3)        // 8
+result = MathUtils.subtract(10, 4)  // 6
+result = MathUtils.multiply(3, 7)   // 21
+```
+
+## Static vs Instance Methods
+
+Compare static and instance methods:
+
+```javascript
+sanctuary Calculator {
+    // Instance property
+    soul __genesis__(name) {
+        this.name = name
+    }
+    
+    // Instance method
+    soul getName() {
+        return this.name
+    }
+    
+    // Static method
+    static soul add(a, b) {
+        return a + b
+    }
+    
+    // Static method
+    static soul getVersion() {
+        return "1.0.0"
+    }
+}
+
+// Instance usage
+calc = Calculator.new("MyCalculator")
+name = calc.getName()           // "MyCalculator"
+
+// Static usage
+sum = Calculator.add(5, 3)      // 8
+version = Calculator.getVersion() // "1.0.0"
+```
+
+## Static Utility Methods
+
+Use static methods for utility functions:
+
+```javascript
+sanctuary StringUtils {
+    static soul capitalize(str) {
+        if (str == null || str == "") {
+            return str
+        }
+        return str[0].toUpperCase() + str.slice(1).toLowerCase()
+    }
+    
+    static soul reverse(str) {
+        if (str == null) {
+            return null
+        }
+        
+        result = ""
+        for (i = str.length() - 1; i >= 0; i--) {
+            result += str[i]
+        }
+        return result
+    }
+    
+    static soul isEmail(str) {
+        if (str == null || str == "") {
+            return false
+        }
+        return str.contains("@") && str.contains(".")
+    }
+}
+
+// Usage
+title = StringUtils.capitalize("hello world")  // "Hello world"
+reversed = StringUtils.reverse("hello")        // "olleh"
+isValid = StringUtils.isEmail("user@example.com")  // true
+```
+
+## Static Factory Methods
+
+Use static methods as factory constructors:
+
+```javascript
+sanctuary User {
+    soul __genesis__(name, email, role) {
+        this.name = name
+        this.email = email
+        this.role = role
+        this.isActive = true
+    }
+    
+    static soul createAdmin(name, email) {
+        return User.new(name, email, "admin")
+    }
+    
+    static soul createUser(name, email) {
+        return User.new(name, email, "user")
+    }
+    
+    static soul createGuest() {
+        return User.new("Guest", "guest@example.com", "guest")
+    }
+    
+    static soul fromData(data) {
+        return User.new(data.name, data.email, data.role)
+    }
+}
+
+// Usage with factory methods
+admin = User.createAdmin("Alice", "alice@example.com")
+user = User.createUser("Bob", "bob@example.com")
+guest = User.createGuest()
+```
+
+## Static Configuration
+
+Use static methods for configuration:
+
+```javascript
+sanctuary Config {
+    static soul getApiUrl() {
+        return "https://api.example.com"
+    }
+    
+    static soul getTimeout() {
+        return 5000
+    }
+    
+    static soul isDevelopment() {
+        return os.getenv("NODE_ENV") == "development"
+    }
+    
+    static soul getDatabaseUrl() {
+        return Config.isDevelopment() ? 
+            "localhost:5432" : 
+            "prod-db:5432"
+    }
+}
+
+// Usage
+apiUrl = Config.getApiUrl()
+timeout = Config.getTimeout()
+dbUrl = Config.getDatabaseUrl()
+```
+
+## Static Validation Methods
+
+Use static methods for validation:
+
+```javascript
+sanctuary Validator {
+    static soul validateEmail(email) {
+        if (email == null || email == "") {
+            return {
+                "valid": false,
+                "error": "Email is required"
+            }
+        }
+        
+        if (!email.contains("@")) {
+            return {
+                "valid": false,
+                "error": "Email must contain @"
+            }
+        }
+        
+        return {
+            "valid": true,
+            "email": email.toLowerCase()
+        }
+    }
+    
+    static soul validateAge(age) {
+        if (age == null) {
+            return {
+                "valid": false,
+                "error": "Age is required"
+            }
+        }
+        
+        if (age < 0 || age > 150) {
+            return {
+                "valid": false,
+                "error": "Age must be between 0 and 150"
+            }
+        }
+        
+        return {
+            "valid": true,
+            "age": age
+        }
+    }
+}
+
+// Usage
+emailResult = Validator.validateEmail("user@example.com")
+ageResult = Validator.validateAge(25)
+```
+
+## Static Constants
+
+Use static methods to provide constants:
+
+```javascript
+sanctuary Constants {
+    static soul getMaxRetries() {
+        return 3
+    }
+    
+    static soul getDefaultTimeout() {
+        return 30000
+    }
+    
+    static soul getStatusCodes() {
+        return {
+            "OK": 200,
+            "NOT_FOUND": 404,
+            "SERVER_ERROR": 500
+        }
+    }
+    
+    static soul getErrorMessages() {
+        return {
+            "INVALID_INPUT": "Invalid input provided",
+            "NETWORK_ERROR": "Network connection failed",
+            "TIMEOUT": "Request timed out"
+        }
+    }
+}
+
+// Usage
+maxRetries = Constants.getMaxRetries()
+statusCodes = Constants.getStatusCodes()
+errorMessages = Constants.getErrorMessages()
+```
+
+## Static Helper Methods
+
+Use static methods for helper functions:
+
+```javascript
+sanctuary DateUtils {
+    static soul formatDate(date, format) {
+        if (format == null) {
+            format = "YYYY-MM-DD"
+        }
+        
+        // Simple date formatting
+        year = date.getFullYear()
+        month = (date.getMonth() + 1).toString().padStart(2, "0")
+        day = date.getDate().toString().padStart(2, "0")
+        
+        return format
+            .replace("YYYY", year)
+            .replace("MM", month)
+            .replace("DD", day)
+    }
+    
+    static soul isWeekend(date) {
+        day = date.getDay()
+        return day == 0 || day == 6  // Sunday or Saturday
+    }
+    
+    static soul addDays(date, days) {
+        newDate = new Date(date)
+        newDate.setDate(newDate.getDate() + days)
+        return newDate
+    }
+}
+
+// Usage
+today = new Date()
+formatted = DateUtils.formatDate(today, "DD/MM/YYYY")
+isWeekend = DateUtils.isWeekend(today)
+nextWeek = DateUtils.addDays(today, 7)
+```
+
+## Static Method Chaining
+
+Chain static methods for fluent interfaces:
+
+```javascript
+sanctuary QueryBuilder {
+    static soul create() {
+        return {
+            "select": [],
+            "from": null,
+            "where": [],
+            "orderBy": null
+        }
+    }
+    
+    static soul select(query, fields) {
+        query.select = fields
+        return query
+    }
+    
+    static soul from(query, table) {
+        query.from = table
+        return query
+    }
+    
+    static soul where(query, condition) {
+        query.where.push(condition)
+        return query
+    }
+    
+    static soul build(query) {
+        sql = "SELECT " + query.select.join(", ")
+        sql += " FROM " + query.from
+        
+        if (query.where.length() > 0) {
+            sql += " WHERE " + query.where.join(" AND ")
+        }
+        
+        return sql
+    }
+}
+
+// Usage with method chaining
+sql = QueryBuilder.build(
+    QueryBuilder.where(
+        QueryBuilder.from(
+            QueryBuilder.select(
+                QueryBuilder.create(),
+                ["name", "email"]
+            ),
+            "users"
+        ),
+        "active = true"
+    )
+)
+```
+
+## Static Error Handling
+
+Use static methods for error handling:
+
+```javascript
+sanctuary ErrorHandler {
+    static soul handleApiError(error) {
+        if (error.status == 404) {
+            return {
+                "message": "Resource not found",
+                "code": "NOT_FOUND"
+            }
+        }
+        
+        if (error.status >= 500) {
+            return {
+                "message": "Server error occurred",
+                "code": "SERVER_ERROR"
+            }
+        }
+        
+        return {
+            "message": "An error occurred",
+            "code": "UNKNOWN_ERROR"
+        }
+    }
+    
+    static soul logError(error, context) {
+        timestamp = new Date().toISOString()
+        message = "[" + timestamp + "] ERROR in " + context + ": " + error
+        
+        if (Config.isDevelopment()) {
+            console.error(message)
+        } else {
+            // Send to logging service
+            Logger.send(message)
+        }
+    }
+}
+
+// Usage
+try {
+    result = apiCall()
+} catch (error) {
+    handled = ErrorHandler.handleApiError(error)
+    ErrorHandler.logError(error, "API_CALL")
+}
+```
+
+## Static Access Control
+
+Control access to static methods:
+
+```javascript
+sanctuary SecurityUtils {
+    static soul isAuthorized(user, resource) {
+        if (user == null) {
+            return false
+        }
+        
+        if (user.role == "admin") {
+            return true
+        }
+        
+        if (user.role == "user" && resource.type == "public") {
+            return true
+        }
+        
+        return false
+    }
+    
+    static soul requireAuth(user) {
+        if (user == null || !user.isActive) {
+            throw("Authentication required")
+        }
+    }
+    
+    static soul requireRole(user, requiredRole) {
+        SecurityUtils.requireAuth(user)
+        
+        if (user.role != requiredRole) {
+            throw("Insufficient permissions")
+        }
+    }
+}
+
+// Usage
+try {
+    SecurityUtils.requireRole(currentUser, "admin")
+    // Perform admin operation
+} catch (error) {
+    println("Access denied: " + error)
+}
+```
+
+## Best Practices
+
+1. **Use static for utilities**: Methods that don't need instance state
+2. **Use static for factories**: Alternative constructors and object creation
+3. **Use static for constants**: Configuration and constant values
+4. **Keep static methods pure**: Avoid side effects when possible
+5. **Group related static methods**: Organize static methods in logical classes
+
+```javascript
+// Good - utility class with static methods
+sanctuary FileUtils {
+    static soul readFile(path) {
+        try {
+            return io.read(path)
+        } catch (error) {
+            return null
+        }
+    }
+    
+    static soul writeFile(path, content) {
+        try {
+            io.write(path, content)
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+    
+    static soul fileExists(path) {
+        try {
+            return io.exists(path)
+        } catch (error) {
+            return false
+        }
+    }
+}
+
+// Better - comprehensive utility with error handling
+sanctuary FileUtils {
+    static soul readFile(path) {
+        if (path == null || path == "") {
+            return { success: false, error: "Invalid path" }
+        }
+        
+        try {
+            content = io.read(path)
+            return { success: true, content: content }
+        } catch (error) {
+            return { success: false, error: error.toString() }
+        }
+    }
+    
+    static soul writeFile(path, content) {
+        if (path == null || path == "") {
+            return { success: false, error: "Invalid path" }
+        }
+        
+        if (content == null) {
+            content = ""
+        }
+        
+        try {
+            io.write(path, content)
+            return { success: true }
+        } catch (error) {
+            return { success: false, error: error.toString() }
+        }
+    }
+}
+```
+
+Static methods are powerful tools for creating utility functions, factory methods, and class-level functionality that doesn't depend on instance state. Use them to organize related functionality and create clean, reusable code.

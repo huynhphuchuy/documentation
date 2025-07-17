@@ -1,0 +1,370 @@
+---
+title: "index"
+description: "Index access for arrays and objects in Soul"
+---
+
+# index
+
+Index access allows you to retrieve and modify elements in arrays, lists, strings, and object properties using square bracket notation `[]`. This is fundamental for working with collections and data structures in Soul.
+
+## Array Index Access
+
+Access array elements by their numeric index:
+
+```javascript
+numbers = [10, 20, 30, 40, 50]
+
+// Read elements
+first = numbers[0]        // 10
+second = numbers[1]       // 20
+last = numbers[4]         // 50
+
+// Modify elements
+numbers[0] = 100          // [100, 20, 30, 40, 50]
+numbers[2] = 300          // [100, 20, 300, 40, 50]
+```
+
+## Negative Index Access
+
+Access elements from the end of arrays:
+
+```javascript
+items = ["apple", "banana", "cherry", "date"]
+
+// Negative indices (if supported)
+last = items[-1]          // "date"
+secondLast = items[-2]    // "cherry"
+
+// Alternative: calculate from length
+last = items[items.length() - 1]        // "date"
+secondLast = items[items.length() - 2]  // "cherry"
+```
+
+## String Index Access
+
+Access individual characters in strings:
+
+```javascript
+text = "Hello"
+
+// Read characters
+first = text[0]           // "H"
+second = text[1]          // "e"
+last = text[4]            // "o"
+
+// Note: String modification may not be supported
+// text[0] = "h"          // May not work - strings might be immutable
+```
+
+## Object Property Index Access
+
+Access object properties using string keys:
+
+```javascript
+user = {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+}
+
+// Read properties
+name = user["name"]       // "Alice"
+age = user["age"]         // 30
+
+// Modify properties
+user["age"] = 31
+user["city"] = "New York"
+```
+
+## Dynamic Index Access
+
+Use variables as indices:
+
+```javascript
+data = [100, 200, 300, 400, 500]
+key = "name"
+user = {"name": "Bob", "age": 25}
+
+// Dynamic array index
+index = 2
+value = data[index]       // 300
+
+// Dynamic object property
+property = user[key]      // "Bob"
+
+// Using expressions as indices
+middle = data[data.length() / 2]
+```
+
+## Multi-dimensional Arrays
+
+Access nested arrays:
+
+```javascript
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+// Access nested elements
+element = matrix[1][2]    // 6 (row 1, column 2)
+row = matrix[0]           // [1, 2, 3]
+
+// Modify nested elements
+matrix[2][1] = 80         // Changes 8 to 80
+```
+
+## Nested Object Access
+
+Access nested object properties:
+
+```javascript
+user = {
+    "profile": {
+        "name": "Alice",
+        "address": {
+            "street": "123 Main St",
+            "city": "New York"
+        }
+    }
+}
+
+// Access nested properties
+name = user["profile"]["name"]                    // "Alice"
+city = user["profile"]["address"]["city"]        // "New York"
+
+// Modify nested properties
+user["profile"]["address"]["city"] = "Boston"
+```
+
+## Array of Objects Index Access
+
+Access properties of objects in arrays:
+
+```javascript
+users = [
+    {"name": "Alice", "age": 25},
+    {"name": "Bob", "age": 30},
+    {"name": "Charlie", "age": 35}
+]
+
+// Access object properties in array
+firstUserName = users[0]["name"]      // "Alice"
+secondUserAge = users[1]["age"]       // 30
+
+// Modify object properties in array
+users[0]["age"] = 26
+users[2]["name"] = "Charles"
+```
+
+## Index with Expressions
+
+Use complex expressions as indices:
+
+```javascript
+data = [10, 20, 30, 40, 50]
+
+// Arithmetic expressions
+middle = data[data.length() / 2]
+next = data[currentIndex + 1]
+
+// Function calls as indices
+index = findIndex(data, target)
+value = data[index]
+
+// Conditional expressions
+selectedIndex = isEven ? 0 : 1
+selectedValue = data[selectedIndex]
+```
+
+## Safe Index Access
+
+Handle index bounds safely:
+
+```javascript
+soul safeGet(array, index) {
+    if (index >= 0 && index < array.length()) {
+        return array[index]
+    }
+    return null
+}
+
+soul safeSet(array, index, value) {
+    if (index >= 0 && index < array.length()) {
+        array[index] = value
+        return true
+    }
+    return false
+}
+
+// Usage
+numbers = [1, 2, 3, 4, 5]
+value = safeGet(numbers, 10)    // null (safe)
+success = safeSet(numbers, 2, 100)  // true
+```
+
+## Index in Loops
+
+Use indices in loop constructs:
+
+```javascript
+items = ["apple", "banana", "cherry"]
+
+// Traditional for loop with index
+for (i = 0; i < items.length(); i++) {
+    println("Index " + i + ": " + items[i])
+}
+
+// For-in loop with index (if supported)
+for (index, item in items) {
+    println("Index " + index + ": " + item)
+}
+```
+
+## Index Assignment Patterns
+
+Different ways to assign values using indices:
+
+```javascript
+// Direct assignment
+arr[0] = "new value"
+
+// Conditional assignment
+if (arr[index] == null) {
+    arr[index] = "default"
+}
+
+// Assignment with computation
+arr[i] = arr[i] + 10
+
+// Assignment from other arrays
+arr1[i] = arr2[j]
+```
+
+## Index with Error Handling
+
+Handle index access errors:
+
+```javascript
+soul getElement(array, index) {
+    try {
+        return array[index]
+    } catch (error) {
+        println("Index access error: " + error)
+        return null
+    }
+}
+
+soul setElement(array, index, value) {
+    try {
+        array[index] = value
+        return true
+    } catch (error) {
+        println("Index assignment error: " + error)
+        return false
+    }
+}
+```
+
+## Index with Object Methods
+
+Use index access with object methods:
+
+```javascript
+data = {
+    "items": [1, 2, 3, 4, 5],
+    "config": {"debug": true}
+}
+
+// Method-like access
+firstItem = data["items"][0]
+debugMode = data["config"]["debug"]
+
+// Combined with method calls
+length = data["items"].length()
+uppercased = data["items"][0].toString().toUpperCase()
+```
+
+## Index Performance Considerations
+
+Optimize index access:
+
+```javascript
+// Cache array length
+items = getItems()
+length = items.length()
+
+for (i = 0; i < length; i++) {
+    processItem(items[i])
+}
+
+// Cache frequently accessed objects
+config = getConfig()
+debugMode = config["debug"]
+logLevel = config["logLevel"]
+```
+
+## Index Validation
+
+Validate indices before use:
+
+```javascript
+soul validateIndex(array, index) {
+    if (array == null) {
+        return false
+    }
+    
+    if (typeof index != "number") {
+        return false
+    }
+    
+    return index >= 0 && index < array.length()
+}
+
+soul accessWithValidation(array, index) {
+    if (validateIndex(array, index)) {
+        return array[index]
+    }
+    
+    throw("Invalid index: " + index)
+}
+```
+
+## Best Practices
+
+1. **Check bounds**: Always validate indices before use
+2. **Use meaningful names**: `users[currentIndex]` instead of `users[i]`
+3. **Handle errors**: Wrap index access in try-catch when needed
+4. **Cache lengths**: Store array lengths in variables for performance
+5. **Use safe access**: Create helper functions for safe index operations
+
+```javascript
+// Good - safe index access
+soul getUserById(users, userId) {
+    for (i = 0; i < users.length(); i++) {
+        if (users[i]["id"] == userId) {
+            return users[i]
+        }
+    }
+    return null
+}
+
+// Better - with validation
+soul getUserById(users, userId) {
+    if (users == null || users.length() == 0) {
+        return null
+    }
+    
+    for (i = 0; i < users.length(); i++) {
+        user = users[i]
+        if (user != null && user["id"] == userId) {
+            return user
+        }
+    }
+    
+    return null
+}
+```
+
+Index access is fundamental to working with data structures in Soul. Use it carefully with proper bounds checking and error handling to create robust applications.

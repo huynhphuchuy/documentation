@@ -1,0 +1,383 @@
+---
+title: "identifier"
+description: "Identifiers and variable names in Soul"
+---
+
+# identifier
+
+Identifiers in Soul are names used to identify variables, functions, classes, and other program elements. They are fundamental building blocks that allow you to reference and manipulate data throughout your program.
+
+## Basic Identifiers
+
+Simple variable names:
+
+```javascript
+name = "Alice"
+age = 30
+isActive = true
+userCount = 100
+```
+
+## Identifier Rules
+
+Valid identifier naming rules:
+
+```javascript
+// Valid identifiers
+userName = "john"
+user_name = "jane"
+userName123 = "bob"
+_privateVar = "secret"
+$specialVar = "value"
+
+// Invalid identifiers (would cause syntax errors)
+// 123user = "invalid"  // Cannot start with number
+// user-name = "invalid"  // Cannot contain hyphens
+// user name = "invalid"  // Cannot contain spaces
+```
+
+## Naming Conventions
+
+Recommended naming patterns:
+
+```javascript
+// camelCase (recommended)
+firstName = "Alice"
+lastName = "Smith"
+userAccountBalance = 1000
+
+// snake_case (also valid)
+first_name = "Bob"
+last_name = "Jones"
+user_account_balance = 2000
+
+// PascalCase (typically for classes)
+sanctuary UserAccount {
+    // Class definition
+}
+```
+
+## Variable Identifiers
+
+Variables with different scopes:
+
+```javascript
+// Global variable
+globalCounter = 0
+
+soul testFunction() {
+    // Local variable
+    localVar = "local"
+    
+    // Function parameter
+    soul innerFunction(parameterName) {
+        // Parameter identifier
+        return parameterName.toUpperCase()
+    }
+    
+    return innerFunction(localVar)
+}
+```
+
+## Function Identifiers
+
+Function names as identifiers:
+
+```javascript
+// Function identifier
+soul calculateTotal(price, tax) {
+    return price + (price * tax)
+}
+
+// Function assigned to variable
+calculator = soul(a, b) {
+    return a + b
+}
+
+// Function identifier in call
+result = calculateTotal(100, 0.08)
+```
+
+## Class and Object Identifiers
+
+Class names and object properties:
+
+```javascript
+// Class identifier
+sanctuary User {
+    soul __genesis__(name) {
+        // Property identifier
+        this.name = name
+        this.isActive = true
+    }
+    
+    // Method identifier
+    soul getName() {
+        return this.name
+    }
+}
+
+// Object identifier
+user = User.new("Alice")
+```
+
+## Property Identifiers
+
+Object property access:
+
+```javascript
+person = {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 30
+}
+
+// Dot notation with identifier
+name = person.firstName
+personAge = person.age
+
+// Bracket notation with string
+email = person["email"]
+```
+
+## Array and Map Identifiers
+
+Collection variable names:
+
+```javascript
+// Array identifier
+numbers = [1, 2, 3, 4, 5]
+userList = ["Alice", "Bob", "Charlie"]
+
+// Map identifier
+userConfig = {
+    "theme": "dark",
+    "language": "en",
+    "notifications": true
+}
+
+// Accessing elements
+firstNumber = numbers[0]
+theme = userConfig.theme
+```
+
+## Loop Variable Identifiers
+
+Identifiers in loops:
+
+```javascript
+// For loop identifier
+for (index = 0; index < 10; index++) {
+    println("Index: " + index)
+}
+
+// For-in loop identifiers
+items = ["apple", "banana", "cherry"]
+for (item in items) {
+    println("Item: " + item)
+}
+
+// Map iteration identifiers
+for (key, value in userConfig) {
+    println(key + ": " + value)
+}
+```
+
+## Function Parameter Identifiers
+
+Parameter names in functions:
+
+```javascript
+// Single parameter
+soul greet(userName) {
+    return "Hello, " + userName
+}
+
+// Multiple parameters
+soul calculateArea(width, height) {
+    return width * height
+}
+
+// Default parameter values
+soul createUser(name, age, isActive) {
+    if (age == null) age = 0
+    if (isActive == null) isActive = true
+    
+    return {
+        "name": name,
+        "age": age,
+        "isActive": isActive
+    }
+}
+```
+
+## Private-like Identifiers
+
+Convention for private variables:
+
+```javascript
+sanctuary BankAccount {
+    soul __genesis__(initialBalance) {
+        this.balance = initialBalance
+        this._accountNumber = generateAccountNumber()  // "private"
+    }
+    
+    soul _validateAmount(amount) {  // "private" method
+        return amount > 0 && amount <= 10000
+    }
+    
+    soul deposit(amount) {
+        if (this._validateAmount(amount)) {
+            this.balance += amount
+            return true
+        }
+        return false
+    }
+}
+```
+
+## Constant-like Identifiers
+
+Convention for constants:
+
+```javascript
+// Constants (by convention, uppercase)
+MAX_USERS = 1000
+DEFAULT_TIMEOUT = 5000
+API_VERSION = "v1"
+DEBUG_MODE = true
+
+// Using constants
+if (userCount > MAX_USERS) {
+    println("Too many users")
+}
+```
+
+## Namespace Identifiers
+
+Module and namespace identifiers:
+
+```javascript
+// Module identifier
+Math = {
+    PI: 3.14159,
+    E: 2.71828
+}
+
+// Accessing namespace members
+circumference = 2 * Math.PI * radius
+```
+
+## Special Identifiers
+
+Reserved and special identifiers:
+
+```javascript
+// 'this' identifier in classes
+sanctuary User {
+    soul __genesis__(name) {
+        this.name = name  // 'this' refers to current instance
+    }
+}
+
+// 'super' identifier in inheritance
+sanctuary Employee extends User {
+    soul __genesis__(name, department) {
+        super.__genesis__(name)  // 'super' refers to parent class
+        this.department = department
+    }
+}
+```
+
+## Dynamic Identifiers
+
+Identifiers created dynamically:
+
+```javascript
+// Dynamic property access
+propertyName = "email"
+userEmail = user[propertyName]
+
+// Dynamic function calls
+functionName = "greet"
+if (typeof this[functionName] == "function") {
+    this[functionName]()
+}
+```
+
+## Identifier Validation
+
+Checking identifier validity:
+
+```javascript
+soul isValidIdentifier(name) {
+    // Check if name is a valid identifier
+    if (name == null || name == "") {
+        return false
+    }
+    
+    // Check first character
+    firstChar = name[0]
+    if (!isLetter(firstChar) && firstChar != "_" && firstChar != "$") {
+        return false
+    }
+    
+    // Check remaining characters
+    for (i = 1; i < name.length(); i++) {
+        char = name[i]
+        if (!isLetter(char) && !isDigit(char) && char != "_" && char != "$") {
+            return false
+        }
+    }
+    
+    return true
+}
+```
+
+## Best Practices
+
+1. **Use descriptive names**: `userAccountBalance` instead of `bal`
+2. **Be consistent**: Choose one naming convention and stick to it
+3. **Avoid abbreviations**: `firstName` instead of `fName`
+4. **Use meaningful prefixes**: `is` for booleans, `get` for getters
+5. **Avoid reserved words**: Don't use language keywords as identifiers
+
+```javascript
+// Good identifier practices
+soul processUserData(userData) {
+    isValidUser = validateUser(userData)
+    
+    if (isValidUser) {
+        userAccount = createUserAccount(userData)
+        accountBalance = calculateInitialBalance(userData)
+        
+        return {
+            "account": userAccount,
+            "balance": accountBalance,
+            "isActive": true
+        }
+    }
+    
+    return null
+}
+
+// Better with even more descriptive names
+soul processUserRegistrationData(registrationData) {
+    isValidRegistration = validateRegistrationData(registrationData)
+    
+    if (isValidRegistration) {
+        newUserAccount = createNewUserAccount(registrationData)
+        initialAccountBalance = calculateInitialAccountBalance(registrationData)
+        
+        return {
+            "userAccount": newUserAccount,
+            "accountBalance": initialAccountBalance,
+            "isAccountActive": true
+        }
+    }
+    
+    return null
+}
+```
+
+Identifiers are crucial for creating readable, maintainable Soul code. Choose names that clearly express the purpose and content of your variables, functions, and other program elements.
