@@ -48,6 +48,23 @@
             "pages": ["documents/usage"]
           },
           {
+            "group": "Modules",
+            "pages": [
+              "documents/modules/ai",
+              "documents/modules/array",
+              "documents/modules/concurrency",
+              "documents/modules/console",
+              "documents/modules/crypto",
+              "documents/modules/file",
+              "documents/modules/http",
+              "documents/modules/json",
+              "documents/modules/math",
+              "documents/modules/robo",
+              "documents/modules/string",
+              "documents/modules/time"
+            ]
+          },
+          {
             "group": "Syntaxes",
             "pages": [
               "documents/syntaxes/assign",
@@ -85,23 +102,6 @@
               "documents/syntaxes/try",
               "documents/syntaxes/use",
               "documents/syntaxes/while"
-            ]
-          },
-          {
-            "group": "Modules",
-            "pages": [
-              "documents/modules/ai",
-              "documents/modules/array",
-              "documents/modules/concurrency",
-              "documents/modules/console",
-              "documents/modules/crypto",
-              "documents/modules/file",
-              "documents/modules/http",
-              "documents/modules/json",
-              "documents/modules/math",
-              "documents/modules/robo",
-              "documents/modules/string",
-              "documents/modules/time"
             ]
           }
         ]
