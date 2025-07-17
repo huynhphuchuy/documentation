@@ -1,0 +1,492 @@
+---
+title: "Console"
+description: "Console output and logging module for Soul"
+---
+
+# Console
+
+The Console module provides comprehensive console output, logging, and formatting capabilities for Soul. It offers a JavaScript-style API for handling console operations including logging at different levels, reading user input, and managing console display.
+
+## Logging Methods
+
+### log - General purpose logging
+
+Log messages to the console with automatic formatting:
+
+```javascript
+Console.log("Hello, World!")
+// Output: Hello, World!
+
+Console.log("User:", username, "Score:", score)
+// Output: User: John Score: 100
+
+Console.log("Processing", items.length, "items...")
+// Output: Processing 25 items...
+```
+
+### print - Output without newline
+
+Print messages without adding a newline character:
+
+```javascript
+Console.print("Loading")
+for i in range(3) {
+    Time.sleep(500)
+    Console.print(".")
+}
+Console.newLine()
+// Output: Loading...
+```
+
+### info - Information messages
+
+Log informational messages:
+
+```javascript
+Console.info("Server started on port 3000")
+Console.info("Connected to database:", dbName)
+Console.info("User", userId, "logged in successfully")
+```
+
+### warn - Warning messages
+
+Log warning messages:
+
+```javascript
+Console.warn("Deprecated function used:", functionName)
+Console.warn("Low memory:", memoryUsage, "MB remaining")
+Console.warn("API rate limit approaching:", remainingCalls, "calls left")
+```
+
+### error - Error messages
+
+Log error messages:
+
+```javascript
+Console.error("Failed to connect to database")
+Console.error("Invalid user input:", userInput)
+Console.error("Error code:", errorCode, "Message:", errorMessage)
+```
+
+## Input Operations
+
+### read - Read user input
+
+Read a line of input from the user:
+
+```javascript
+// Simple read
+userInput = Console.read()
+Console.log("You entered:", userInput)
+
+// Read with prompt
+name = Console.read("Enter your name: ")
+Console.log("Hello,", name)
+
+// Read password-like input
+password = Console.read("Enter password: ")
+// Note: Input is visible in terminal
+```
+
+## Display Management
+
+### clear - Clear console screen
+
+Clear the console screen:
+
+```javascript
+Console.clear()
+Console.log("Fresh start!")
+
+// Clear before displaying menu
+Console.clear()
+Console.log("=== Main Menu ===")
+Console.log("1. Start Game")
+Console.log("2. Options")
+Console.log("3. Exit")
+```
+
+### newLine - Print newline character
+
+Print a newline character for spacing:
+
+```javascript
+Console.log("First paragraph...")
+Console.newLine()
+Console.log("Second paragraph...")
+
+// Multiple newlines for spacing
+for i in range(3) {
+    Console.newLine()
+}
+Console.log("After some space")
+```
+
+## Practical Examples
+
+### Interactive Console Application
+
+```javascript
+soul interactiveApp() {
+    Console.clear()
+    Console.log("=== Welcome to Soul Calculator ===")
+    Console.newLine()
+    
+    while true {
+        Console.print("Enter first number: ")
+        num1 = parseFloat(Console.read())
+        
+        Console.print("Enter operator (+, -, *, /): ")
+        operator = Console.read()
+        
+        Console.print("Enter second number: ")
+        num2 = parseFloat(Console.read())
+        
+        result = calculateResult(num1, operator, num2)
+        
+        if result != null {
+            Console.info("Result:", result)
+        } else {
+            Console.error("Invalid operation")
+        }
+        
+        Console.newLine()
+        continue = Console.read("Continue? (y/n): ")
+        
+        if continue.toLowerCase() != "y" {
+            break
+        }
+        
+        Console.clear()
+    }
+    
+    Console.log("Thank you for using Soul Calculator!")
+}
+
+soul calculateResult(num1, operator, num2) {
+    switch operator {
+        case "+":
+            return num1 + num2
+        case "-":
+            return num1 - num2
+        case "*":
+            return num1 * num2
+        case "/":
+            if num2 == 0 {
+                Console.warn("Division by zero!")
+                return null
+            }
+            return num1 / num2
+        default:
+            return null
+    }
+}
+```
+
+### Progress Indicator
+
+```javascript
+soul showProgress(total) {
+    Console.log("Processing items...")
+    
+    for i in range(total) {
+        // Clear line and show progress
+        Console.print("\rProgress: [")
+        
+        // Draw progress bar
+        completed = (i + 1) * 20 / total
+        for j in range(20) {
+            if j < completed {
+                Console.print("=")
+            } else {
+                Console.print(" ")
+            }
+        }
+        
+        Console.print("] ")
+        Console.print(((i + 1) * 100 / total).toFixed(0))
+        Console.print("%")
+        
+        // Simulate work
+        Time.sleep(100)
+    }
+    
+    Console.newLine()
+    Console.info("Processing complete!")
+}
+
+showProgress(50)
+```
+
+### Logging System
+
+```javascript
+soul Logger {
+    init(level) {
+        this.level = level  // "debug", "info", "warn", "error"
+        this.timestamp = true
+    }
+    
+    soul getTimestamp() {
+        if this.timestamp {
+            return "[" + Time.now().format("HH:mm:ss") + "] "
+        }
+        return ""
+    }
+    
+    soul debug(messages...) {
+        if this.level == "debug" {
+            Console.log(this.getTimestamp() + "[DEBUG]", messages...)
+        }
+    }
+    
+    soul info(messages...) {
+        if this.level in ["debug", "info"] {
+            Console.info(this.getTimestamp() + "[INFO]", messages...)
+        }
+    }
+    
+    soul warn(messages...) {
+        if this.level in ["debug", "info", "warn"] {
+            Console.warn(this.getTimestamp() + "[WARN]", messages...)
+        }
+    }
+    
+    soul error(messages...) {
+        Console.error(this.getTimestamp() + "[ERROR]", messages...)
+    }
+}
+
+// Usage
+logger = Logger("info")
+logger.debug("This won't show")  // Below threshold
+logger.info("Application started")
+logger.warn("Configuration missing, using defaults")
+logger.error("Failed to load resource")
+```
+
+### Menu System
+
+```javascript
+soul displayMenu(title, options) {
+    Console.clear()
+    Console.log("=".repeat(40))
+    Console.log(title.center(40))
+    Console.log("=".repeat(40))
+    Console.newLine()
+    
+    for i, option in enumerate(options) {
+        Console.log((i + 1) + ".", option)
+    }
+    
+    Console.newLine()
+    choice = Console.read("Enter your choice: ")
+    
+    return parseInt(choice)
+}
+
+soul mainMenu() {
+    options = [
+        "Start New Game",
+        "Load Game",
+        "Options",
+        "Exit"
+    ]
+    
+    while true {
+        choice = displayMenu("Main Menu", options)
+        
+        switch choice {
+            case 1:
+                Console.info("Starting new game...")
+                // Game logic here
+                break
+            case 2:
+                Console.info("Loading saved games...")
+                // Load logic here
+                break
+            case 3:
+                Console.info("Opening options...")
+                // Options logic here
+                break
+            case 4:
+                Console.log("Thanks for playing!")
+                return
+            default:
+                Console.error("Invalid choice. Please try again.")
+                Time.sleep(1000)
+        }
+    }
+}
+```
+
+### Formatted Output
+
+```javascript
+soul printTable(headers, rows) {
+    // Calculate column widths
+    widths = []
+    for i, header in enumerate(headers) {
+        maxWidth = header.length
+        for row in rows {
+            if row[i].toString().length > maxWidth {
+                maxWidth = row[i].toString().length
+            }
+        }
+        widths.push(maxWidth + 2)
+    }
+    
+    // Print headers
+    Console.print("|")
+    for i, header in enumerate(headers) {
+        Console.print(" " + header.padEnd(widths[i] - 1) + "|")
+    }
+    Console.newLine()
+    
+    // Print separator
+    Console.print("|")
+    for width in widths {
+        Console.print("-".repeat(width) + "|")
+    }
+    Console.newLine()
+    
+    // Print rows
+    for row in rows {
+        Console.print("|")
+        for i, cell in enumerate(row) {
+            Console.print(" " + cell.toString().padEnd(widths[i] - 1) + "|")
+        }
+        Console.newLine()
+    }
+}
+
+// Example usage
+headers = ["Name", "Age", "City"]
+data = [
+    ["Alice", 25, "New York"],
+    ["Bob", 30, "London"],
+    ["Charlie", 35, "Tokyo"]
+]
+
+printTable(headers, data)
+```
+
+### Error Handling with Console
+
+```javascript
+soul safeOperation(operation) {
+    try {
+        Console.info("Starting operation:", operation)
+        
+        // Simulate operation
+        result = performOperation(operation)
+        
+        Console.info("Operation completed successfully")
+        return result
+        
+    } catch error {
+        Console.error("Operation failed:", error.message)
+        Console.warn("Attempting recovery...")
+        
+        // Log detailed error info
+        Console.error("Stack trace:", error.stack)
+        
+        return null
+    }
+}
+
+soul debugMode() {
+    Console.clear()
+    Console.log("=== DEBUG MODE ===")
+    Console.warn("Debug mode enabled - verbose logging active")
+    Console.newLine()
+    
+    // Show system info
+    Console.info("System Information:")
+    Console.log("- Platform:", System.platform)
+    Console.log("- Memory:", System.memory.used, "/", System.memory.total)
+    Console.log("- CPU Cores:", System.cpuCount)
+    Console.newLine()
+    
+    // Start debug session
+    while true {
+        command = Console.read("debug> ")
+        
+        if command == "exit" {
+            break
+        }
+        
+        try {
+            result = eval(command)
+            Console.log("Result:", result)
+        } catch error {
+            Console.error("Error:", error.message)
+        }
+    }
+    
+    Console.info("Exiting debug mode")
+}
+```
+
+## Best Practices
+
+1. **Use appropriate log levels**: Choose the right logging method for your message type
+2. **Clear console judiciously**: Only clear when it improves user experience
+3. **Format output clearly**: Use spacing and separators for readability
+4. **Handle input validation**: Always validate user input from Console.read()
+5. **Provide feedback**: Keep users informed about what's happening
+
+```javascript
+// Good - appropriate log levels
+Console.info("Server started successfully")
+Console.warn("Using default configuration")
+Console.error("Failed to connect to database")
+
+// Good - clear output formatting
+Console.log("=" * 50)
+Console.log("RESULTS".center(50))
+Console.log("=" * 50)
+
+// Good - input validation
+soul getValidNumber(prompt) {
+    while true {
+        input = Console.read(prompt)
+        
+        if input.match(/^-?\d+(\.\d+)?$/) {
+            return parseFloat(input)
+        }
+        
+        Console.error("Invalid number. Please try again.")
+    }
+}
+
+// Good - progress feedback
+soul processItems(items) {
+    total = items.length
+    
+    for i, item in enumerate(items) {
+        Console.print("\rProcessing: " + (i + 1) + "/" + total)
+        processItem(item)
+    }
+    
+    Console.newLine()
+    Console.info("All items processed successfully")
+}
+
+// Good - interactive prompts
+soul confirm(message) {
+    while true {
+        response = Console.read(message + " (yes/no): ").toLowerCase()
+        
+        if response in ["yes", "y"] {
+            return true
+        } else if response in ["no", "n"] {
+            return false
+        }
+        
+        Console.warn("Please answer 'yes' or 'no'")
+    }
+}
+```
+
+The Console module provides essential tools for creating interactive command-line applications in Soul, with support for various logging levels, user input, and display management features that enable rich console experiences.

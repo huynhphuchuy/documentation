@@ -1,0 +1,756 @@
+---
+title: "String"
+description: "String manipulation module for Soul"
+---
+
+# String
+
+The String module provides comprehensive string manipulation capabilities for Soul, offering methods for case conversion, trimming, padding, searching, replacement, validation, and transformation. It follows a JavaScript-like API for familiar string operations.
+
+## Case Manipulation
+
+### toLowerCase - Convert to lowercase
+
+Convert string to lowercase:
+
+```javascript
+text = "HELLO WORLD"
+lower = String.toLowerCase(text)
+println(lower)  // "hello world"
+```
+
+### toUpperCase - Convert to uppercase
+
+Convert string to uppercase:
+
+```javascript
+text = "hello world"
+upper = String.toUpperCase(text)
+println(upper)  // "HELLO WORLD"
+```
+
+### capitalize - Capitalize first letter
+
+Capitalize the first letter and lowercase the rest:
+
+```javascript
+text = "hello world"
+capitalized = String.capitalize(text)
+println(capitalized)  // "Hello world"
+```
+
+### toCamelCase - Convert to camelCase
+
+Convert string to camelCase:
+
+```javascript
+text = "hello-world-example"
+camel = String.toCamelCase(text)
+println(camel)  // "helloWorldExample"
+
+text = "hello_world_example"
+camel = String.toCamelCase(text)
+println(camel)  // "helloWorldExample"
+```
+
+### toSnakeCase - Convert to snake_case
+
+Convert string to snake_case:
+
+```javascript
+text = "helloWorldExample"
+snake = String.toSnakeCase(text)
+println(snake)  // "hello_world_example"
+
+text = "Hello World Example"
+snake = String.toSnakeCase(text)
+println(snake)  // "hello_world_example"
+```
+
+### toKebabCase - Convert to kebab-case
+
+Convert string to kebab-case:
+
+```javascript
+text = "helloWorldExample"
+kebab = String.toKebabCase(text)
+println(kebab)  // "hello-world-example"
+
+text = "Hello World Example"
+kebab = String.toKebabCase(text)
+println(kebab)  // "hello-world-example"
+```
+
+## Trimming and Padding
+
+### trim - Remove whitespace from both ends
+
+Remove whitespace from both ends of a string:
+
+```javascript
+text = "  hello world  "
+trimmed = String.trim(text)
+println(trimmed)  // "hello world"
+
+// With custom characters to trim
+text = "---hello world---"
+trimmed = String.trim(text, "-")
+println(trimmed)  // "hello world"
+```
+
+### trimLeft - Remove whitespace from left
+
+Remove whitespace from the left side:
+
+```javascript
+text = "  hello world  "
+trimmed = String.trimLeft(text)
+println(trimmed)  // "hello world  "
+
+// With custom characters
+text = "---hello world---"
+trimmed = String.trimLeft(text, "-")
+println(trimmed)  // "hello world---"
+```
+
+### trimRight - Remove whitespace from right
+
+Remove whitespace from the right side:
+
+```javascript
+text = "  hello world  "
+trimmed = String.trimRight(text)
+println(trimmed)  // "  hello world"
+
+// With custom characters
+text = "---hello world---"
+trimmed = String.trimRight(text, "-")
+println(trimmed)  // "---hello world"
+```
+
+### padLeft - Pad string on the left
+
+Pad string on the left to a specific length:
+
+```javascript
+text = "hello"
+padded = String.padLeft(text, 10, "*")
+println(padded)  // "*****hello"
+
+// Default padding character is space
+padded = String.padLeft(text, 8)
+println(padded)  // "   hello"
+```
+
+### padRight - Pad string on the right
+
+Pad string on the right to a specific length:
+
+```javascript
+text = "hello"
+padded = String.padRight(text, 10, "*")
+println(padded)  // "hello*****"
+
+// Default padding character is space
+padded = String.padRight(text, 8)
+println(padded)  // "hello   "
+```
+
+### padCenter - Center string with padding
+
+Center string with padding on both sides:
+
+```javascript
+text = "hello"
+centered = String.padCenter(text, 11, "*")
+println(centered)  // "***hello***"
+
+// Default padding character is space
+centered = String.padCenter(text, 9)
+println(centered)  // "  hello  "
+```
+
+## Searching and Testing
+
+### startsWith - Check if string starts with prefix
+
+Check if string starts with a specific prefix:
+
+```javascript
+text = "hello world"
+starts = String.startsWith(text, "hello")
+println(starts)  // true
+
+starts = String.startsWith(text, "world")
+println(starts)  // false
+```
+
+### endsWith - Check if string ends with suffix
+
+Check if string ends with a specific suffix:
+
+```javascript
+text = "hello world"
+ends = String.endsWith(text, "world")
+println(ends)  // true
+
+ends = String.endsWith(text, "hello")
+println(ends)  // false
+```
+
+### contains - Check if string contains substring
+
+Check if string contains a specific substring:
+
+```javascript
+text = "hello world"
+contains = String.contains(text, "lo wo")
+println(contains)  // true
+
+contains = String.contains(text, "xyz")
+println(contains)  // false
+```
+
+### indexOf - Find first index of substring
+
+Find the first index of a substring:
+
+```javascript
+text = "hello world hello"
+index = String.indexOf(text, "hello")
+println(index)  // 0
+
+index = String.indexOf(text, "world")
+println(index)  // 6
+
+index = String.indexOf(text, "xyz")
+println(index)  // -1 (not found)
+```
+
+### lastIndexOf - Find last index of substring
+
+Find the last index of a substring:
+
+```javascript
+text = "hello world hello"
+index = String.lastIndexOf(text, "hello")
+println(index)  // 12
+
+index = String.lastIndexOf(text, "world")
+println(index)  // 6
+
+index = String.lastIndexOf(text, "xyz")
+println(index)  // -1 (not found)
+```
+
+### count - Count occurrences of substring
+
+Count how many times a substring appears:
+
+```javascript
+text = "hello world hello"
+count = String.count(text, "hello")
+println(count)  // 2
+
+count = String.count(text, "l")
+println(count)  // 5
+
+count = String.count(text, "xyz")
+println(count)  // 0
+```
+
+## String Manipulation
+
+### replace - Replace first occurrence
+
+Replace the first occurrence of a substring:
+
+```javascript
+text = "hello world hello"
+replaced = String.replace(text, "hello", "hi")
+println(replaced)  // "hi world hello"
+```
+
+### replaceAll - Replace all occurrences
+
+Replace all occurrences of a substring:
+
+```javascript
+text = "hello world hello"
+replaced = String.replaceAll(text, "hello", "hi")
+println(replaced)  // "hi world hi"
+```
+
+### split - Split string into array
+
+Split string into an array by separator:
+
+```javascript
+text = "apple,banana,cherry"
+parts = String.split(text, ",")
+println(parts)  // ["apple", "banana", "cherry"]
+
+// Split into individual characters
+text = "hello"
+chars = String.split(text)
+println(chars)  // ["h", "e", "l", "l", "o"]
+
+// With limit
+text = "a,b,c,d,e"
+parts = String.split(text, ",", 3)
+println(parts)  // ["a", "b", "c,d,e"]
+```
+
+### join - Join array into string
+
+Join array elements with a separator:
+
+```javascript
+parts = ["apple", "banana", "cherry"]
+text = String.join(parts, ", ")
+println(text)  // "apple, banana, cherry"
+
+// With different separator
+words = ["hello", "world"]
+text = String.join(words, " ")
+println(text)  // "hello world"
+```
+
+### repeat - Repeat string n times
+
+Repeat a string a specified number of times:
+
+```javascript
+text = "hello"
+repeated = String.repeat(text, 3)
+println(repeated)  // "hellohellohello"
+
+separator = "-"
+repeated = String.repeat(separator, 10)
+println(repeated)  // "----------"
+```
+
+### reverse - Reverse string characters
+
+Reverse the order of characters in a string:
+
+```javascript
+text = "hello"
+reversed = String.reverse(text)
+println(reversed)  // "olleh"
+
+// Unicode-aware reversal
+text = "café"
+reversed = String.reverse(text)
+println(reversed)  // "éfac"
+```
+
+### slice - Extract substring by indices
+
+Extract a substring using start and end indices:
+
+```javascript
+text = "hello world"
+sub = String.slice(text, 0, 5)
+println(sub)  // "hello"
+
+sub = String.slice(text, 6)
+println(sub)  // "world"
+
+// With negative indices
+sub = String.slice(text, -5)
+println(sub)  // "world"
+
+sub = String.slice(text, 0, -6)
+println(sub)  // "hello"
+```
+
+### substring - Extract substring (swaps if needed)
+
+Extract a substring, automatically swapping indices if needed:
+
+```javascript
+text = "hello world"
+sub = String.substring(text, 0, 5)
+println(sub)  // "hello"
+
+// Indices are swapped automatically
+sub = String.substring(text, 5, 0)
+println(sub)  // "hello"
+```
+
+## Validation
+
+### isAlpha - Check if only letters
+
+Check if string contains only letters:
+
+```javascript
+text = "hello"
+isAlpha = String.isAlpha(text)
+println(isAlpha)  // true
+
+text = "hello123"
+isAlpha = String.isAlpha(text)
+println(isAlpha)  // false
+
+text = ""
+isAlpha = String.isAlpha(text)
+println(isAlpha)  // false
+```
+
+### isNumeric - Check if valid number
+
+Check if string represents a valid number:
+
+```javascript
+text = "123"
+isNum = String.isNumeric(text)
+println(isNum)  // true
+
+text = "123.45"
+isNum = String.isNumeric(text)
+println(isNum)  // true
+
+text = "hello"
+isNum = String.isNumeric(text)
+println(isNum)  // false
+```
+
+### isAlphaNumeric - Check if only letters and digits
+
+Check if string contains only letters and digits:
+
+```javascript
+text = "hello123"
+isAlphaNum = String.isAlphaNumeric(text)
+println(isAlphaNum)  // true
+
+text = "hello-123"
+isAlphaNum = String.isAlphaNumeric(text)
+println(isAlphaNum)  // false
+
+text = ""
+isAlphaNum = String.isAlphaNumeric(text)
+println(isAlphaNum)  // false
+```
+
+### isEmpty - Check if string is empty
+
+Check if string is empty:
+
+```javascript
+text = ""
+empty = String.isEmpty(text)
+println(empty)  // true
+
+text = "hello"
+empty = String.isEmpty(text)
+println(empty)  // false
+```
+
+### isWhitespace - Check if only whitespace
+
+Check if string contains only whitespace characters:
+
+```javascript
+text = "   "
+isWhite = String.isWhitespace(text)
+println(isWhite)  // true
+
+text = ""
+isWhite = String.isWhitespace(text)
+println(isWhite)  // true
+
+text = "hello"
+isWhite = String.isWhitespace(text)
+println(isWhite)  // false
+```
+
+## Conversion
+
+### toNumber - Convert string to number
+
+Convert string to a number:
+
+```javascript
+text = "123.45"
+num = String.toNumber(text)
+println(num)  // 123.45
+
+text = "hello"
+num = String.toNumber(text)
+println(num)  // null (invalid number)
+```
+
+### toCharArray - Convert to character array
+
+Convert string to an array of characters:
+
+```javascript
+text = "hello"
+chars = String.toCharArray(text)
+println(chars)  // ["h", "e", "l", "l", "o"]
+
+// Unicode-aware
+text = "café"
+chars = String.toCharArray(text)
+println(chars)  // ["c", "a", "f", "é"]
+```
+
+## Utility
+
+### length - Get string length
+
+Get the length of a string (Unicode-aware):
+
+```javascript
+text = "hello"
+len = String.length(text)
+println(len)  // 5
+
+// Unicode-aware length
+text = "café"
+len = String.length(text)
+println(len)  // 4
+```
+
+## Advanced Examples
+
+### Text Processing Pipeline
+
+```javascript
+soul processText(input) {
+    // Clean and normalize text
+    cleaned = String.trim(input)
+    normalized = String.toLowerCase(cleaned)
+    
+    // Split into words and filter
+    words = String.split(normalized, " ")
+    validWords = Array.filter(words, soul(word) { 
+        return !String.isEmpty(word) && String.isAlpha(word) 
+    })
+    
+    // Transform to camelCase
+    camelWords = Array.map(validWords, soul(word, index) {
+        if (index == 0) {
+            return word
+        }
+        return String.capitalize(word)
+    })
+    
+    return String.join(camelWords, "")
+}
+
+input = "  Hello World Example  "
+result = processText(input)
+println(result)  // "helloWorldExample"
+```
+
+### String Validation System
+
+```javascript
+soul validateInput(input) {
+    validations = {
+        isEmpty: String.isEmpty(input),
+        isWhitespace: String.isWhitespace(input),
+        isNumeric: String.isNumeric(input),
+        isAlpha: String.isAlpha(input),
+        isAlphaNumeric: String.isAlphaNumeric(input),
+        length: String.length(input),
+        hasNumbers: String.contains(input, "0123456789"),
+        hasSpecialChars: !String.isAlphaNumeric(input) && !String.isWhitespace(input)
+    }
+    
+    return validations
+}
+
+result = validateInput("hello123")
+println(result)
+```
+
+### Text Formatting Utility
+
+```javascript
+soul formatText(text, options) {
+    result = text
+    
+    // Apply transformations based on options
+    if (options.trim) {
+        result = String.trim(result)
+    }
+    
+    if (options.case == "upper") {
+        result = String.toUpperCase(result)
+    } else if (options.case == "lower") {
+        result = String.toLowerCase(result)
+    } else if (options.case == "capitalize") {
+        result = String.capitalize(result)
+    } else if (options.case == "camel") {
+        result = String.toCamelCase(result)
+    } else if (options.case == "snake") {
+        result = String.toSnakeCase(result)
+    } else if (options.case == "kebab") {
+        result = String.toKebabCase(result)
+    }
+    
+    // Apply padding
+    if (options.padLeft) {
+        result = String.padLeft(result, options.padLeft, options.padChar || " ")
+    }
+    if (options.padRight) {
+        result = String.padRight(result, options.padRight, options.padChar || " ")
+    }
+    if (options.padCenter) {
+        result = String.padCenter(result, options.padCenter, options.padChar || " ")
+    }
+    
+    return result
+}
+
+text = "hello world"
+formatted = formatText(text, {
+    trim: true,
+    case: "camel",
+    padCenter: 20,
+    padChar: "*"
+})
+println(formatted)  // "****helloWorld****"
+```
+
+### String Search and Replace Engine
+
+```javascript
+soul searchAndReplace(text, operations) {
+    result = text
+    
+    Array.forEach(operations, soul(op) {
+        if (op.type == "replace") {
+            result = String.replace(result, op.find, op.replace)
+        } else if (op.type == "replaceAll") {
+            result = String.replaceAll(result, op.find, op.replace)
+        }
+    })
+    
+    return result
+}
+
+text = "Hello world, hello universe, hello galaxy"
+operations = [
+    {type: "replace", find: "Hello", replace: "Hi"},
+    {type: "replaceAll", find: "hello", replace: "hi"}
+]
+
+result = searchAndReplace(text, operations)
+println(result)  // "Hi world, hi universe, hi galaxy"
+```
+
+### Template String Processor
+
+```javascript
+soul processTemplate(template, variables) {
+    result = template
+    
+    Array.forEach(Object.keys(variables), soul(key) {
+        placeholder = "${" + key + "}"
+        value = variables[key]
+        result = String.replaceAll(result, placeholder, value)
+    })
+    
+    return result
+}
+
+template = "Hello ${name}, welcome to ${place}!"
+variables = {
+    name: "Alice",
+    place: "Soul Land"
+}
+
+result = processTemplate(template, variables)
+println(result)  // "Hello Alice, welcome to Soul Land!"
+```
+
+### String Analysis Tool
+
+```javascript
+soul analyzeString(text) {
+    chars = String.toCharArray(text)
+    
+    analysis = {
+        length: String.length(text),
+        isEmpty: String.isEmpty(text),
+        isWhitespace: String.isWhitespace(text),
+        isNumeric: String.isNumeric(text),
+        isAlpha: String.isAlpha(text),
+        isAlphaNumeric: String.isAlphaNumeric(text),
+        
+        // Character counts
+        letterCount: Array.filter(chars, soul(c) { return String.isAlpha(c) }).length,
+        digitCount: Array.filter(chars, soul(c) { return String.isNumeric(c) }).length,
+        whitespaceCount: Array.filter(chars, soul(c) { return String.isWhitespace(c) }).length,
+        
+        // Word statistics
+        words: String.split(String.trim(text), " "),
+        wordCount: String.split(String.trim(text), " ").length,
+        
+        // Character frequency
+        charFreq: {}
+    }
+    
+    // Calculate character frequency
+    Array.forEach(chars, soul(c) {
+        if (analysis.charFreq[c]) {
+            analysis.charFreq[c] += 1
+        } else {
+            analysis.charFreq[c] = 1
+        }
+    })
+    
+    return analysis
+}
+
+text = "Hello World 123"
+analysis = analyzeString(text)
+println(analysis)
+```
+
+## Best Practices
+
+1. **Unicode awareness**: String operations are Unicode-aware for proper character handling
+2. **Null safety**: Methods return null for invalid inputs
+3. **Immutability**: String methods return new strings, leaving originals unchanged
+4. **Performance**: Use appropriate methods for your use case
+5. **Validation**: Always validate string inputs before processing
+
+```javascript
+// Good - check for empty strings
+soul safeStringOperation(text) {
+    if (String.isEmpty(text)) {
+        return ""
+    }
+    
+    return String.toUpperCase(String.trim(text))
+}
+
+// Good - chain operations for readability
+result = String.trim(input)
+    |> String.toLowerCase()
+    |> String.toCamelCase()
+    |> String.padCenter(20, "*")
+
+// Good - use appropriate validation
+soul validateEmail(email) {
+    if (String.isEmpty(email)) {
+        return false
+    }
+    
+    return String.contains(email, "@") && String.contains(email, ".")
+}
+
+// Good - handle Unicode properly
+text = "café"
+chars = String.toCharArray(text)  // Properly handles Unicode
+length = String.length(text)      // Returns 4, not 5
+```
+
+The String module provides comprehensive tools for string manipulation in Soul, enabling powerful text processing capabilities with a familiar and intuitive API.

@@ -1,0 +1,662 @@
+---
+title: "Time"
+description: "Time manipulation and duration constants module for Soul"
+---
+
+# Time
+
+The Time module provides essential time manipulation capabilities for Soul, including sleep functionality, current timestamp retrieval, and comprehensive duration constants for time calculations. It follows a JavaScript-style API for familiar usage patterns.
+
+## Time Operations
+
+### now - Get current timestamp
+
+Get the current Unix timestamp in seconds:
+
+```javascript
+// Get current timestamp
+timestamp = Time.now()
+println(timestamp)  // 1704110400 (example Unix timestamp)
+
+// Use timestamp for calculations
+startTime = Time.now()
+// ... do some work ...
+endTime = Time.now()
+duration = endTime - startTime
+println("Operation took " + duration + " seconds")
+```
+
+### sleep - Pause execution
+
+Pause execution for a specified number of milliseconds:
+
+```javascript
+// Sleep for 1 second (1000 milliseconds)
+Time.sleep(1000)
+println("This prints after 1 second")
+
+// Sleep for half a second
+Time.sleep(500)
+println("This prints after 500ms")
+
+// Sleep for 2.5 seconds
+Time.sleep(2500)
+println("This prints after 2.5 seconds")
+```
+
+## Duration Constants
+
+The Time module provides duration constants that return the number of seconds for each time unit. These constants are useful for time calculations and conversions.
+
+### nanosecond - Nanosecond duration
+
+Returns the duration of one nanosecond in seconds:
+
+```javascript
+nano = Time.nanosecond
+println(nano)  // 0.00001 (1 nanosecond in seconds)
+
+// Convert nanoseconds to seconds
+nanoseconds = 1000000000  // 1 billion nanoseconds
+seconds = nanoseconds * Time.nanosecond
+println(seconds)  // 0.01 (10 milliseconds)
+```
+
+### microsecond - Microsecond duration
+
+Returns the duration of one microsecond in seconds:
+
+```javascript
+micro = Time.microsecond
+println(micro)  // 0.0001 (1 microsecond in seconds)
+
+// Convert microseconds to seconds
+microseconds = 1000000  // 1 million microseconds
+seconds = microseconds * Time.microsecond
+println(seconds)  // 0.1 (100 milliseconds)
+```
+
+### millisecond - Millisecond duration
+
+Returns the duration of one millisecond in seconds:
+
+```javascript
+milli = Time.millisecond
+println(milli)  // 0.001 (1 millisecond in seconds)
+
+// Convert milliseconds to seconds
+milliseconds = 5000
+seconds = milliseconds * Time.millisecond
+println(seconds)  // 5 (5 seconds)
+```
+
+### second - Second duration
+
+Returns the duration of one second:
+
+```javascript
+sec = Time.second
+println(sec)  // 1 (1 second)
+
+// Use as base unit for calculations
+minutes = 5
+totalSeconds = minutes * 60 * Time.second
+println(totalSeconds)  // 300 (5 minutes in seconds)
+```
+
+### minute - Minute duration
+
+Returns the duration of one minute in seconds:
+
+```javascript
+min = Time.minute
+println(min)  // 60 (1 minute in seconds)
+
+// Convert minutes to seconds
+minutes = 15
+seconds = minutes * Time.minute
+println(seconds)  // 900 (15 minutes in seconds)
+```
+
+### hour - Hour duration
+
+Returns the duration of one hour in seconds:
+
+```javascript
+hr = Time.hour
+println(hr)  // 3600 (1 hour in seconds)
+
+// Convert hours to seconds
+hours = 2.5
+seconds = hours * Time.hour
+println(seconds)  // 9000 (2.5 hours in seconds)
+```
+
+### day - Day duration
+
+Returns the duration of one day in seconds:
+
+```javascript
+day = Time.day
+println(day)  // 86400 (1 day in seconds)
+
+// Convert days to seconds
+days = 7
+seconds = days * Time.day
+println(seconds)  // 604800 (1 week in seconds)
+```
+
+### week - Week duration
+
+Returns the duration of one week in seconds:
+
+```javascript
+week = Time.week
+println(week)  // 604800 (1 week in seconds)
+
+// Convert weeks to seconds
+weeks = 4
+seconds = weeks * Time.week
+println(seconds)  // 2419200 (4 weeks in seconds)
+```
+
+### month - Month duration
+
+Returns the duration of one month in seconds (30 days):
+
+```javascript
+month = Time.month
+println(month)  // 2592000 (30 days in seconds)
+
+// Convert months to seconds
+months = 3
+seconds = months * Time.month
+println(seconds)  // 7776000 (3 months in seconds)
+```
+
+### year - Year duration
+
+Returns the duration of one year in seconds (365 days):
+
+```javascript
+year = Time.year
+println(year)  // 31536000 (365 days in seconds)
+
+// Convert years to seconds
+years = 2
+seconds = years * Time.year
+println(seconds)  // 63072000 (2 years in seconds)
+```
+
+## Time Calculations
+
+### Duration Conversions
+
+Convert between different time units:
+
+```javascript
+// Convert 2 hours to different units
+hours = 2
+milliseconds = hours * Time.hour * 1000
+minutes = hours * 60
+seconds = hours * Time.hour
+
+println("2 hours = " + milliseconds + " milliseconds")  // 7200000
+println("2 hours = " + minutes + " minutes")            // 120
+println("2 hours = " + seconds + " seconds")            // 7200
+```
+
+### Time Arithmetic
+
+Perform arithmetic operations with time values:
+
+```javascript
+// Calculate total duration
+meetingDuration = 1.5 * Time.hour
+breakDuration = 15 * Time.minute
+totalTime = meetingDuration + breakDuration
+
+println("Total time: " + totalTime + " seconds")  // 6300 seconds
+
+// Calculate time remaining
+deadline = Time.now() + 5 * Time.day
+remaining = deadline - Time.now()
+daysLeft = remaining / Time.day
+println("Days until deadline: " + daysLeft)
+```
+
+## Practical Examples
+
+### Timer Implementation
+
+```javascript
+soul Timer {
+    init() {
+        this.startTime = null
+        this.endTime = null
+        this.isRunning = false
+    }
+    
+    soul start() {
+        this.startTime = Time.now()
+        this.isRunning = true
+        println("Timer started")
+    }
+    
+    soul stop() {
+        if (!this.isRunning) {
+            println("Timer is not running")
+            return
+        }
+        
+        this.endTime = Time.now()
+        this.isRunning = false
+        println("Timer stopped")
+    }
+    
+    soul elapsed() {
+        if (this.startTime == null) {
+            return 0
+        }
+        
+        end = this.isRunning ? Time.now() : this.endTime
+        return end - this.startTime
+    }
+    
+    soul elapsedFormatted() {
+        seconds = this.elapsed()
+        
+        if (seconds < Time.minute) {
+            return seconds.toFixed(2) + " seconds"
+        } else if (seconds < Time.hour) {
+            minutes = seconds / Time.minute
+            return minutes.toFixed(2) + " minutes"
+        } else {
+            hours = seconds / Time.hour
+            return hours.toFixed(2) + " hours"
+        }
+    }
+}
+
+// Usage
+timer = Timer()
+timer.start()
+Time.sleep(2000)  // Sleep for 2 seconds
+timer.stop()
+println("Elapsed: " + timer.elapsedFormatted())
+```
+
+### Retry Mechanism with Exponential Backoff
+
+```javascript
+soul retryWithBackoff(operation, maxRetries, initialDelay) {
+    delay = initialDelay
+    
+    for attempt in range(maxRetries) {
+        try {
+            result = operation()
+            println("Operation succeeded on attempt " + (attempt + 1))
+            return result
+        } catch error {
+            if (attempt == maxRetries - 1) {
+                println("Operation failed after " + maxRetries + " attempts")
+                throw error
+            }
+            
+            println("Attempt " + (attempt + 1) + " failed, retrying in " + delay + "ms")
+            Time.sleep(delay)
+            delay *= 2  // Exponential backoff
+        }
+    }
+}
+
+// Usage
+soul unreliableOperation() {
+    // Simulate 70% failure rate
+    if (Math.random() < 0.7) {
+        throw new Error("Random failure")
+    }
+    return "Success!"
+}
+
+result = retryWithBackoff(unreliableOperation, 5, 100)
+println(result)
+```
+
+### Rate Limiting
+
+```javascript
+soul RateLimiter {
+    init(maxRequests, timeWindow) {
+        this.maxRequests = maxRequests
+        this.timeWindow = timeWindow  // in seconds
+        this.requests = []
+    }
+    
+    soul cleanOldRequests() {
+        now = Time.now()
+        cutoff = now - this.timeWindow
+        
+        this.requests = Array.filter(this.requests, soul(timestamp) {
+            return timestamp > cutoff
+        })
+    }
+    
+    soul canMakeRequest() {
+        this.cleanOldRequests()
+        return Array.length(this.requests) < this.maxRequests
+    }
+    
+    soul makeRequest() {
+        if (!this.canMakeRequest()) {
+            return false
+        }
+        
+        Array.push(this.requests, Time.now())
+        return true
+    }
+    
+    soul timeUntilNextRequest() {
+        if (this.canMakeRequest()) {
+            return 0
+        }
+        
+        this.cleanOldRequests()
+        if (Array.length(this.requests) == 0) {
+            return 0
+        }
+        
+        oldestRequest = Array.min(this.requests)
+        return (oldestRequest + this.timeWindow) - Time.now()
+    }
+}
+
+// Usage: 5 requests per minute
+limiter = RateLimiter(5, Time.minute)
+
+soul makeApiCall() {
+    if (limiter.canMakeRequest()) {
+        limiter.makeRequest()
+        println("API call made at " + Time.now())
+        return true
+    } else {
+        waitTime = limiter.timeUntilNextRequest()
+        println("Rate limit exceeded. Wait " + waitTime + " seconds")
+        return false
+    }
+}
+
+// Test the rate limiter
+for i in range(10) {
+    makeApiCall()
+    Time.sleep(5000)  // Wait 5 seconds between attempts
+}
+```
+
+### Periodic Task Scheduler
+
+```javascript
+soul PeriodicScheduler {
+    init() {
+        this.tasks = []
+        this.running = false
+    }
+    
+    soul addTask(interval, callback) {
+        task = {
+            interval: interval,
+            callback: callback,
+            lastRun: 0
+        }
+        Array.push(this.tasks, task)
+    }
+    
+    soul start() {
+        this.running = true
+        println("Scheduler started")
+        
+        while this.running {
+            now = Time.now()
+            
+            Array.forEach(this.tasks, soul(task) {
+                if (now - task.lastRun >= task.interval) {
+                    try {
+                        task.callback()
+                        task.lastRun = now
+                    } catch error {
+                        println("Task failed: " + error)
+                    }
+                }
+            })
+            
+            Time.sleep(100)  // Check every 100ms
+        }
+    }
+    
+    soul stop() {
+        this.running = false
+        println("Scheduler stopped")
+    }
+}
+
+// Usage
+scheduler = PeriodicScheduler()
+
+// Add tasks
+scheduler.addTask(5 * Time.second, soul() {
+    println("Heartbeat at " + Time.now())
+})
+
+scheduler.addTask(Time.minute, soul() {
+    println("Minute check at " + Time.now())
+})
+
+scheduler.addTask(10 * Time.second, soul() {
+    println("Status report at " + Time.now())
+})
+
+// Start scheduler (this will run indefinitely)
+scheduler.start()
+```
+
+### Time-based Cache
+
+```javascript
+soul TimedCache {
+    init(ttl) {
+        this.ttl = ttl  // Time to live in seconds
+        this.cache = {}
+    }
+    
+    soul set(key, value) {
+        this.cache[key] = {
+            value: value,
+            expires: Time.now() + this.ttl
+        }
+    }
+    
+    soul get(key) {
+        if (!this.cache.hasKey(key)) {
+            return null
+        }
+        
+        entry = this.cache[key]
+        if (Time.now() > entry.expires) {
+            this.cache.remove(key)
+            return null
+        }
+        
+        return entry.value
+    }
+    
+    soul cleanup() {
+        now = Time.now()
+        expiredKeys = []
+        
+        for (key in this.cache) {
+            if (now > this.cache[key].expires) {
+                Array.push(expiredKeys, key)
+            }
+        }
+        
+        Array.forEach(expiredKeys, soul(key) {
+            this.cache.remove(key)
+        })
+        
+        return Array.length(expiredKeys)
+    }
+    
+    soul size() {
+        return Object.keys(this.cache).length
+    }
+}
+
+// Usage
+cache = TimedCache(30 * Time.second)  // 30 second TTL
+
+// Set values
+cache.set("user:123", {name: "Alice", active: true})
+cache.set("session:abc", {userId: 123, token: "xyz"})
+
+// Get values
+user = cache.get("user:123")
+println(user)  // {name: "Alice", active: true}
+
+// Wait and check expiration
+Time.sleep(35000)  // Wait 35 seconds
+user = cache.get("user:123")
+println(user)  // null (expired)
+
+// Manual cleanup
+removed = cache.cleanup()
+println("Removed " + removed + " expired entries")
+```
+
+### Benchmark Utility
+
+```javascript
+soul Benchmark {
+    soul measure(name, iterations, func) {
+        println("Running benchmark: " + name)
+        
+        startTime = Time.now()
+        
+        for i in range(iterations) {
+            func()
+        }
+        
+        endTime = Time.now()
+        totalTime = endTime - startTime
+        avgTime = totalTime / iterations
+        
+        println("Total time: " + totalTime + " seconds")
+        println("Average time: " + (avgTime * 1000) + " milliseconds")
+        println("Iterations: " + iterations)
+        println("Throughput: " + (iterations / totalTime) + " ops/sec")
+        println("---")
+        
+        return {
+            name: name,
+            totalTime: totalTime,
+            averageTime: avgTime,
+            iterations: iterations,
+            throughput: iterations / totalTime
+        }
+    }
+    
+    soul compare(benchmarks) {
+        println("Benchmark Comparison:")
+        
+        fastest = Array.min(benchmarks, soul(b) { return b.averageTime })
+        
+        Array.forEach(benchmarks, soul(benchmark) {
+            ratio = benchmark.averageTime / fastest.averageTime
+            println(benchmark.name + ": " + ratio.toFixed(2) + "x slower")
+        })
+    }
+}
+
+// Usage
+soul testFunction1() {
+    // Simulate work
+    result = 0
+    for i in range(1000) {
+        result += i
+    }
+    return result
+}
+
+soul testFunction2() {
+    // Simulate different work
+    result = 1
+    for i in range(100) {
+        result *= 1.001
+    }
+    return result
+}
+
+// Run benchmarks
+benchmark1 = Benchmark.measure("Test Function 1", 1000, testFunction1)
+benchmark2 = Benchmark.measure("Test Function 2", 1000, testFunction2)
+
+// Compare results
+Benchmark.compare([benchmark1, benchmark2])
+```
+
+## Best Practices
+
+1. **Use appropriate time units**: Choose duration constants that match your use case
+2. **Handle sleep interruptions**: Be aware that sleep operations pause execution
+3. **Consider time zones**: Time.now() returns UTC timestamp
+4. **Use constants for readability**: Duration constants make code more readable than magic numbers
+5. **Measure performance**: Use timers to measure execution time of operations
+
+```javascript
+// Good - use duration constants
+timeout = 30 * Time.second
+interval = 5 * Time.minute
+deadline = Time.now() + 7 * Time.day
+
+// Good - readable sleep durations
+Time.sleep(2 * Time.second)  // instead of Time.sleep(2000)
+Time.sleep(500 * Time.millisecond)  // instead of Time.sleep(500)
+
+// Good - measure execution time
+startTime = Time.now()
+performOperation()
+executionTime = Time.now() - startTime
+println("Operation took " + executionTime + " seconds")
+
+// Good - convert to appropriate units
+soul formatDuration(seconds) {
+    if (seconds < Time.minute) {
+        return seconds.toFixed(2) + " seconds"
+    } else if (seconds < Time.hour) {
+        return (seconds / Time.minute).toFixed(2) + " minutes"
+    } else if (seconds < Time.day) {
+        return (seconds / Time.hour).toFixed(2) + " hours"
+    } else {
+        return (seconds / Time.day).toFixed(2) + " days"
+    }
+}
+
+// Good - handle long operations with progress
+soul longOperation(items) {
+    total = Array.length(items)
+    startTime = Time.now()
+    
+    for i, item in enumerate(items) {
+        processItem(item)
+        
+        // Show progress every 10 items
+        if (i % 10 == 0) {
+            elapsed = Time.now() - startTime
+            remaining = (elapsed / (i + 1)) * (total - i - 1)
+            println("Progress: " + (i + 1) + "/" + total + 
+                   " (ETA: " + formatDuration(remaining) + ")")
+        }
+    }
+}
+```
+
+The Time module provides essential timing capabilities for Soul applications, enabling precise time management, performance measurement, and time-based operations with a comprehensive set of duration constants for all common time units.

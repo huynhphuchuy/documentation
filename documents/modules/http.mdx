@@ -1,0 +1,710 @@
+---
+title: "HTTP"
+description: "HTTP client and server module for Soul"
+---
+
+# HTTP
+
+The HTTP module provides comprehensive HTTP client capabilities and web server functionality for Soul. It offers a JavaScript-like API for making HTTP requests, handling responses, and building web applications with middleware support, routing, and static file serving.
+
+## HTTP Client Operations
+
+### GET Request
+
+Make a GET request to retrieve data:
+
+```javascript
+// Simple GET request
+response = HTTP.get("https://api.example.com/users")
+println(response.status)     // 200
+println(response.body)       // Response body as string
+println(response.json)       // Parsed JSON data
+
+// GET with options
+response = HTTP.get("https://api.example.com/users", {
+    headers: {
+        "Authorization": "Bearer token123"
+    },
+    timeout: 10  // 10 seconds
+})
+```
+
+### POST Request
+
+Send data with a POST request:
+
+```javascript
+// POST with JSON data
+data = {
+    name: "John Doe",
+    email: "john@example.com"
+}
+
+response = HTTP.post("https://api.example.com/users", data)
+println(response.status)     // 201
+println(response.json)       // Created user data
+
+// POST with options
+response = HTTP.post("https://api.example.com/users", data, {
+    headers: {
+        "X-API-Key": "secret123"
+    }
+})
+```
+
+### PUT Request
+
+Update data with a PUT request:
+
+```javascript
+// Update user data
+updatedData = {
+    name: "John Smith",
+    email: "john.smith@example.com"
+}
+
+response = HTTP.put("https://api.example.com/users/123", updatedData)
+println(response.status)     // 200
+```
+
+### PATCH Request
+
+Partially update data with a PATCH request:
+
+```javascript
+// Partial update
+partialData = {
+    email: "newemail@example.com"
+}
+
+response = HTTP.patch("https://api.example.com/users/123", partialData)
+println(response.status)     // 200
+```
+
+### DELETE Request
+
+Delete resources with a DELETE request:
+
+```javascript
+// Delete a user
+response = HTTP.delete("https://api.example.com/users/123")
+println(response.status)     // 204
+
+// DELETE with options
+response = HTTP.delete("https://api.example.com/users/123", {
+    headers: {
+        "Authorization": "Bearer token123"
+    }
+})
+```
+
+### HEAD Request
+
+Get headers without response body:
+
+```javascript
+// Check if resource exists
+response = HTTP.head("https://example.com/large-file.pdf")
+println(response.status)        // 200
+println(response.headers)       // Response headers
+println(response.contentLength) // File size
+```
+
+### OPTIONS Request
+
+Get allowed methods for a resource:
+
+```javascript
+// Check CORS options
+response = HTTP.options("https://api.example.com/users")
+println(response.headers["allow"])         // Allowed methods
+println(response.headers["access-control-allow-origin"])
+```
+
+## Custom Requests
+
+### request - Make custom HTTP requests
+
+Create fully customized HTTP requests:
+
+```javascript
+// Custom request configuration
+response = HTTP.request({
+    url: "https://api.example.com/data",
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-Custom-Header": "value"
+    },
+    body: {
+        key: "value"
+    },
+    timeout: 30,
+    auth: {
+        username: "user",
+        password: "pass"
+    }
+})
+```
+
+## Request Configuration
+
+### Headers
+
+Set custom headers for requests:
+
+```javascript
+// Create headers object
+headers = HTTP.headers({
+    "Authorization": "Bearer token123",
+    "Content-Type": "application/json",
+    "X-API-Version": "2.0"
+})
+
+// Use in request
+response = HTTP.get("https://api.example.com/data", {
+    headers: headers
+})
+```
+
+### Authentication
+
+Configure basic authentication:
+
+```javascript
+// Create auth configuration
+auth = HTTP.auth("username", "password")
+
+// Use in request
+response = HTTP.get("https://api.example.com/secure", {
+    auth: auth
+})
+
+// Bearer token authentication
+response = HTTP.get("https://api.example.com/data", {
+    token: "your-bearer-token"
+})
+```
+
+### Timeout
+
+Set request timeout:
+
+```javascript
+// Set global timeout (in seconds)
+HTTP.timeout(60)  // 60 seconds
+
+// Per-request timeout
+response = HTTP.get("https://api.example.com/slow-endpoint", {
+    timeout: 120  // 120 seconds for this request only
+})
+```
+
+### Proxy Configuration
+
+Configure proxy settings:
+
+```javascript
+// Set proxy
+proxy = HTTP.proxy("http://proxy.example.com:8080")
+
+// Use in request
+response = HTTP.get("https://api.example.com/data", {
+    proxy: proxy
+})
+```
+
+## File Operations
+
+### Download Files
+
+Download files from URLs:
+
+```javascript
+// Download a file
+response = HTTP.download("https://example.com/document.pdf")
+println(response.status)     // 200
+println(response.size)       // File size
+println(response.body)       // File contents
+
+// Download with progress tracking
+response = HTTP.download("https://example.com/large-file.zip", {
+    headers: {
+        "Authorization": "Bearer token123"
+    }
+})
+```
+
+### Upload Files
+
+Upload files to a server:
+
+```javascript
+// Upload file data
+fileData = "File contents here..."
+response = HTTP.upload("https://api.example.com/upload", fileData)
+
+// Upload with metadata
+response = HTTP.upload("https://api.example.com/upload", fileData, {
+    headers: {
+        "Content-Type": "text/plain",
+        "X-File-Name": "document.txt"
+    }
+})
+```
+
+## Response Handling
+
+### Response Object Structure
+
+All HTTP methods return a response object with the following properties:
+
+```javascript
+response = HTTP.get("https://api.example.com/data")
+
+// Status information
+println(response.status)      // 200
+println(response.statusText)  // "200 OK"
+
+// Response headers
+println(response.headers)     // Map of headers
+println(response.headers["content-type"])  // "application/json"
+
+// Response body
+println(response.body)        // Raw response as string
+
+// Parsed JSON (if applicable)
+println(response.json)        // Parsed JSON object or null
+
+// Additional metadata
+println(response.contentLength)  // Response size
+println(response.url)           // Final URL (after redirects)
+```
+
+### JSON Handling
+
+Automatic JSON parsing for JSON responses:
+
+```javascript
+// API returns JSON
+response = HTTP.get("https://api.example.com/users")
+
+if (response.json != null) {
+    users = response.json
+    users.forEach(soul(user) {
+        println(user.name + " - " + user.email)
+    })
+}
+
+// Send JSON data
+data = {
+    name: "Alice",
+    age: 30,
+    tags: ["developer", "soul"]
+}
+
+response = HTTP.post("https://api.example.com/users", data)
+// Automatically sets Content-Type: application/json
+```
+
+## Web Server Capabilities
+
+### Creating a Web Server
+
+Create and configure a web server:
+
+```javascript
+// Create server on port 8080
+server = HTTP.createServer(8080)
+
+// Define routes
+server.get("/", soul(req, res) {
+    res.send("Welcome to Soul HTTP Server!")
+})
+
+server.get("/users/:id", soul(req, res) {
+    userId = req.params.id
+    res.json({
+        id: userId,
+        name: "User " + userId
+    })
+})
+
+server.post("/users", soul(req, res) {
+    userData = req.body
+    // Process user data
+    res.status(201).json({
+        message: "User created",
+        data: userData
+    })
+})
+
+// Serve static files
+server.static("/public", "./static")
+
+// Start the server
+server.listen(soul() {
+    println("Server running on http://localhost:8080")
+})
+```
+
+### Middleware Support
+
+Add middleware for request processing:
+
+```javascript
+// Logger middleware
+server.use(soul(req, res, next) {
+    println(req.method + " " + req.path)
+    next()
+})
+
+// Authentication middleware
+server.use(soul(req, res, next) {
+    token = req.headers["authorization"]
+    if (!token) {
+        res.status(401).json({error: "Unauthorized"})
+        return
+    }
+    // Verify token
+    req.user = verifyToken(token)
+    next()
+})
+
+// Error handling middleware
+server.use(soul(err, req, res, next) {
+    println("Error: " + err.message)
+    res.status(500).json({error: "Internal Server Error"})
+})
+```
+
+### Request and Response Objects
+
+Work with request and response objects:
+
+```javascript
+server.get("/api/data", soul(req, res) {
+    // Request properties
+    method = req.method          // "GET"
+    path = req.path             // "/api/data"
+    query = req.query           // Query parameters
+    headers = req.headers       // Request headers
+    body = req.body            // Request body (for POST/PUT)
+    params = req.params        // Route parameters
+    cookies = req.cookies      // Request cookies
+    
+    // Response methods
+    res.send("Text response")              // Send text
+    res.json({data: "value"})              // Send JSON
+    res.status(404).send("Not found")      // Set status
+    res.redirect("/new-location")          // Redirect
+    res.cookie("session", "abc123")        // Set cookie
+    res.header("X-Custom", "value")        // Set header
+})
+```
+
+## Utility Functions
+
+### URL Encoding/Decoding
+
+Handle URL encoding and decoding:
+
+```javascript
+// Encode URL component
+encoded = HTTP.urlEncode("hello world & special chars")
+println(encoded)  // "hello%20world%20%26%20special%20chars"
+
+// Decode URL component
+decoded = HTTP.urlDecode("hello%20world%20%26%20special%20chars")
+println(decoded)  // "hello world & special chars"
+```
+
+### Query String Handling
+
+Parse and build query strings:
+
+```javascript
+// Parse query string
+query = HTTP.parseQuery("name=John&age=30&city=New+York")
+println(query.name)   // "John"
+println(query.age)    // "30"
+println(query.city)   // "New York"
+
+// Build query string
+params = {
+    name: "Alice",
+    age: 25,
+    tags: ["developer", "designer"]
+}
+queryString = HTTP.buildQuery(params)
+println(queryString)  // "name=Alice&age=25&tags=developer&tags=designer"
+```
+
+### Cookie Management
+
+Work with HTTP cookies:
+
+```javascript
+// Parse cookie string
+cookies = HTTP.cookie("session=abc123; user=john; theme=dark")
+println(cookies.session)  // "abc123"
+println(cookies.user)     // "john"
+
+// Create set-cookie header
+cookieHeader = HTTP.setCookie("session", "xyz789", {
+    maxAge: 3600,      // 1 hour
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    domain: ".example.com"
+})
+```
+
+## Advanced Examples
+
+### API Client Example
+
+```javascript
+soul createAPIClient(baseURL, apiKey) {
+    soul makeRequest(method, path, data) {
+        url = baseURL + path
+        options = {
+            headers: {
+                "X-API-Key": apiKey,
+                "Content-Type": "application/json"
+            }
+        }
+        
+        if (method == "GET") {
+            return HTTP.get(url, options)
+        } else if (method == "POST") {
+            return HTTP.post(url, data, options)
+        } else if (method == "PUT") {
+            return HTTP.put(url, data, options)
+        } else if (method == "DELETE") {
+            return HTTP.delete(url, options)
+        }
+    }
+    
+    return {
+        get: soul(path) { return makeRequest("GET", path) },
+        post: soul(path, data) { return makeRequest("POST", path, data) },
+        put: soul(path, data) { return makeRequest("PUT", path, data) },
+        delete: soul(path) { return makeRequest("DELETE", path) }
+    }
+}
+
+// Usage
+api = createAPIClient("https://api.example.com", "secret123")
+users = api.get("/users").json
+newUser = api.post("/users", {name: "Bob"}).json
+```
+
+### REST API Server
+
+```javascript
+soul createRESTServer() {
+    server = HTTP.createServer(3000)
+    
+    // In-memory data store
+    users = []
+    nextId = 1
+    
+    // GET all users
+    server.get("/api/users", soul(req, res) {
+        res.json(users)
+    })
+    
+    // GET user by ID
+    server.get("/api/users/:id", soul(req, res) {
+        userId = parseInt(req.params.id)
+        user = users.find(soul(u) { return u.id == userId })
+        
+        if (user) {
+            res.json(user)
+        } else {
+            res.status(404).json({error: "User not found"})
+        }
+    })
+    
+    // POST create user
+    server.post("/api/users", soul(req, res) {
+        user = req.body
+        user.id = nextId++
+        users.push(user)
+        res.status(201).json(user)
+    })
+    
+    // PUT update user
+    server.put("/api/users/:id", soul(req, res) {
+        userId = parseInt(req.params.id)
+        index = users.findIndex(soul(u) { return u.id == userId })
+        
+        if (index >= 0) {
+            users[index] = {...users[index], ...req.body}
+            res.json(users[index])
+        } else {
+            res.status(404).json({error: "User not found"})
+        }
+    })
+    
+    // DELETE user
+    server.delete("/api/users/:id", soul(req, res) {
+        userId = parseInt(req.params.id)
+        index = users.findIndex(soul(u) { return u.id == userId })
+        
+        if (index >= 0) {
+            users.splice(index, 1)
+            res.status(204).send()
+        } else {
+            res.status(404).json({error: "User not found"})
+        }
+    })
+    
+    return server
+}
+
+// Start the server
+server = createRESTServer()
+server.listen(soul() {
+    println("REST API running on http://localhost:3000")
+})
+```
+
+### Web Scraping Example
+
+```javascript
+soul scrapePage(url) {
+    response = HTTP.get(url)
+    
+    if (response.status != 200) {
+        return {error: "Failed to fetch page"}
+    }
+    
+    // Extract data from HTML (simplified example)
+    html = response.body
+    
+    // Extract title
+    titleMatch = html.match(/<title>(.*?)<\/title>/)
+    title = titleMatch ? titleMatch[1] : "No title"
+    
+    // Extract meta description
+    descMatch = html.match(/<meta name="description" content="(.*?)"/)
+    description = descMatch ? descMatch[1] : "No description"
+    
+    // Extract all links
+    links = []
+    linkMatches = html.matchAll(/<a href="(.*?)">(.*?)<\/a>/g)
+    for (match in linkMatches) {
+        links.push({
+            url: match[1],
+            text: match[2]
+        })
+    }
+    
+    return {
+        title: title,
+        description: description,
+        links: links,
+        url: url
+    }
+}
+
+// Usage
+pageData = scrapePage("https://example.com")
+println("Title: " + pageData.title)
+println("Links found: " + pageData.links.length)
+```
+
+### Webhook Handler
+
+```javascript
+soul createWebhookServer() {
+    server = HTTP.createServer(8080)
+    
+    // Webhook endpoint
+    server.post("/webhook", soul(req, res) {
+        // Verify webhook signature
+        signature = req.headers["x-webhook-signature"]
+        if (!verifySignature(req.body, signature)) {
+            res.status(401).json({error: "Invalid signature"})
+            return
+        }
+        
+        // Process webhook data
+        event = req.body
+        println("Received webhook: " + event.type)
+        
+        // Handle different event types
+        if (event.type == "user.created") {
+            // Process new user
+            println("New user: " + event.data.email)
+        } else if (event.type == "payment.completed") {
+            // Process payment
+            println("Payment completed: $" + event.data.amount)
+        }
+        
+        // Acknowledge receipt
+        res.json({received: true})
+    })
+    
+    return server
+}
+
+// Helper function to verify signature
+soul verifySignature(body, signature) {
+    // Implement signature verification logic
+    return true  // Simplified
+}
+```
+
+## Best Practices
+
+1. **Error Handling**: Always check response status codes
+2. **Timeouts**: Set appropriate timeouts for long-running requests
+3. **Headers**: Use proper content types and authorization headers
+4. **JSON**: Leverage automatic JSON parsing and serialization
+5. **Security**: Use HTTPS, validate inputs, and implement proper authentication
+
+```javascript
+// Good - error handling
+soul makeAPICall(url) {
+    try {
+        response = HTTP.get(url, {timeout: 30})
+        
+        if (response.status >= 200 && response.status < 300) {
+            return {success: true, data: response.json}
+        } else {
+            return {success: false, error: "HTTP " + response.status}
+        }
+    } catch (e) {
+        return {success: false, error: e.message}
+    }
+}
+
+// Good - reusable configuration
+soul createHTTPClient(config) {
+    defaultOptions = {
+        headers: config.headers || {},
+        timeout: config.timeout || 30
+    }
+    
+    return {
+        get: soul(url) { 
+            return HTTP.get(url, defaultOptions) 
+        },
+        post: soul(url, data) { 
+            return HTTP.post(url, data, defaultOptions) 
+        }
+    }
+}
+
+// Good - middleware composition
+server.use(corsMiddleware())
+server.use(authMiddleware())
+server.use(loggingMiddleware())
+server.use(errorHandler())
+```
+
+The HTTP module provides a complete solution for HTTP communication in Soul, supporting both client-side requests and server-side web applications with modern features like middleware, routing, and JSON handling.

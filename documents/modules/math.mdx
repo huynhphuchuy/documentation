@@ -1,0 +1,578 @@
+---
+title: "Math"
+description: "Mathematical operations and constants module for Soul"
+---
+
+# Math
+
+The Math module provides comprehensive mathematical operations, constants, and utility functions for Soul. It includes basic arithmetic operations, trigonometric functions, logarithmic functions, statistical operations, and random number generation capabilities.
+
+## Mathematical Constants
+
+The Math module provides commonly used mathematical constants:
+
+### PI - Circle constant π
+
+The ratio of a circle's circumference to its diameter:
+
+```javascript
+radius = 5
+circumference = 2 * Math.PI * radius
+println(circumference)  // 31.415926535897932
+```
+
+### E - Euler's number
+
+The base of natural logarithms:
+
+```javascript
+naturalLog = Math.log(Math.E)
+println(naturalLog)     // 1
+```
+
+### TAU - Circle constant τ
+
+The ratio of a circle's circumference to its radius (2π):
+
+```javascript
+radius = 5
+circumference = Math.TAU * radius
+println(circumference)  // 31.415926535897932
+```
+
+### EPSILON - Machine epsilon
+
+The smallest representable positive number:
+
+```javascript
+println(Math.EPSILON)   // 2.2204460492503130808472633361816E-16
+```
+
+## Basic Mathematical Operations
+
+### abs - Absolute value
+
+Returns the absolute value of a number:
+
+```javascript
+positive = Math.abs(5)
+negative = Math.abs(-5)
+zero = Math.abs(0)
+
+println(positive)  // 5
+println(negative)  // 5
+println(zero)      // 0
+```
+
+### sign - Sign of number
+
+Returns the sign of a number (-1, 0, or 1):
+
+```javascript
+positive = Math.sign(42)
+negative = Math.sign(-42)
+zero = Math.sign(0)
+
+println(positive)  // 1
+println(negative)  // -1
+println(zero)      // 0
+```
+
+### max - Maximum value
+
+Returns the largest of two or more numbers:
+
+```javascript
+maximum = Math.max(5, 10, 3, 8)
+println(maximum)   // 10
+
+// With negative numbers
+maximum = Math.max(-5, -10, -3)
+println(maximum)   // -3
+```
+
+### min - Minimum value
+
+Returns the smallest of two or more numbers:
+
+```javascript
+minimum = Math.min(5, 10, 3, 8)
+println(minimum)   // 3
+
+// With negative numbers
+minimum = Math.min(-5, -10, -3)
+println(minimum)   // -10
+```
+
+### clamp - Clamp value between bounds
+
+Restricts a value to be within a specified range:
+
+```javascript
+// Clamp to range [0, 10]
+result1 = Math.clamp(15, 0, 10)  // 10 (clamped to max)
+result2 = Math.clamp(-5, 0, 10)  // 0 (clamped to min)
+result3 = Math.clamp(5, 0, 10)   // 5 (within range)
+
+println(result1)  // 10
+println(result2)  // 0
+println(result3)  // 5
+```
+
+## Rounding Operations
+
+### ceil - Round up
+
+Returns the smallest integer greater than or equal to a number:
+
+```javascript
+rounded = Math.ceil(4.3)
+println(rounded)    // 5
+
+rounded = Math.ceil(-4.3)
+println(rounded)    // -4
+```
+
+### floor - Round down
+
+Returns the largest integer less than or equal to a number:
+
+```javascript
+rounded = Math.floor(4.7)
+println(rounded)    // 4
+
+rounded = Math.floor(-4.7)
+println(rounded)    // -5
+```
+
+### round - Round to nearest integer
+
+Returns the nearest integer, rounding half away from zero:
+
+```javascript
+rounded = Math.round(4.5)
+println(rounded)    // 5
+
+rounded = Math.round(4.4)
+println(rounded)    // 4
+
+rounded = Math.round(-4.5)
+println(rounded)    // -5
+```
+
+## Power and Root Operations
+
+### pow - Power function
+
+Returns base raised to the power of exponent:
+
+```javascript
+result = Math.pow(2, 3)
+println(result)     // 8
+
+result = Math.pow(9, 0.5)
+println(result)     // 3 (square root)
+
+result = Math.pow(2, -2)
+println(result)     // 0.25
+```
+
+### sqrt - Square root
+
+Returns the square root of a number:
+
+```javascript
+result = Math.sqrt(9)
+println(result)     // 3
+
+result = Math.sqrt(2)
+println(result)     // 1.4142135623730951
+
+// Note: sqrt of negative numbers returns null
+result = Math.sqrt(-9)
+println(result)     // null
+```
+
+## Logarithmic and Exponential Functions
+
+### log - Natural logarithm
+
+Returns the natural logarithm (base e) of a number:
+
+```javascript
+result = Math.log(Math.E)
+println(result)     // 1
+
+result = Math.log(10)
+println(result)     // 2.302585092994046
+
+// Note: log of zero or negative numbers returns null
+result = Math.log(0)
+println(result)     // null
+```
+
+### exp - Exponential function
+
+Returns e raised to the power of a number:
+
+```javascript
+result = Math.exp(1)
+println(result)     // 2.718281828459045 (Math.E)
+
+result = Math.exp(0)
+println(result)     // 1
+
+result = Math.exp(2)
+println(result)     // 7.38905609893065
+```
+
+## Trigonometric Functions
+
+### sin - Sine function
+
+Returns the sine of an angle (in radians):
+
+```javascript
+result = Math.sin(0)
+println(result)     // 0
+
+result = Math.sin(Math.PI / 2)
+println(result)     // 1
+
+result = Math.sin(Math.PI)
+println(result)     // 0 (approximately)
+```
+
+### cos - Cosine function
+
+Returns the cosine of an angle (in radians):
+
+```javascript
+result = Math.cos(0)
+println(result)     // 1
+
+result = Math.cos(Math.PI / 2)
+println(result)     // 0 (approximately)
+
+result = Math.cos(Math.PI)
+println(result)     // -1
+```
+
+### tan - Tangent function
+
+Returns the tangent of an angle (in radians):
+
+```javascript
+result = Math.tan(0)
+println(result)     // 0
+
+result = Math.tan(Math.PI / 4)
+println(result)     // 1 (approximately)
+
+result = Math.tan(Math.PI)
+println(result)     // 0 (approximately)
+```
+
+## Modulo Operations
+
+### mod - Modulo operation
+
+Returns the floating-point remainder of x divided by y:
+
+```javascript
+result = Math.mod(10, 3)
+println(result)     // 1
+
+result = Math.mod(10.5, 3)
+println(result)     // 1.5
+
+result = Math.mod(-10, 3)
+println(result)     // -1
+
+// Note: mod by zero returns null
+result = Math.mod(10, 0)
+println(result)     // null
+```
+
+## Number Testing Functions
+
+### isPositive - Check if positive
+
+Tests if a number is positive:
+
+```javascript
+result = Math.isPositive(5)
+println(result)     // true
+
+result = Math.isPositive(-5)
+println(result)     // false
+
+result = Math.isPositive(0)
+println(result)     // false
+```
+
+### isNegative - Check if negative
+
+Tests if a number is negative:
+
+```javascript
+result = Math.isNegative(-5)
+println(result)     // true
+
+result = Math.isNegative(5)
+println(result)     // false
+
+result = Math.isNegative(0)
+println(result)     // false
+```
+
+### isZero - Check if zero
+
+Tests if a number is zero:
+
+```javascript
+result = Math.isZero(0)
+println(result)     // true
+
+result = Math.isZero(0.0)
+println(result)     // true
+
+result = Math.isZero(1)
+println(result)     // false
+```
+
+## Random Number Generation
+
+### random - Generate random number
+
+Generates a random number between 0 and 1 (exclusive):
+
+```javascript
+// Random number between 0 and 1
+randomNum = Math.random()
+println(randomNum)  // e.g., 0.7234567890123456
+
+// Random number between 0 and max
+randomNum = Math.random(10)
+println(randomNum)  // e.g., 7.234567890123456
+
+// Random number between min and max
+randomNum = Math.random(5, 15)
+println(randomNum)  // e.g., 12.234567890123456
+```
+
+### seed - Set random seed
+
+Sets the seed for the random number generator:
+
+```javascript
+// Set a specific seed for reproducible results
+Math.seed(12345)
+random1 = Math.random()
+random2 = Math.random()
+
+// Reset with same seed - will produce same sequence
+Math.seed(12345)
+random3 = Math.random()
+random4 = Math.random()
+
+println(random1 == random3)  // true
+println(random2 == random4)  // true
+
+// Access current seed
+currentSeed = Math.seed
+println(currentSeed)  // 12345
+```
+
+## Practical Examples
+
+### Distance Calculation
+
+```javascript
+soul distance(x1, y1, x2, y2) {
+    dx = x2 - x1
+    dy = y2 - y1
+    return Math.sqrt(dx * dx + dy * dy)
+}
+
+// Calculate distance between two points
+dist = distance(0, 0, 3, 4)
+println(dist)  // 5
+```
+
+### Angle Conversions
+
+```javascript
+soul degreesToRadians(degrees) {
+    return degrees * Math.PI / 180
+}
+
+soul radiansToDegrees(radians) {
+    return radians * 180 / Math.PI
+}
+
+// Convert 45 degrees to radians
+radians = degreesToRadians(45)
+println(radians)  // 0.7853981633974483
+
+// Convert back to degrees
+degrees = radiansToDegrees(radians)
+println(degrees)  // 45
+```
+
+### Statistical Calculations
+
+```javascript
+soul standardDeviation(values) {
+    n = Array.length(values)
+    if (n == 0) return 0
+    
+    // Calculate mean
+    mean = Array.sum(values) / n
+    
+    // Calculate variance
+    variance = Array.reduce(values, soul(acc, x) {
+        diff = x - mean
+        return acc + diff * diff
+    }, 0) / n
+    
+    return Math.sqrt(variance)
+}
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+stdDev = standardDeviation(numbers)
+println(stdDev)  // 2.8722813232690143
+```
+
+### Geometric Calculations
+
+```javascript
+soul circleArea(radius) {
+    return Math.PI * radius * radius
+}
+
+soul sphereVolume(radius) {
+    return (4/3) * Math.PI * Math.pow(radius, 3)
+}
+
+// Calculate area of a circle with radius 5
+area = circleArea(5)
+println(area)  // 78.53981633974483
+
+// Calculate volume of a sphere with radius 3
+volume = sphereVolume(3)
+println(volume)  // 113.09733552923255
+```
+
+### Random Number Utilities
+
+```javascript
+soul randomInt(min, max) {
+    return Math.floor(Math.random(min, max + 1))
+}
+
+soul randomChoice(array) {
+    index = randomInt(0, Array.length(array) - 1)
+    return Array.get(array, index)
+}
+
+soul shuffle(array) {
+    result = Array.copy(array)
+    for (i = Array.length(result) - 1; i > 0; i--) {
+        j = randomInt(0, i)
+        // Swap elements
+        temp = Array.get(result, i)
+        Array.set(result, i, Array.get(result, j))
+        Array.set(result, j, temp)
+    }
+    return result
+}
+
+// Generate random integer between 1 and 10
+randomNum = randomInt(1, 10)
+println(randomNum)
+
+// Choose random element from array
+colors = ["red", "green", "blue", "yellow"]
+randomColor = randomChoice(colors)
+println(randomColor)
+
+// Shuffle array
+shuffled = shuffle([1, 2, 3, 4, 5])
+println(shuffled)
+```
+
+### Trigonometric Applications
+
+```javascript
+soul polarToCartesian(r, theta) {
+    x = r * Math.cos(theta)
+    y = r * Math.sin(theta)
+    return {x: x, y: y}
+}
+
+soul cartesianToPolar(x, y) {
+    r = Math.sqrt(x * x + y * y)
+    theta = Math.atan2(y, x)  // Note: atan2 not implemented, using approximation
+    return {r: r, theta: theta}
+}
+
+// Convert polar coordinates to cartesian
+point = polarToCartesian(5, Math.PI / 4)
+println(point)  // {x: 3.5355339059327378, y: 3.5355339059327378}
+```
+
+### Financial Calculations
+
+```javascript
+soul compoundInterest(principal, rate, time, compound) {
+    return principal * Math.pow(1 + rate / compound, compound * time)
+}
+
+soul simpleInterest(principal, rate, time) {
+    return principal * (1 + rate * time)
+}
+
+// Calculate compound interest
+// $1000 at 5% annually for 10 years, compounded quarterly
+amount = compoundInterest(1000, 0.05, 10, 4)
+println(amount)  // 1643.61947
+
+// Calculate simple interest
+amount = simpleInterest(1000, 0.05, 10)
+println(amount)  // 1500
+```
+
+## Best Practices
+
+1. **Handle edge cases**: Always check for invalid inputs (negative numbers for sqrt, zero for division)
+2. **Use appropriate precision**: Be aware of floating-point precision limitations
+3. **Choose the right function**: Use appropriate mathematical functions for your use case
+4. **Angle units**: Remember that trigonometric functions use radians, not degrees
+5. **Random seeding**: Set seeds for reproducible random sequences when needed
+
+```javascript
+// Good - handle edge cases
+soul safeDivision(a, b) {
+    if (Math.isZero(b)) {
+        return null  // or throw error
+    }
+    return a / b
+}
+
+// Good - use constants
+circumference = 2 * Math.PI * radius  // Use Math.PI instead of 3.14159
+
+// Good - convert degrees to radians
+angleInRadians = angleInDegrees * Math.PI / 180
+sineValue = Math.sin(angleInRadians)
+
+// Good - set seed for reproducible results
+Math.seed(42)
+randomSequence = [Math.random(), Math.random(), Math.random()]
+
+// Good - clamp values to valid ranges
+normalizedValue = Math.clamp(inputValue, 0, 1)
+```
+
+The Math module provides a comprehensive set of mathematical functions and constants for Soul, enabling complex mathematical computations, statistical analysis, and geometric calculations with precision and reliability.

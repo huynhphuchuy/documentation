@@ -1,0 +1,674 @@
+---
+title: "Crypto"
+description: "Cryptographic operations and security utilities for Soul"
+---
+
+# Crypto
+
+The Crypto module provides comprehensive cryptographic capabilities for Soul, including hashing, HMAC authentication, Base64 encoding, and JWT (JSON Web Token) operations. It offers essential security functions for data integrity, authentication, and secure communication.
+
+## Base64 Encoding
+
+### base64Encode - Encode string to Base64
+
+Convert a string to Base64 encoding:
+
+```javascript
+// Encode to standard Base64
+plainText = "Hello, World!"
+encoded = Crypto.base64Encode(plainText)
+println(encoded)  // SGVsbG8sIFdvcmxkIQ==
+
+// Encode binary data
+binaryData = "This is binary data"
+encoded = Crypto.base64Encode(binaryData)
+println(encoded)  // VGhpcyBpcyBiaW5hcnkgZGF0YQ==
+```
+
+### base64Decode - Decode Base64 to string
+
+Convert Base64 encoded string back to original text:
+
+```javascript
+// Decode from Base64
+encoded = "SGVsbG8sIFdvcmxkIQ=="
+decoded = Crypto.base64Decode(encoded)
+println(decoded)  // Hello, World!
+
+// Handle decoding errors
+invalidBase64 = "invalid_base64!"
+result = Crypto.base64Decode(invalidBase64)
+if (result.type() == "ERROR") {
+    println("Decoding failed: " + result)
+}
+```
+
+### base64UrlEncode - URL-safe Base64 encoding
+
+Encode string using URL-safe Base64 format (no padding):
+
+```javascript
+// URL-safe encoding (no padding)
+data = "Hello, World!"
+urlSafeEncoded = Crypto.base64UrlEncode(data)
+println(urlSafeEncoded)  // SGVsbG8sIFdvcmxkIQ
+
+// Compare with standard Base64
+standardEncoded = Crypto.base64Encode(data)
+println(standardEncoded)  // SGVsbG8sIFdvcmxkIQ==
+```
+
+### base64UrlDecode - URL-safe Base64 decoding
+
+Decode URL-safe Base64 encoded strings:
+
+```javascript
+// URL-safe decoding
+encoded = "SGVsbG8sIFdvcmxkIQ"
+decoded = Crypto.base64UrlDecode(encoded)
+println(decoded)  // Hello, World!
+
+// Automatically handles padding
+noPadding = "SGVsbG8"
+decoded = Crypto.base64UrlDecode(noPadding)
+println(decoded)  // Hello
+```
+
+## Hash Functions
+
+### md5 - Compute MD5 hash
+
+Generate MD5 hash of a string (hex format):
+
+```javascript
+// Basic MD5 hashing
+text = "Hello, World!"
+hash = Crypto.md5(text)
+println(hash)  // 65a8e27d8879283831b664bd8b7f0ad4
+
+// Hash passwords (not recommended for production)
+password = "mypassword123"
+hash = Crypto.md5(password)
+println(hash)  // 482c811da5d5b4bc6d497ffa98491e38
+```
+
+### sha256 - Compute SHA-256 hash
+
+Generate SHA-256 hash of a string (hex format):
+
+```javascript
+// SHA-256 hashing
+text = "Hello, World!"
+hash = Crypto.sha256(text)
+println(hash)  // dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f
+
+// Hash sensitive data
+sensitiveData = "user_secret_data"
+hash = Crypto.sha256(sensitiveData)
+println(hash)  // 7d865e959b2466918c9863afca942d0fb89d7c9ac0c99bafc3749504ded97730
+```
+
+### sha512 - Compute SHA-512 hash
+
+Generate SHA-512 hash of a string (hex format):
+
+```javascript
+// SHA-512 hashing
+text = "Hello, World!"
+hash = Crypto.sha512(text)
+println(hash)  // 374d794a95cdcfd8b35993185fef9ba368f160d8daf432d08ba9f1ed1e5abe6cc69291e0fa2fe0006a52570ef18c19def4e617c33ce52ef0a6e5fbe318cb0387
+
+// Hash large data
+largeData = "This is a large amount of data that needs secure hashing"
+hash = Crypto.sha512(largeData)
+println(hash)  // Long SHA-512 hash
+```
+
+## HMAC Authentication
+
+### hmacSha256 - HMAC-SHA256 authentication
+
+Generate HMAC-SHA256 for message authentication:
+
+```javascript
+// Basic HMAC-SHA256
+message = "Hello, World!"
+secret = "my-secret-key"
+hmac = Crypto.hmacSha256(message, secret)
+println(hmac)  // 2b9d6f5f6f5d5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f
+
+// API request signing
+apiData = "GET /api/users timestamp=1234567890"
+apiSecret = "api-secret-key-123"
+signature = Crypto.hmacSha256(apiData, apiSecret)
+println("API Signature: " + signature)
+```
+
+### hmacSha512 - HMAC-SHA512 authentication
+
+Generate HMAC-SHA512 for stronger authentication:
+
+```javascript
+// HMAC-SHA512 for enhanced security
+message = "Sensitive transaction data"
+secret = "super-secret-key"
+hmac = Crypto.hmacSha512(message, secret)
+println(hmac)  // Long HMAC-SHA512 hash
+
+// Webhook signature verification
+webhookPayload = '{"event": "user_created", "data": {"id": 123}}'
+webhookSecret = "webhook-secret-key"
+expectedSignature = Crypto.hmacSha512(webhookPayload, webhookSecret)
+println("Webhook Signature: " + expectedSignature)
+```
+
+## JWT Operations
+
+### jwtSign - Sign JWT tokens
+
+Create and sign JWT tokens:
+
+```javascript
+// Basic JWT signing
+payload = {
+    sub: "user123",
+    name: "John Doe",
+    admin: true
+}
+secret = "jwt-secret-key"
+token = Crypto.jwtSign(payload, secret)
+println(token)  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+// JWT with custom expiration
+payload = {
+    sub: "user456",
+    name: "Jane Smith",
+    role: "admin"
+}
+options = {
+    expiresIn: 7200,  // 2 hours
+    algorithm: "HS256"
+}
+token = Crypto.jwtSign(payload, secret, options)
+println(token)
+```
+
+### jwtVerify - Verify JWT tokens
+
+Verify and decode JWT tokens:
+
+```javascript
+// Verify JWT token
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+secret = "jwt-secret-key"
+payload = Crypto.jwtVerify(token, secret)
+
+if (payload.type() == "ERROR") {
+    println("Token verification failed: " + payload)
+} else {
+    println("User ID: " + payload.sub)
+    println("Name: " + payload.name)
+    println("Admin: " + payload.admin)
+}
+
+// Handle expired tokens
+expiredToken = "expired.jwt.token"
+result = Crypto.jwtVerify(expiredToken, secret)
+if (result.type() == "ERROR") {
+    println("Token expired or invalid")
+}
+```
+
+### jwtDecode - Decode JWT without verification
+
+Decode JWT token without signature verification:
+
+```javascript
+// Decode JWT header and payload
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+decoded = Crypto.jwtDecode(token)
+
+// Access header information
+header = decoded.header
+println("Algorithm: " + header.alg)  // HS256
+println("Type: " + header.typ)       // JWT
+
+// Access payload claims
+payload = decoded.payload
+println("Subject: " + payload.sub)
+println("Issued At: " + payload.iat)
+println("Expires At: " + payload.exp)
+```
+
+## Security Best Practices
+
+### Password Hashing
+
+```javascript
+soul hashPassword(password, salt) {
+    // Combine password with salt
+    combined = password + salt
+    
+    // Use SHA-256 for password hashing
+    hash = Crypto.sha256(combined)
+    
+    return {
+        hash: hash,
+        salt: salt
+    }
+}
+
+soul verifyPassword(password, storedHash, salt) {
+    // Hash the provided password with salt
+    result = hashPassword(password, salt)
+    
+    // Compare with stored hash
+    return result.hash == storedHash
+}
+
+// Usage
+password = "user_password_123"
+salt = "random_salt_value"
+stored = hashPassword(password, salt)
+
+// Verify password
+isValid = verifyPassword("user_password_123", stored.hash, stored.salt)
+println("Password valid: " + isValid)  // true
+```
+
+### API Request Signing
+
+```javascript
+soul signApiRequest(method, path, body, secret) {
+    // Create timestamp
+    timestamp = Time.now()
+    
+    // Create signature payload
+    payload = method + path + body + timestamp
+    
+    // Generate HMAC signature
+    signature = Crypto.hmacSha256(payload, secret)
+    
+    return {
+        signature: signature,
+        timestamp: timestamp
+    }
+}
+
+soul verifyApiSignature(method, path, body, timestamp, signature, secret) {
+    // Recreate payload
+    payload = method + path + body + timestamp
+    
+    // Calculate expected signature
+    expectedSignature = Crypto.hmacSha256(payload, secret)
+    
+    // Compare signatures
+    return signature == expectedSignature
+}
+
+// Usage
+apiSecret = "api-secret-key"
+requestBody = '{"data": "example"}'
+auth = signApiRequest("POST", "/api/data", requestBody, apiSecret)
+
+// Verify on server side
+isValid = verifyApiSignature("POST", "/api/data", requestBody, 
+                            auth.timestamp, auth.signature, apiSecret)
+```
+
+### JWT Authentication System
+
+```javascript
+soul createAuthToken(user, secret) {
+    // Create JWT payload
+    payload = {
+        sub: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        iat: Time.now()
+    }
+    
+    // Sign with 24 hour expiration
+    options = {
+        expiresIn: 86400  // 24 hours
+    }
+    
+    return Crypto.jwtSign(payload, secret, options)
+}
+
+soul validateAuthToken(token, secret) {
+    // Verify JWT token
+    payload = Crypto.jwtVerify(token, secret)
+    
+    if (payload.type() == "ERROR") {
+        return {
+            valid: false,
+            error: "Invalid or expired token"
+        }
+    }
+    
+    // Extract user information
+    return {
+        valid: true,
+        user: {
+            id: payload.sub,
+            name: payload.name,
+            email: payload.email,
+            role: payload.role
+        }
+    }
+}
+
+// Usage
+user = {
+    id: "user123",
+    name: "John Doe",
+    email: "john@example.com",
+    role: "admin"
+}
+
+jwtSecret = "jwt-secret-key"
+token = createAuthToken(user, jwtSecret)
+println("Generated token: " + token)
+
+// Validate token
+validation = validateAuthToken(token, jwtSecret)
+if (validation.valid) {
+    println("User authenticated: " + validation.user.name)
+} else {
+    println("Authentication failed: " + validation.error)
+}
+```
+
+### Data Integrity Verification
+
+```javascript
+soul createDataPackage(data, secret) {
+    // Serialize data
+    jsonData = JSON.encode(data)
+    
+    // Create hash for integrity
+    hash = Crypto.sha256(jsonData)
+    
+    // Create HMAC for authenticity
+    hmac = Crypto.hmacSha256(jsonData, secret)
+    
+    // Encode package
+    package = {
+        data: jsonData,
+        hash: hash,
+        hmac: hmac,
+        timestamp: Time.now()
+    }
+    
+    // Base64 encode the entire package
+    return Crypto.base64Encode(JSON.encode(package))
+}
+
+soul verifyDataPackage(encodedPackage, secret) {
+    // Decode package
+    packageJson = Crypto.base64Decode(encodedPackage)
+    package = JSON.decode(packageJson)
+    
+    // Verify integrity
+    expectedHash = Crypto.sha256(package.data)
+    if (package.hash != expectedHash) {
+        return {valid: false, error: "Data integrity check failed"}
+    }
+    
+    // Verify authenticity
+    expectedHmac = Crypto.hmacSha256(package.data, secret)
+    if (package.hmac != expectedHmac) {
+        return {valid: false, error: "Data authenticity check failed"}
+    }
+    
+    // Return verified data
+    return {
+        valid: true,
+        data: JSON.decode(package.data),
+        timestamp: package.timestamp
+    }
+}
+
+// Usage
+originalData = {
+    id: 123,
+    message: "Important data",
+    amount: 1000.50
+}
+
+dataSecret = "data-secret-key"
+package = createDataPackage(originalData, dataSecret)
+println("Secure package created")
+
+// Verify package
+verification = verifyDataPackage(package, dataSecret)
+if (verification.valid) {
+    println("Data verified: " + JSON.encode(verification.data))
+} else {
+    println("Verification failed: " + verification.error)
+}
+```
+
+## Error Handling
+
+### Cryptographic Error Handling
+
+```javascript
+soul safeHash(data, algorithm) {
+    result = null
+    
+    switch (algorithm) {
+        case "md5":
+            result = Crypto.md5(data)
+        case "sha256":
+            result = Crypto.sha256(data)
+        case "sha512":
+            result = Crypto.sha512(data)
+        default:
+            return {success: false, error: "Unsupported algorithm"}
+    }
+    
+    if (result.type() == "ERROR") {
+        return {success: false, error: result.String()}
+    }
+    
+    return {success: true, hash: result}
+}
+
+soul safeBase64Encode(data) {
+    result = Crypto.base64Encode(data)
+    
+    if (result.type() == "ERROR") {
+        return {success: false, error: result.String()}
+    }
+    
+    return {success: true, encoded: result}
+}
+
+soul safeJwtVerify(token, secret) {
+    result = Crypto.jwtVerify(token, secret)
+    
+    if (result.type() == "ERROR") {
+        return {valid: false, error: result.String()}
+    }
+    
+    return {valid: true, payload: result}
+}
+
+// Usage examples
+hashResult = safeHash("test data", "sha256")
+if (hashResult.success) {
+    println("Hash: " + hashResult.hash)
+} else {
+    println("Hashing failed: " + hashResult.error)
+}
+```
+
+## Advanced Examples
+
+### Multi-factor Authentication
+
+```javascript
+soul generateTOTP(secret, timeStep) {
+    // Get current time step
+    currentTime = Time.now()
+    timeCounter = Math.floor(currentTime / timeStep)
+    
+    // Create HMAC with time counter
+    counter = String(timeCounter)
+    hmac = Crypto.hmacSha256(counter, secret)
+    
+    // Generate 6-digit code
+    code = hmac.substring(0, 6)
+    return code
+}
+
+soul verifyTOTP(userCode, secret, timeStep, window) {
+    // Check current time step and surrounding window
+    currentTime = Time.now()
+    currentStep = Math.floor(currentTime / timeStep)
+    
+    for (i = -window; i <= window; i++) {
+        step = currentStep + i
+        counter = String(step)
+        hmac = Crypto.hmacSha256(counter, secret)
+        expectedCode = hmac.substring(0, 6)
+        
+        if (userCode == expectedCode) {
+            return true
+        }
+    }
+    
+    return false
+}
+
+// Usage
+totpSecret = "user-totp-secret"
+timeStep = 30  // 30 seconds
+window = 1     // Allow 1 step before/after
+
+code = generateTOTP(totpSecret, timeStep)
+println("TOTP Code: " + code)
+
+// Verify code
+isValid = verifyTOTP(code, totpSecret, timeStep, window)
+println("TOTP Valid: " + isValid)
+```
+
+### Secure Session Management
+
+```javascript
+soul createSession(userId, secret) {
+    // Create session data
+    sessionData = {
+        userId: userId,
+        created: Time.now(),
+        expires: Time.now() + 3600,  // 1 hour
+        nonce: Crypto.sha256(String(Time.now()) + userId)
+    }
+    
+    // Create session token
+    token = Crypto.jwtSign(sessionData, secret)
+    
+    // Create session ID
+    sessionId = Crypto.sha256(token)
+    
+    return {
+        sessionId: sessionId,
+        token: token,
+        expires: sessionData.expires
+    }
+}
+
+soul validateSession(sessionId, token, secret) {
+    // Verify session ID matches token
+    expectedId = Crypto.sha256(token)
+    if (sessionId != expectedId) {
+        return {valid: false, error: "Session ID mismatch"}
+    }
+    
+    // Verify JWT token
+    payload = Crypto.jwtVerify(token, secret)
+    if (payload.type() == "ERROR") {
+        return {valid: false, error: "Invalid session token"}
+    }
+    
+    // Check expiration
+    if (Time.now() > payload.expires) {
+        return {valid: false, error: "Session expired"}
+    }
+    
+    return {
+        valid: true,
+        userId: payload.userId,
+        created: payload.created,
+        expires: payload.expires
+    }
+}
+
+// Usage
+sessionSecret = "session-secret-key"
+session = createSession("user123", sessionSecret)
+println("Session created: " + session.sessionId)
+
+// Validate session
+validation = validateSession(session.sessionId, session.token, sessionSecret)
+if (validation.valid) {
+    println("Session valid for user: " + validation.userId)
+} else {
+    println("Session validation failed: " + validation.error)
+}
+```
+
+## Best Practices
+
+1. **Use strong secrets**: Always use cryptographically strong secrets for HMAC and JWT operations
+2. **Hash sensitive data**: Use SHA-256 or SHA-512 for hashing sensitive information
+3. **Implement proper error handling**: Always check for ERROR types in cryptographic operations
+4. **Use appropriate algorithms**: Choose the right hashing algorithm for your security needs
+5. **Validate inputs**: Always validate input data before cryptographic operations
+6. **Handle JWT expiration**: Implement proper token expiration and refresh mechanisms
+
+```javascript
+// Good - Strong secret generation
+soul generateSecret(length) {
+    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    secret = ""
+    for (i = 0; i < length; i++) {
+        randomIndex = Math.floor(Math.random() * chars.length)
+        secret += chars.substring(randomIndex, randomIndex + 1)
+    }
+    return Crypto.sha256(secret)  // Hash for additional security
+}
+
+// Good - Secure comparison
+soul secureCompare(a, b) {
+    if (a.length != b.length) {
+        return false
+    }
+    
+    result = 0
+    for (i = 0; i < a.length; i++) {
+        result |= a.charCodeAt(i) ^ b.charCodeAt(i)
+    }
+    
+    return result == 0
+}
+
+// Good - Input validation
+soul validateCryptoInput(data) {
+    if (data.type() != "STRING") {
+        return {valid: false, error: "Input must be string"}
+    }
+    
+    if (data.length == 0) {
+        return {valid: false, error: "Input cannot be empty"}
+    }
+    
+    return {valid: true}
+}
+```
+
+The Crypto module provides essential cryptographic tools for securing applications in Soul, enabling developers to implement robust authentication, data integrity, and secure communication features.

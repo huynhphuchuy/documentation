@@ -1,0 +1,466 @@
+---
+title: "GenAI"
+description: "AI integration module for Soul"
+---
+
+# GenAI
+
+The GenAI module provides AI integration capabilities for Soul, supporting multiple AI providers including OpenAI, Anthropic, and Google Gemini. It enables easy AI-powered automation with conversation management, prompt templating, and advanced features like rate limiting and fallback handling.
+
+## Basic Usage
+
+### Simple AI Chat
+
+Create and use AI with basic configuration:
+
+```javascript
+ai = GenAI.chat("openai")
+    .model("gpt-3.5-turbo")
+    .configure({
+        api_key: "your-api-key",
+        max_tokens: 150
+    })
+
+response = ai.invoke("Hello, how are you?")
+println(response.text)
+```
+
+### Multi-Provider Setup
+
+Configure different AI providers:
+
+```javascript
+// OpenAI setup
+openai = GenAI.chat("openai")
+    .model("gpt-4")
+    .configure({
+        api_key: "your-openai-key",
+        max_tokens: 200
+    })
+
+// Anthropic setup
+claude = GenAI.chat("anthropic")
+    .model("claude-3-haiku")
+    .configure({
+        api_key: "your-anthropic-key",
+        max_tokens: 300
+    })
+
+// Google Gemini setup
+gemini = GenAI.chat("google")
+    .model("gemini-pro")
+    .configure({
+        api_key: "your-google-key",
+        max_tokens: 250
+    })
+```
+
+## Conversation Management
+
+### Basic Conversation
+
+Create and manage multi-turn conversations:
+
+```javascript
+conversation = GenAI.createConversation()
+
+// Add messages to conversation
+conversation.addSystemMessage("You are a helpful assistant.")
+conversation.addUserMessage("What is the capital of France?")
+
+// Get AI response with conversation context
+ai = GenAI.chat("openai").model("gpt-3.5-turbo")
+response = ai.invokeConversation(conversation)
+
+// Add AI response to conversation
+conversation.addAssistantMessage(response.text)
+
+// Continue conversation
+conversation.addUserMessage("What about Germany?")
+response = ai.invokeConversation(conversation)
+```
+
+### Conversation Utilities
+
+Use conversation helper methods:
+
+```javascript
+conversation = GenAI.createConversation()
+
+// Add various message types
+conversation.addSystemMessage("You are a coding assistant.")
+conversation.addUserMessage("How do I create a function in Soul?")
+
+// Get conversation info
+messageCount = conversation.length()
+messages = conversation.getMessages()
+lastUserMessage = conversation.getLastUserMessage()
+
+// Summarize conversation
+summary = conversation.summarize()
+println(summary)  // "Conversation with 1 user messages and 0 assistant messages"
+```
+
+## Prompt Templates
+
+### Creating Templates
+
+Build reusable prompt templates:
+
+```javascript
+// Create a template with variables
+template = GenAI.createTemplate("Hello {name}, welcome to {platform}!")
+
+// Render template with variables
+rendered = template.render({
+    name: "Alice",
+    platform: "Soul"
+})
+println(rendered)  // "Hello Alice, welcome to Soul!"
+
+// Validate template variables
+validation = template.validate({
+    name: "Alice"
+    // Missing 'platform' variable
+})
+println(validation)  // "Missing variables: platform"
+```
+
+### Registered Templates
+
+Register and reuse templates globally:
+
+```javascript
+// Register a template
+GenAI.registerTemplate("greeting", "Hello {name}! How can I help you with {topic}?")
+
+// Use registered template
+template = GenAI.getTemplate("greeting")
+message = template.render({
+    name: "Bob",
+    topic: "programming"
+})
+
+ai = GenAI.chat("openai").model("gpt-3.5-turbo")
+response = ai.invoke(message)
+```
+
+## Advanced Features
+
+### Token Counting
+
+Estimate token usage:
+
+```javascript
+text = "This is a sample text for token counting"
+model = "gpt-3.5-turbo"
+
+tokenCount = GenAI.countTokens(text, model)
+println("Estimated tokens: " + tokenCount)
+```
+
+### Text Preprocessing
+
+Clean and prepare text for AI:
+
+```javascript
+rawText = "  This    has    extra   spaces  \n\n  and   newlines  "
+cleanedText = GenAI.preprocessText(rawText)
+println(cleanedText)  // "This has extra spaces and newlines"
+```
+
+### Response Validation
+
+Validate AI responses:
+
+```javascript
+response = ai.invoke("What is 2+2?")
+isValid = GenAI.validateResponse(response)
+
+if (isValid) {
+    println("Response is valid: " + response.text)
+} else {
+    println("Response is invalid or contains errors")
+}
+```
+
+### Model Capabilities
+
+Get information about AI models:
+
+```javascript
+capabilities = GenAI.getModelCapabilities("gpt-4")
+println("Max tokens: " + capabilities.max_tokens)
+println("Context window: " + capabilities.context_window)
+println("Supports functions: " + capabilities.supports_functions)
+println("Supports vision: " + capabilities.supports_vision)
+```
+
+## Batch Processing
+
+### Creating Batches
+
+Process multiple prompts efficiently:
+
+```javascript
+prompts = [
+    "What is the capital of France?",
+    "What is the capital of Germany?",
+    "What is the capital of Italy?"
+]
+
+batch = GenAI.createBatch(prompts)
+println("Batch ID: " + batch.getId())
+println("Estimated tokens: " + batch.getEstimatedTokens())
+```
+
+## Rate Limiting
+
+### Basic Rate Limiting
+
+Implement rate limiting for API calls:
+
+```javascript
+// Create rate limiter: 100 requests per minute, max 10 concurrent
+rateLimiter = GenAI.createRateLimiter(100, 10)
+
+// Check if request is allowed
+if (rateLimiter.checkLimit()) {
+    // Make API call
+    response = ai.invoke("Hello")
+    rateLimiter.recordRequest()
+    
+    println("Remaining requests: " + rateLimiter.getRemainingRequests())
+    println("Current usage: " + rateLimiter.getCurrentUsage())
+} else {
+    println("Rate limit exceeded")
+}
+```
+
+## Retry Handling
+
+### Retry Configuration
+
+Handle API failures with retry logic:
+
+```javascript
+// Create retry handler with exponential backoff
+retryConfig = {
+    max_retries: 3,
+    base_delay: 1000,  // 1 second
+    exponential_backoff: true
+}
+
+retryHandler = GenAI.createRetryHandler(retryConfig)
+
+// Get delay for retry attempt
+attempt = 2
+delay = retryHandler.getDelay(attempt)
+println("Retry delay: " + delay + "ms")
+```
+
+## Fallback Management
+
+### Model Fallbacks
+
+Set up fallback models for reliability:
+
+```javascript
+// Create fallback chain
+fallbackModels = ["gpt-4", "gpt-3.5-turbo", "claude-3-haiku"]
+fallbackManager = GenAI.createFallbackManager(fallbackModels)
+
+// Get current model
+currentModel = fallbackManager.getCurrentModel()
+println("Using model: " + currentModel)
+
+// Switch to next model on failure
+nextModel = fallbackManager.getNextModel()
+if (nextModel != null) {
+    println("Switching to: " + nextModel)
+}
+```
+
+## Complete Example
+
+### AI-Powered Chat Assistant
+
+```javascript
+soul genesis() {
+    // Configure AI
+    ai = GenAI.chat("openai")
+        .model("gpt-3.5-turbo")
+        .configure({
+            api_key: "your-api-key",
+            max_tokens: 150
+        })
+    
+    // Create conversation
+    conversation = GenAI.createConversation()
+    conversation.addSystemMessage("You are a helpful programming assistant.")
+    
+    // Create rate limiter
+    rateLimiter = GenAI.createRateLimiter(60, 5)  // 60 requests per minute
+    
+    // Create template for user queries
+    GenAI.registerTemplate("code_help", "Help me with {language}: {question}")
+    
+    // Simulate user interactions
+    userQueries = [
+        {language: "Soul", question: "How do I create a function?"},
+        {language: "Soul", question: "What is the syntax for classes?"},
+        {language: "Soul", question: "How do I handle errors?"}
+    ]
+    
+    template = GenAI.getTemplate("code_help")
+    
+    for (query in userQueries) {
+        // Check rate limit
+        if (!rateLimiter.checkLimit()) {
+            println("Rate limit exceeded, waiting...")
+            continue
+        }
+        
+        // Render prompt from template
+        prompt = template.render(query)
+        
+        // Add to conversation
+        conversation.addUserMessage(prompt)
+        
+        // Get AI response
+        response = ai.invokeConversation(conversation)
+        
+        // Record request
+        rateLimiter.recordRequest()
+        
+        // Validate response
+        if (GenAI.validateResponse(response)) {
+            println("Question: " + query.question)
+            println("Answer: " + response.text)
+            println("Tokens used: " + response.usage.total_tokens)
+            println("---")
+            
+            // Add response to conversation
+            conversation.addAssistantMessage(response.text)
+        } else {
+            println("Invalid response received")
+        }
+    }
+    
+    // Print conversation summary
+    println("Final conversation summary:")
+    println(conversation.summarize())
+}
+```
+
+## Configuration Options
+
+### Provider-Specific Settings
+
+Different providers support different configuration options:
+
+```javascript
+// OpenAI configuration
+openaiConfig = {
+    api_key: "your-openai-key",
+    max_tokens: 150,
+    temperature: 0.7,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0
+}
+
+// Anthropic configuration
+anthropicConfig = {
+    api_key: "your-anthropic-key",
+    max_tokens: 200,
+    temperature: 0.5
+}
+
+// Google configuration
+googleConfig = {
+    api_key: "your-google-key",
+    max_tokens: 250,
+    temperature: 0.8
+}
+```
+
+## Error Handling
+
+### Robust Error Handling
+
+Handle AI API errors gracefully:
+
+```javascript
+try {
+    ai = GenAI.chat("openai")
+        .model("gpt-3.5-turbo")
+        .configure({
+            api_key: "invalid-key"
+        })
+    
+    response = ai.invoke("Hello")
+    println(response.text)
+    
+} catch (error) {
+    println("AI API error: " + error.message)
+    
+    // Try fallback model
+    fallbackAI = GenAI.chat("anthropic")
+        .model("claude-3-haiku")
+        .configure({
+            api_key: "backup-key"
+        })
+    
+    try {
+        response = fallbackAI.invoke("Hello")
+        println("Fallback response: " + response.text)
+    } catch (fallbackError) {
+        println("Fallback also failed: " + fallbackError.message)
+    }
+}
+```
+
+## Best Practices
+
+1. **Use rate limiting**: Prevent API quota exhaustion
+2. **Implement fallbacks**: Have backup models ready
+3. **Validate responses**: Check for errors before processing
+4. **Manage conversations**: Track context for multi-turn chats
+5. **Monitor token usage**: Keep track of API costs
+
+```javascript
+// Good - comprehensive AI setup
+soul createRobustAI() {
+    // Create AI with fallback
+    fallbackModels = ["gpt-4", "gpt-3.5-turbo", "claude-3-haiku"]
+    fallbackManager = GenAI.createFallbackManager(fallbackModels)
+    
+    // Rate limiting
+    rateLimiter = GenAI.createRateLimiter(100, 10)
+    
+    // Retry handling
+    retryHandler = GenAI.createRetryHandler({
+        max_retries: 3,
+        base_delay: 1000,
+        exponential_backoff: true
+    })
+    
+    // Main AI instance
+    ai = GenAI.chat("openai")
+        .model(fallbackManager.getCurrentModel())
+        .configure({
+            api_key: "your-api-key",
+            max_tokens: 200
+        })
+    
+    return {
+        ai: ai,
+        rateLimiter: rateLimiter,
+        retryHandler: retryHandler,
+        fallbackManager: fallbackManager
+    }
+}
+```
+
+The GenAI module provides a comprehensive AI integration platform for Soul, enabling sophisticated AI-powered applications with robust error handling, conversation management, and multi-provider support.

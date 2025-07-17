@@ -1,0 +1,773 @@
+---
+title: "Robo"
+description: "Browser automation and web scraping module for Soul"
+---
+
+# Robo
+
+The Robo module provides comprehensive browser automation and web scraping capabilities for Soul. Built on top of the powerful Rod library, it offers a JavaScript-like API for controlling browsers, interacting with web pages, and extracting data. The module supports both headless and headed browser modes, making it perfect for web scraping, automated testing, and UI automation tasks.
+
+## Browser Management
+
+### Creating a Browser
+
+Create a new browser instance with optional configuration:
+
+```javascript
+// Create headless browser (default)
+browser = Robo.createBrowser()
+
+// Create browser with custom options
+browser = Robo.createBrowser({
+    headless: false,  // Show browser window
+    devtools: true    // Enable developer tools
+})
+
+// Create headed browser for debugging
+browser = Robo.createBrowser({
+    headless: false
+})
+```
+
+### Connecting to Existing Browser
+
+Connect to an already running browser instance:
+
+```javascript
+// Connect to browser running on specific URL
+browser = Robo.connectBrowser("ws://localhost:9222")
+
+// Connect to remote browser
+browser = Robo.connectBrowser("ws://remote-host:9222")
+```
+
+### Browser Information
+
+Get information about the browser:
+
+```javascript
+// Get browser details
+info = Robo.getBrowserInfo(browser)
+println(info.version)    // Browser version
+println(info.userAgent)  // User agent string
+```
+
+### Closing Browser
+
+Close the browser when done:
+
+```javascript
+// Close browser and all its pages
+Robo.closeBrowser(browser)
+```
+
+## Page Management
+
+### Creating Pages
+
+Create new pages (tabs) in the browser:
+
+```javascript
+// Create a new page
+page = browser.newPage()
+
+// Alternative using module method
+page = Robo.newPage(browser)
+```
+
+### Page Operations
+
+Manage multiple pages:
+
+```javascript
+// Get all open pages
+pages = Robo.getPages(browser)
+println("Open pages: " + pages.length)
+
+// Get page information
+pageInfo = Robo.getPageInfo(page)
+println("Page URL: " + pageInfo.url)
+println("Page title: " + pageInfo.title)
+
+// Close a specific page
+Robo.closePage(page)
+```
+
+## Navigation
+
+### Basic Navigation
+
+Navigate to web pages:
+
+```javascript
+// Navigate to URL
+Robo.navigate(page, "https://example.com")
+
+// Navigate to local file
+Robo.navigate(page, "file:///path/to/local/file.html")
+
+// Get current URL
+currentUrl = Robo.getURL(page)
+println("Current URL: " + currentUrl)
+
+// Get page title
+title = Robo.getTitle(page)
+println("Page title: " + title)
+```
+
+### Navigation Controls
+
+Control browser navigation:
+
+```javascript
+// Reload current page
+Robo.reload(page)
+
+// Go back in history
+Robo.goBack(page)
+
+// Go forward in history
+Robo.goForward(page)
+
+// Wait for navigation to complete
+Robo.waitForNavigation(page)
+
+// Wait for page to fully load
+Robo.waitForLoad(page)
+
+// Wait for page to become stable
+Robo.waitForStable(page)
+```
+
+## Element Selection
+
+### Finding Elements
+
+Locate elements on the page using CSS selectors:
+
+```javascript
+// Find single element
+element = Robo.findElement(page, "#login-button")
+element = Robo.findElement(page, ".menu-item")
+element = Robo.findElement(page, "input[type='email']")
+
+// Find multiple elements
+elements = Robo.findElements(page, ".product-card")
+elements = Robo.findElements(page, "a[href*='product']")
+
+// Check if element exists
+exists = Robo.elementExists(page, "#notification")
+if (exists) {
+    println("Notification is present")
+}
+```
+
+### Waiting for Elements
+
+Wait for elements to appear:
+
+```javascript
+// Wait for element to be present
+element = Robo.waitForElement(page, "#dynamic-content")
+
+// Wait for multiple elements
+elements = Robo.waitForElement(page, ".loaded-items")
+
+// Wait with timeout (handled internally)
+element = Robo.waitForElement(page, "#slow-loading-element")
+```
+
+## Element Interaction
+
+### Clicking Elements
+
+Interact with clickable elements:
+
+```javascript
+// Single click
+Robo.click(element)
+
+// Double click
+Robo.doubleClick(element)
+
+// Right click (context menu)
+Robo.rightClick(element)
+
+// Hover over element
+Robo.hover(element)
+```
+
+### Form Interactions
+
+Work with form elements:
+
+```javascript
+// Input text into field
+Robo.input(element, "user@example.com")
+
+// Clear input field
+Robo.clear(element)
+
+// Select option from dropdown
+Robo.select(element, "option-value")
+
+// Upload file
+Robo.upload(element, "/path/to/file.txt")
+
+// Get form field value
+value = Robo.getValue(element)
+println("Field value: " + value)
+```
+
+### Mouse and Keyboard Actions
+
+Perform low-level input actions:
+
+```javascript
+// Mouse actions
+Robo.mouseMove(page, 100, 200)          // Move to coordinates
+Robo.mouseClick(page, 150, 250)         // Click at coordinates
+Robo.mouseDrag(page, 100, 100, 200, 200) // Drag from one point to another
+
+// Keyboard actions
+Robo.keyPress(page, "Enter")            // Press single key
+Robo.keyDown(page, "Shift")             // Hold key down
+Robo.keyUp(page, "Shift")               // Release key
+Robo.type(page, "Hello World")          // Type text
+```
+
+## Data Extraction
+
+### Text Content
+
+Extract text from elements:
+
+```javascript
+// Get text content
+text = Robo.getText(element)
+println("Element text: " + text)
+
+// Get inner HTML
+html = Robo.getHTML(element)
+println("Element HTML: " + html)
+
+// Get element attribute
+href = Robo.getAttribute(element, "href")
+className = Robo.getAttribute(element, "class")
+
+// Get element property
+checked = Robo.getProperty(element, "checked")
+disabled = Robo.getProperty(element, "disabled")
+```
+
+### Page Content
+
+Extract page-level content:
+
+```javascript
+// Get page HTML
+pageHtml = Robo.getPageHTML(page)
+
+// Get page title
+title = Robo.getTitle(page)
+
+// Get current URL
+url = Robo.getURL(page)
+```
+
+## Screenshots and Media
+
+### Taking Screenshots
+
+Capture visual content:
+
+```javascript
+// Screenshot entire page
+Robo.screenshot(page, "page-screenshot.png")
+
+// Screenshot specific element
+Robo.elementScreenshot(element, "element-screenshot.png")
+
+// Save page as PDF
+Robo.pdf(page, "page-content.pdf")
+```
+
+## JavaScript Execution
+
+### Running JavaScript
+
+Execute JavaScript code in the browser:
+
+```javascript
+// Execute JavaScript on page
+result = Robo.evaluate(page, "document.title")
+result = Robo.evaluate(page, "window.location.href")
+
+// Execute complex JavaScript
+result = Robo.evaluate(page, `
+    const elements = document.querySelectorAll('.item');
+    return Array.from(elements).map(el => el.textContent);
+`)
+
+// Execute JavaScript on specific element
+result = Robo.evaluateOnElement(element, "this.innerText")
+result = Robo.evaluateOnElement(element, "this.classList.contains('active')")
+```
+
+## Cookie Management
+
+### Working with Cookies
+
+Manage browser cookies:
+
+```javascript
+// Get all cookies
+cookies = Robo.getCookies(page)
+cookies.forEach(soul(cookie) {
+    println(cookie.name + ": " + cookie.value)
+})
+
+// Set cookie
+Robo.setCookie(page, {
+    name: "session",
+    value: "abc123",
+    domain: "example.com",
+    path: "/",
+    httpOnly: true
+})
+
+// Delete specific cookie
+Robo.deleteCookie(page, "session")
+
+// Clear all cookies
+Robo.clearCookies(page)
+```
+
+## Viewport and Device Emulation
+
+### Viewport Control
+
+Control browser viewport:
+
+```javascript
+// Set viewport size
+Robo.setViewport(page, 1920, 1080)  // Desktop resolution
+Robo.setViewport(page, 375, 667)    // Mobile resolution
+
+// Set user agent
+Robo.setUserAgent(page, "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X)")
+
+// Emulate specific device
+Robo.emulateDevice(page, "iPhone 12")
+Robo.emulateDevice(page, "iPad Pro")
+```
+
+## Network and Requests
+
+### Request Interception
+
+Control network requests:
+
+```javascript
+// Intercept requests
+Robo.interceptRequests(page, soul(request) {
+    if (request.url.includes("analytics")) {
+        request.abort()  // Block analytics requests
+    } else {
+        request.continue()  // Allow other requests
+    }
+})
+
+// Set custom headers
+Robo.setHeaders(page, {
+    "Authorization": "Bearer token123",
+    "X-Custom-Header": "value"
+})
+
+// Block specific requests
+Robo.blockRequests(page, ["*.jpg", "*.png", "analytics.js"])
+```
+
+### Download Management
+
+Configure file downloads:
+
+```javascript
+// Set download directory
+Robo.setDownloadPath(page, "/path/to/downloads")
+```
+
+## Scrolling
+
+### Page Scrolling
+
+Control page scrolling:
+
+```javascript
+// Scroll to specific position
+Robo.scroll(page, 0, 500)  // Scroll to y=500
+
+// Scroll to element
+Robo.scrollToElement(element)
+
+// Scroll to top of page
+Robo.scrollToTop(page)
+
+// Scroll to bottom of page
+Robo.scrollToBottom(page)
+```
+
+## Frames and Windows
+
+### Frame Management
+
+Work with iframes:
+
+```javascript
+// Get all frames
+frames = Robo.getFrames(page)
+
+// Switch to frame
+Robo.switchToFrame(page, frame)
+
+// Switch back to parent frame
+Robo.switchToParent(page)
+```
+
+## Timing and Waits
+
+### Wait Functions
+
+Control timing in automation:
+
+```javascript
+// Wait for specific duration (milliseconds)
+Robo.wait(page, 2000)  // Wait 2 seconds
+
+// Wait for element to appear
+element = Robo.waitForElement(page, ".dynamic-content")
+
+// Wait for page navigation
+Robo.waitForNavigation(page)
+
+// Wait for page load
+Robo.waitForLoad(page)
+
+// Wait for page to stabilize
+Robo.waitForStable(page)
+```
+
+## Complete Examples
+
+### Web Scraping Example
+
+```javascript
+soul scrapeProductData(productUrl) {
+    // Create browser and page
+    browser = Robo.createBrowser({headless: true})
+    page = browser.newPage()
+    
+    try {
+        // Navigate to product page
+        Robo.navigate(page, productUrl)
+        
+        // Wait for content to load
+        Robo.waitForElement(page, ".product-title")
+        
+        // Extract product information
+        title = Robo.getText(Robo.findElement(page, ".product-title"))
+        price = Robo.getText(Robo.findElement(page, ".price"))
+        
+        // Get product description
+        description = ""
+        if (Robo.elementExists(page, ".product-description")) {
+            description = Robo.getText(Robo.findElement(page, ".product-description"))
+        }
+        
+        // Get product images
+        images = []
+        imageElements = Robo.findElements(page, ".product-image img")
+        imageElements.forEach(soul(img) {
+            src = Robo.getAttribute(img, "src")
+            if (src) {
+                images.push(src)
+            }
+        })
+        
+        // Take screenshot
+        Robo.screenshot(page, "product-" + Date.now() + ".png")
+        
+        return {
+            title: title,
+            price: price,
+            description: description,
+            images: images,
+            url: productUrl
+        }
+        
+    } finally {
+        // Always close browser
+        Robo.closeBrowser(browser)
+    }
+}
+
+// Usage
+product = scrapeProductData("https://example-store.com/product/123")
+println("Product: " + product.title)
+println("Price: " + product.price)
+```
+
+### Form Automation Example
+
+```javascript
+soul autoFillForm(formUrl, userData) {
+    browser = Robo.createBrowser({headless: false})
+    page = browser.newPage()
+    
+    try {
+        // Navigate to form
+        Robo.navigate(page, formUrl)
+        
+        // Fill form fields
+        Robo.input(Robo.findElement(page, "#first-name"), userData.firstName)
+        Robo.input(Robo.findElement(page, "#last-name"), userData.lastName)
+        Robo.input(Robo.findElement(page, "#email"), userData.email)
+        
+        // Select from dropdown
+        Robo.select(Robo.findElement(page, "#country"), userData.country)
+        
+        // Check checkbox
+        if (userData.newsletter) {
+            Robo.click(Robo.findElement(page, "#newsletter-checkbox"))
+        }
+        
+        // Upload file if provided
+        if (userData.resume) {
+            Robo.upload(Robo.findElement(page, "#resume-upload"), userData.resume)
+        }
+        
+        // Submit form
+        Robo.click(Robo.findElement(page, "#submit-button"))
+        
+        // Wait for success message
+        Robo.waitForElement(page, ".success-message")
+        
+        return {
+            success: true,
+            message: Robo.getText(Robo.findElement(page, ".success-message"))
+        }
+        
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        }
+    } finally {
+        Robo.closeBrowser(browser)
+    }
+}
+
+// Usage
+result = autoFillForm("https://example.com/contact", {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@example.com",
+    country: "US",
+    newsletter: true,
+    resume: "/path/to/resume.pdf"
+})
+```
+
+### Multi-Page Scraping Example
+
+```javascript
+soul scrapeMultiplePages(urls) {
+    browser = Robo.createBrowser({headless: true})
+    results = []
+    
+    try {
+        urls.forEach(soul(url) {
+            page = browser.newPage()
+            
+            try {
+                // Navigate to page
+                Robo.navigate(page, url)
+                
+                // Wait for content
+                Robo.waitForLoad(page)
+                
+                // Extract data
+                title = Robo.getTitle(page)
+                
+                // Get all links
+                links = []
+                linkElements = Robo.findElements(page, "a[href]")
+                linkElements.forEach(soul(link) {
+                    href = Robo.getAttribute(link, "href")
+                    text = Robo.getText(link)
+                    if (href && text) {
+                        links.push({
+                            url: href,
+                            text: text
+                        })
+                    }
+                })
+                
+                // Get meta description
+                metaDesc = ""
+                if (Robo.elementExists(page, "meta[name='description']")) {
+                    metaDesc = Robo.getAttribute(
+                        Robo.findElement(page, "meta[name='description']"), 
+                        "content"
+                    )
+                }
+                
+                results.push({
+                    url: url,
+                    title: title,
+                    description: metaDesc,
+                    links: links,
+                    timestamp: Date.now()
+                })
+                
+            } finally {
+                Robo.closePage(page)
+            }
+        })
+        
+        return results
+        
+    } finally {
+        Robo.closeBrowser(browser)
+    }
+}
+
+// Usage
+urls = [
+    "https://example.com/page1",
+    "https://example.com/page2",
+    "https://example.com/page3"
+]
+
+results = scrapeMultiplePages(urls)
+results.forEach(soul(result) {
+    println("Title: " + result.title)
+    println("Links found: " + result.links.length)
+    println("---")
+})
+```
+
+### Advanced Automation Example
+
+```javascript
+soul automateEcommercePurchase(siteUrl, credentials, productInfo) {
+    browser = Robo.createBrowser({headless: false})
+    page = browser.newPage()
+    
+    try {
+        // Navigate to site
+        Robo.navigate(page, siteUrl)
+        
+        // Login process
+        Robo.click(Robo.findElement(page, ".login-button"))
+        Robo.input(Robo.findElement(page, "#username"), credentials.username)
+        Robo.input(Robo.findElement(page, "#password"), credentials.password)
+        Robo.click(Robo.findElement(page, "#login-submit"))
+        
+        // Wait for login success
+        Robo.waitForElement(page, ".user-dashboard")
+        
+        // Search for product
+        Robo.input(Robo.findElement(page, "#search-box"), productInfo.name)
+        Robo.keyPress(page, "Enter")
+        
+        // Wait for search results
+        Robo.waitForElement(page, ".search-results")
+        
+        // Click on first product
+        Robo.click(Robo.findElement(page, ".product-item:first-child"))
+        
+        // Wait for product page
+        Robo.waitForElement(page, ".product-details")
+        
+        // Add to cart
+        Robo.click(Robo.findElement(page, ".add-to-cart"))
+        
+        // Wait for cart update
+        Robo.waitForElement(page, ".cart-updated")
+        
+        // Go to checkout
+        Robo.click(Robo.findElement(page, ".checkout-button"))
+        
+        // Take screenshot of final state
+        Robo.screenshot(page, "checkout-complete.png")
+        
+        return {
+            success: true,
+            message: "Product added to cart successfully"
+        }
+        
+    } catch (error) {
+        // Take error screenshot
+        Robo.screenshot(page, "error-state.png")
+        
+        return {
+            success: false,
+            error: error.message
+        }
+    } finally {
+        Robo.closeBrowser(browser)
+    }
+}
+```
+
+## Best Practices
+
+1. **Resource Management**: Always close browsers and pages when done
+2. **Error Handling**: Use try-catch blocks for robust automation
+3. **Waits**: Use appropriate wait functions instead of fixed delays
+4. **Selectors**: Use stable selectors (IDs, data attributes) over brittle ones
+5. **Screenshots**: Take screenshots for debugging and monitoring
+6. **Headless Mode**: Use headless mode for production scraping
+
+```javascript
+// Good - proper resource management
+soul safeBrowserAutomation(task) {
+    browser = Robo.createBrowser({headless: true})
+    
+    try {
+        return performTask(browser, task)
+    } catch (error) {
+        // Take error screenshot
+        if (page) {
+            Robo.screenshot(page, "error-" + Date.now() + ".png")
+        }
+        throw error
+    } finally {
+        // Always cleanup
+        Robo.closeBrowser(browser)
+    }
+}
+
+// Good - robust element interaction
+soul safeElementAction(page, selector, action) {
+    if (Robo.elementExists(page, selector)) {
+        element = Robo.findElement(page, selector)
+        action(element)
+        return true
+    }
+    return false
+}
+
+// Good - wait for dynamic content
+soul waitForDynamicContent(page, selector) {
+    try {
+        return Robo.waitForElement(page, selector)
+    } catch (error) {
+        println("Element not found: " + selector)
+        return null
+    }
+}
+```
+
+The Robo module provides a complete solution for browser automation and web scraping in Soul, supporting everything from simple data extraction to complex multi-step automation workflows with stealth capabilities and comprehensive error handling.

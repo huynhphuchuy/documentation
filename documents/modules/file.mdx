@@ -1,0 +1,747 @@
+---
+title: "File"
+description: "File system operations module for Soul"
+---
+
+# File
+
+The File module provides comprehensive file system operations for Soul, enabling file I/O, directory management, and file manipulation capabilities. It supports both absolute and relative paths, with automatic path resolution based on the current working directory or environment context.
+
+## File I/O Operations
+
+### read - Read file contents
+
+Read the entire contents of a file as a string:
+
+```javascript
+// Read a text file
+content = File.read("config.txt")
+println(content)
+
+// Read with absolute path
+content = File.read("/home/user/documents/data.txt")
+println(content)
+
+// Read JSON configuration
+configJson = File.read("app.config.json")
+config = JSON.decode(configJson)
+```
+
+### write - Write content to file
+
+Write content to a file, creating it if it doesn't exist:
+
+```javascript
+// Write text to file
+content = "Hello, World!"
+File.write("output.txt", content)
+
+// Write JSON data
+data = {name: "Alice", age: 30}
+jsonString = JSON.encode(data)
+File.write("user.json", jsonString)
+
+// Write with absolute path
+File.write("/tmp/temp.txt", "Temporary content")
+```
+
+### append - Append content to file
+
+Append content to an existing file, creating it if it doesn't exist:
+
+```javascript
+// Append to log file
+File.append("app.log", "New log entry")
+
+// Append multiple lines
+File.append("data.csv", "John,25,Engineer")
+File.append("data.csv", "Jane,30,Designer")
+
+// Note: append automatically adds a newline after content
+logMessage = "Error occurred at " + Date.now()
+File.append("errors.log", logMessage)
+```
+
+## File Operations
+
+### copy - Copy file
+
+Copy a file from source to destination:
+
+```javascript
+// Copy file
+File.copy("source.txt", "backup.txt")
+
+// Copy to different directory
+File.copy("data.csv", "backups/data_backup.csv")
+
+// Copy with absolute paths
+File.copy("/tmp/original.txt", "/home/user/copy.txt")
+```
+
+### move - Move/rename file
+
+Move or rename a file:
+
+```javascript
+// Rename file
+File.move("old_name.txt", "new_name.txt")
+
+// Move to different directory
+File.move("temp.txt", "archive/temp.txt")
+
+// Move with absolute paths
+File.move("/tmp/file.txt", "/home/user/documents/file.txt")
+```
+
+### rename - Rename file (alias for move)
+
+Rename a file (alias for the move operation):
+
+```javascript
+// Rename file
+File.rename("document.txt", "important_document.txt")
+
+// Same as File.move()
+File.rename("old.pdf", "new.pdf")
+```
+
+### delete - Delete file
+
+Delete a file:
+
+```javascript
+// Delete file
+File.delete("temp.txt")
+
+// Delete with absolute path
+File.delete("/tmp/temporary_file.txt")
+
+// Delete multiple files
+files = ["temp1.txt", "temp2.txt", "temp3.txt"]
+Array.forEach(files, soul(filename) {
+    if (File.exists(filename)) {
+        File.delete(filename)
+    }
+})
+```
+
+## Directory Operations
+
+### mkdir - Create directory
+
+Create a directory (and parent directories if needed):
+
+```javascript
+// Create single directory
+File.mkdir("new_folder")
+
+// Create nested directories
+File.mkdir("data/backups/2024")
+
+// Create with absolute path
+File.mkdir("/tmp/my_app/logs")
+```
+
+### rmdir - Remove directory
+
+Remove a directory and all its contents:
+
+```javascript
+// Remove directory
+File.rmdir("temp_folder")
+
+// Remove nested directory structure
+File.rmdir("old_project/src/components")
+
+// Remove with absolute path
+File.rmdir("/tmp/cleanup_folder")
+```
+
+### list - List directory contents
+
+List files and directories in a directory:
+
+```javascript
+// List current directory
+files = File.list(".")
+Array.forEach(files, soul(filename) {
+    println(filename)
+})
+
+// List specific directory
+contents = File.list("src")
+println("Source files:")
+Array.forEach(contents, soul(item) {
+    println("  " + item)
+})
+
+// List with absolute path
+items = File.list("/home/user/documents")
+```
+
+## File Information
+
+### exists - Check if file/directory exists
+
+Check if a file or directory exists:
+
+```javascript
+// Check file existence
+if (File.exists("config.json")) {
+    println("Config file found")
+} else {
+    println("Config file missing")
+}
+
+// Check directory existence
+if (File.exists("logs")) {
+    println("Logs directory exists")
+} else {
+    File.mkdir("logs")
+    println("Created logs directory")
+}
+```
+
+### isFile - Check if path is a file
+
+Check if a path points to a regular file:
+
+```javascript
+path = "data.txt"
+if (File.isFile(path)) {
+    println(path + " is a file")
+    content = File.read(path)
+}
+
+// Distinguish between files and directories
+items = File.list(".")
+Array.forEach(items, soul(item) {
+    if (File.isFile(item)) {
+        println(item + " is a file")
+    } else {
+        println(item + " is a directory")
+    }
+})
+```
+
+### isDir - Check if path is a directory
+
+Check if a path points to a directory:
+
+```javascript
+path = "src"
+if (File.isDir(path)) {
+    println(path + " is a directory")
+    contents = File.list(path)
+}
+
+// Check before creating directory
+if (!File.isDir("backups")) {
+    File.mkdir("backups")
+}
+```
+
+### size - Get file size
+
+Get the size of a file in bytes:
+
+```javascript
+// Get file size
+filename = "data.csv"
+if (File.exists(filename)) {
+    size = File.size(filename)
+    println("File size: " + size + " bytes")
+}
+
+// Check file sizes in directory
+files = File.list(".")
+Array.forEach(files, soul(filename) {
+    if (File.isFile(filename)) {
+        size = File.size(filename)
+        println(filename + ": " + size + " bytes")
+    }
+})
+```
+
+### modified - Get last modified time
+
+Get the last modified time of a file as Unix timestamp:
+
+```javascript
+// Get modification time
+filename = "document.txt"
+if (File.exists(filename)) {
+    timestamp = File.modified(filename)
+    println("Last modified: " + timestamp)
+}
+
+// Find most recently modified file
+files = File.list(".")
+mostRecent = null
+latestTime = 0
+
+Array.forEach(files, soul(filename) {
+    if (File.isFile(filename)) {
+        modTime = File.modified(filename)
+        if (modTime > latestTime) {
+            latestTime = modTime
+            mostRecent = filename
+        }
+    }
+})
+
+if (mostRecent) {
+    println("Most recent file: " + mostRecent)
+}
+```
+
+## Path Handling
+
+### Absolute vs Relative Paths
+
+The File module handles both absolute and relative paths:
+
+```javascript
+// Relative paths (resolved from current working directory)
+File.write("data.txt", "content")           // ./data.txt
+File.write("folder/file.txt", "content")    // ./folder/file.txt
+
+// Absolute paths (used as-is)
+File.write("/tmp/file.txt", "content")      // /tmp/file.txt
+File.write("/home/user/doc.txt", "content") // /home/user/doc.txt
+
+// The module automatically resolves paths based on:
+// 1. Current working directory (if no environment directory set)
+// 2. Environment directory (if set in the scope)
+```
+
+## Practical Examples
+
+### File Processing Pipeline
+
+```javascript
+soul processLogFiles(logDir) {
+    // Check if log directory exists
+    if (!File.exists(logDir)) {
+        println("Log directory not found: " + logDir)
+        return
+    }
+    
+    // Get all files in directory
+    files = File.list(logDir)
+    
+    // Process each log file
+    processedCount = 0
+    
+    Array.forEach(files, soul(filename) {
+        fullPath = logDir + "/" + filename
+        
+        // Only process .log files
+        if (File.isFile(fullPath) && String.endsWith(filename, ".log")) {
+            println("Processing: " + filename)
+            
+            // Read log content
+            content = File.read(fullPath)
+            
+            // Process content (example: count lines)
+            lines = String.split(content, "\n")
+            lineCount = Array.length(lines)
+            
+            // Write summary
+            summary = "File: " + filename + ", Lines: " + lineCount
+            File.append("processing_summary.txt", summary)
+            
+            processedCount += 1
+        }
+    })
+    
+    println("Processed " + processedCount + " log files")
+}
+
+// Usage
+processLogFiles("logs")
+```
+
+### Backup System
+
+```javascript
+soul backupFiles(sourceDir, backupDir) {
+    // Create backup directory if it doesn't exist
+    if (!File.exists(backupDir)) {
+        File.mkdir(backupDir)
+    }
+    
+    // Get current timestamp for backup naming
+    timestamp = Date.now()
+    
+    // List all files in source directory
+    files = File.list(sourceDir)
+    
+    Array.forEach(files, soul(filename) {
+        sourcePath = sourceDir + "/" + filename
+        
+        // Only backup files, not directories
+        if (File.isFile(sourcePath)) {
+            // Create backup filename with timestamp
+            backupName = timestamp + "_" + filename
+            backupPath = backupDir + "/" + backupName
+            
+            // Copy file to backup
+            File.copy(sourcePath, backupPath)
+            
+            println("Backed up: " + filename + " -> " + backupName)
+        }
+    })
+}
+
+// Usage
+backupFiles("important_data", "backups")
+```
+
+### Configuration Manager
+
+```javascript
+soul ConfigManager() {
+    configFile = "app.config.json"
+    
+    return {
+        load: soul() {
+            if (!File.exists(configFile)) {
+                // Create default configuration
+                defaultConfig = {
+                    server: {
+                        host: "localhost",
+                        port: 8080
+                    },
+                    database: {
+                        url: "sqlite:///app.db"
+                    },
+                    logging: {
+                        level: "info",
+                        file: "app.log"
+                    }
+                }
+                
+                this.save(defaultConfig)
+                return defaultConfig
+            }
+            
+            content = File.read(configFile)
+            return JSON.decode(content)
+        },
+        
+        save: soul(config) {
+            jsonContent = JSON.encode(config)
+            File.write(configFile, jsonContent)
+        },
+        
+        backup: soul() {
+            if (File.exists(configFile)) {
+                timestamp = Date.now()
+                backupName = "config_backup_" + timestamp + ".json"
+                File.copy(configFile, backupName)
+                println("Configuration backed up to: " + backupName)
+            }
+        }
+    }
+}
+
+// Usage
+configManager = ConfigManager()
+config = configManager.load()
+config.server.port = 9000
+configManager.backup()
+configManager.save(config)
+```
+
+### File Synchronization
+
+```javascript
+soul syncDirectories(sourceDir, targetDir) {
+    // Create target directory if it doesn't exist
+    if (!File.exists(targetDir)) {
+        File.mkdir(targetDir)
+    }
+    
+    // Get files from source
+    sourceFiles = File.list(sourceDir)
+    
+    // Sync each file
+    Array.forEach(sourceFiles, soul(filename) {
+        sourcePath = sourceDir + "/" + filename
+        targetPath = targetDir + "/" + filename
+        
+        if (File.isFile(sourcePath)) {
+            shouldSync = false
+            
+            if (!File.exists(targetPath)) {
+                // File doesn't exist in target, copy it
+                shouldSync = true
+                println("New file: " + filename)
+            } else {
+                // Compare modification times
+                sourceTime = File.modified(sourcePath)
+                targetTime = File.modified(targetPath)
+                
+                if (sourceTime > targetTime) {
+                    shouldSync = true
+                    println("Updated file: " + filename)
+                }
+            }
+            
+            if (shouldSync) {
+                File.copy(sourcePath, targetPath)
+            }
+        }
+    })
+    
+    println("Synchronization complete")
+}
+
+// Usage
+syncDirectories("project/src", "backup/src")
+```
+
+### File Cleanup Utility
+
+```javascript
+soul cleanupOldFiles(directory, maxAgeSeconds) {
+    if (!File.exists(directory)) {
+        println("Directory not found: " + directory)
+        return
+    }
+    
+    currentTime = Date.now()
+    deletedCount = 0
+    
+    files = File.list(directory)
+    
+    Array.forEach(files, soul(filename) {
+        filepath = directory + "/" + filename
+        
+        if (File.isFile(filepath)) {
+            fileTime = File.modified(filepath)
+            age = currentTime - fileTime
+            
+            if (age > maxAgeSeconds) {
+                println("Deleting old file: " + filename)
+                File.delete(filepath)
+                deletedCount += 1
+            }
+        }
+    })
+    
+    println("Deleted " + deletedCount + " old files")
+}
+
+// Usage - delete files older than 7 days
+maxAge = 7 * 24 * 60 * 60  // 7 days in seconds
+cleanupOldFiles("temp", maxAge)
+```
+
+### File Statistics Reporter
+
+```javascript
+soul generateFileReport(directory) {
+    if (!File.exists(directory)) {
+        println("Directory not found: " + directory)
+        return
+    }
+    
+    files = File.list(directory)
+    
+    report = {
+        totalFiles: 0,
+        totalDirectories: 0,
+        totalSize: 0,
+        fileTypes: {},
+        largestFile: {name: "", size: 0},
+        oldestFile: {name: "", time: Date.now()},
+        newestFile: {name: "", time: 0}
+    }
+    
+    Array.forEach(files, soul(filename) {
+        filepath = directory + "/" + filename
+        
+        if (File.isFile(filepath)) {
+            report.totalFiles += 1
+            
+            // File size
+            size = File.size(filepath)
+            report.totalSize += size
+            
+            // Track largest file
+            if (size > report.largestFile.size) {
+                report.largestFile = {name: filename, size: size}
+            }
+            
+            // File modification time
+            modTime = File.modified(filepath)
+            
+            // Track oldest file
+            if (modTime < report.oldestFile.time) {
+                report.oldestFile = {name: filename, time: modTime}
+            }
+            
+            // Track newest file
+            if (modTime > report.newestFile.time) {
+                report.newestFile = {name: filename, time: modTime}
+            }
+            
+            // File type statistics
+            if (String.contains(filename, ".")) {
+                parts = String.split(filename, ".")
+                extension = parts[Array.length(parts) - 1]
+                
+                if (report.fileTypes[extension]) {
+                    report.fileTypes[extension] += 1
+                } else {
+                    report.fileTypes[extension] = 1
+                }
+            }
+        } else if (File.isDir(filepath)) {
+            report.totalDirectories += 1
+        }
+    })
+    
+    // Write report to file
+    reportJson = JSON.encode(report)
+    File.write(directory + "/file_report.json", reportJson)
+    
+    // Print summary
+    println("File Report for: " + directory)
+    println("Total files: " + report.totalFiles)
+    println("Total directories: " + report.totalDirectories)
+    println("Total size: " + report.totalSize + " bytes")
+    println("Largest file: " + report.largestFile.name + " (" + report.largestFile.size + " bytes)")
+    
+    return report
+}
+
+// Usage
+report = generateFileReport("project")
+```
+
+## Error Handling
+
+### Safe File Operations
+
+```javascript
+soul safeFileRead(filename) {
+    if (!File.exists(filename)) {
+        println("File not found: " + filename)
+        return null
+    }
+    
+    if (!File.isFile(filename)) {
+        println("Path is not a file: " + filename)
+        return null
+    }
+    
+    content = File.read(filename)
+    return content
+}
+
+soul safeFileWrite(filename, content) {
+    // Create directory if it doesn't exist
+    parts = String.split(filename, "/")
+    if (Array.length(parts) > 1) {
+        // Remove filename to get directory path
+        Array.pop(parts)
+        directory = String.join(parts, "/")
+        
+        if (!File.exists(directory)) {
+            File.mkdir(directory)
+        }
+    }
+    
+    result = File.write(filename, content)
+    return result
+}
+
+// Usage
+content = safeFileRead("data/config.json")
+if (content) {
+    config = JSON.decode(content)
+    // Process config...
+}
+```
+
+## Best Practices
+
+1. **Always check existence**: Use `exists()` before performing operations on files
+2. **Handle paths correctly**: Be aware of relative vs absolute path behavior
+3. **Use appropriate file types**: Check `isFile()` vs `isDir()` before operations
+4. **Create directories as needed**: Use `mkdir()` to ensure directory structure exists
+5. **Clean up resources**: Remove temporary files after use
+6. **Error handling**: Check return values and handle file operation failures
+
+```javascript
+// Good - check existence before reading
+soul readConfigFile(filename) {
+    if (!File.exists(filename)) {
+        println("Configuration file not found, creating default...")
+        File.write(filename, JSON.encode({version: "1.0"}))
+    }
+    
+    content = File.read(filename)
+    return JSON.decode(content)
+}
+
+// Good - ensure directory structure exists
+soul saveUserData(userId, data) {
+    userDir = "users/" + userId
+    if (!File.exists(userDir)) {
+        File.mkdir(userDir)
+    }
+    
+    filename = userDir + "/profile.json"
+    File.write(filename, JSON.encode(data))
+}
+
+// Good - clean up temporary files
+soul processWithTempFile(data) {
+    tempFile = "temp_" + Date.now() + ".json"
+    
+    try {
+        // Write temporary data
+        File.write(tempFile, JSON.encode(data))
+        
+        // Process file
+        processedData = processFile(tempFile)
+        
+        return processedData
+    } finally {
+        // Clean up
+        if (File.exists(tempFile)) {
+            File.delete(tempFile)
+        }
+    }
+}
+
+// Good - batch operations for efficiency
+soul copyMultipleFiles(files, targetDir) {
+    // Ensure target directory exists
+    if (!File.exists(targetDir)) {
+        File.mkdir(targetDir)
+    }
+    
+    copied = 0
+    failed = 0
+    
+    Array.forEach(files, soul(filename) {
+        if (File.exists(filename) && File.isFile(filename)) {
+            targetPath = targetDir + "/" + filename
+            File.copy(filename, targetPath)
+            copied += 1
+        } else {
+            failed += 1
+        }
+    })
+    
+    println("Copied: " + copied + ", Failed: " + failed)
+}
+```
+
+The File module provides essential file system operations for Soul applications, enabling powerful file manipulation, directory management, and I/O capabilities with automatic path resolution and comprehensive error handling.

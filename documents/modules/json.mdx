@@ -1,0 +1,478 @@
+---
+title: "JSON"
+description: "JSON parsing and serialization module for Soul"
+---
+
+# JSON
+
+The JSON module provides comprehensive JSON (JavaScript Object Notation) capabilities for Soul, including parsing, serialization, and validation. It offers both Soul-style and JavaScript-style aliases for familiar API usage.
+
+## Parsing JSON
+
+### decode / parse - Parse JSON string to object
+
+Parse a JSON string into Soul objects (maps or lists):
+
+```javascript
+// Using decode (Soul-style)
+jsonString = '{"name": "Alice", "age": 30, "active": true}'
+data = JSON.decode(jsonString)
+println(data.name)     // "Alice"
+println(data.age)      // 30
+println(data.active)   // true
+
+// Using parse (JavaScript-style alias)
+arrayJson = '[1, 2, 3, 4, 5]'
+numbers = JSON.parse(arrayJson)
+println(numbers)       // [1, 2, 3, 4, 5]
+```
+
+### Parsing Complex Structures
+
+Parse nested JSON structures:
+
+```javascript
+complexJson = '{
+    "user": {
+        "id": 123,
+        "profile": {
+            "name": "Bob",
+            "email": "bob@example.com"
+        }
+    },
+    "scores": [85, 92, 78],
+    "active": true
+}'
+
+data = JSON.decode(complexJson)
+println(data.user.profile.name)  // "Bob"
+println(data.scores[1])          // 92
+```
+
+## Serialization
+
+### encode / stringify - Convert object to JSON string
+
+Convert Soul objects (maps or lists) to JSON strings:
+
+```javascript
+// Using encode (Soul-style)
+user = {
+    name: "Charlie",
+    age: 25,
+    hobbies: ["reading", "gaming", "coding"]
+}
+jsonString = JSON.encode(user)
+println(jsonString)  // {"age":25,"hobbies":["reading","gaming","coding"],"name":"Charlie"}
+
+// Using stringify (JavaScript-style alias)
+numbers = [1, 2, 3, 4, 5]
+jsonArray = JSON.stringify(numbers)
+println(jsonArray)   // [1,2,3,4,5]
+```
+
+### Serializing Complex Objects
+
+Serialize nested structures:
+
+```javascript
+data = {
+    timestamp: "2024-01-01T12:00:00Z",
+    metrics: {
+        cpu: 45.5,
+        memory: 78.2,
+        disk: 60.0
+    },
+    tags: ["production", "server-01"],
+    healthy: true
+}
+
+jsonOutput = JSON.encode(data)
+println(jsonOutput)
+// {"healthy":true,"metrics":{"cpu":45.5,"disk":60,"memory":78.2},"tags":["production","server-01"],"timestamp":"2024-01-01T12:00:00Z"}
+```
+
+## Validation
+
+### isValid - Check if string is valid JSON
+
+Validate whether a string contains valid JSON:
+
+```javascript
+// Valid JSON
+validJson = '{"key": "value"}'
+isValid = JSON.isValid(validJson)
+println(isValid)     // true
+
+// Invalid JSON
+invalidJson = '{key: value}'  // Missing quotes
+isValid = JSON.isValid(invalidJson)
+println(isValid)     // false
+
+// Empty string
+isValid = JSON.isValid("")
+println(isValid)     // false
+
+// Valid array JSON
+arrayJson = '[1, 2, 3]'
+isValid = JSON.isValid(arrayJson)
+println(isValid)     // true
+```
+
+## Data Type Handling
+
+### Supported Data Types
+
+The JSON module handles all standard JSON data types:
+
+```javascript
+// All JSON data types
+data = {
+    string: "Hello, World!",
+    number: 42.5,
+    integer: 100,
+    boolean: true,
+    null: null,
+    array: [1, "two", 3.0, false],
+    object: {
+        nested: "value"
+    }
+}
+
+// Encode to JSON
+json = JSON.encode(data)
+
+// Decode back
+decoded = JSON.decode(json)
+println(decoded.string)    // "Hello, World!"
+println(decoded.number)    // 42.5
+println(decoded.boolean)   // true
+println(decoded.null)      // null
+```
+
+### Map Key Conversion
+
+When encoding maps, different key types are converted to strings:
+
+```javascript
+// String keys (standard)
+stringMap = {
+    "key1": "value1",
+    "key2": "value2"
+}
+
+// Number keys (converted to strings)
+numberMap = {
+    1: "first",
+    2: "second"
+}
+
+// Boolean keys (converted to strings)
+boolMap = {
+    true: "yes",
+    false: "no"
+}
+
+println(JSON.encode(stringMap))  // {"key1":"value1","key2":"value2"}
+println(JSON.encode(numberMap))  // {"1":"first","2":"second"}
+println(JSON.encode(boolMap))    // {"false":"no","true":"yes"}
+```
+
+## Error Handling
+
+### Parsing Errors
+
+Handle JSON parsing errors gracefully:
+
+```javascript
+soul safeJsonParse(jsonString) {
+    result = JSON.decode(jsonString)
+    
+    // Check if result is an error
+    if (result.type() == "ERROR") {
+        println("Failed to parse JSON: " + result)
+        return null
+    }
+    
+    return result
+}
+
+// Test with invalid JSON
+invalidJson = '{"name": "Alice", "age": }'  // Invalid - missing value
+parsed = safeJsonParse(invalidJson)
+if (parsed == null) {
+    println("Handling invalid JSON...")
+}
+```
+
+### Encoding Errors
+
+Handle encoding errors for unsupported types:
+
+```javascript
+soul safeJsonEncode(data) {
+    result = JSON.encode(data)
+    
+    if (result.type() == "ERROR") {
+        println("Failed to encode JSON: " + result)
+        return null
+    }
+    
+    return result
+}
+
+// Only LIST and MAP types can be encoded
+validData = {key: "value"}
+encoded = safeJsonEncode(validData)
+println(encoded)  // {"key":"value"}
+```
+
+## Practical Examples
+
+### Configuration File Handling
+
+```javascript
+soul loadConfig(filename) {
+    // Read JSON configuration file
+    content = File.read(filename)
+    
+    if (!JSON.isValid(content)) {
+        println("Invalid configuration file")
+        return null
+    }
+    
+    config = JSON.decode(content)
+    return config
+}
+
+soul saveConfig(config, filename) {
+    // Serialize configuration to JSON
+    jsonContent = JSON.encode(config)
+    File.write(filename, jsonContent)
+    return true
+}
+
+// Usage
+config = {
+    server: {
+        host: "localhost",
+        port: 8080,
+        ssl: false
+    },
+    database: {
+        url: "postgres://localhost/mydb",
+        pool_size: 10
+    },
+    features: ["auth", "api", "websocket"]
+}
+
+saveConfig(config, "app.config.json")
+loaded = loadConfig("app.config.json")
+```
+
+### API Response Handling
+
+```javascript
+soul parseApiResponse(responseBody) {
+    // Validate response
+    if (!JSON.isValid(responseBody)) {
+        return {
+            success: false,
+            error: "Invalid JSON response"
+        }
+    }
+    
+    // Parse response
+    data = JSON.decode(responseBody)
+    
+    // Process based on structure
+    if (data.status == "success") {
+        return {
+            success: true,
+            data: data.result
+        }
+    } else {
+        return {
+            success: false,
+            error: data.message || "Unknown error"
+        }
+    }
+}
+
+// Example API response
+apiResponse = '{"status": "success", "result": {"id": 123, "name": "Product"}}'
+result = parseApiResponse(apiResponse)
+if (result.success) {
+    println("Got data: " + JSON.encode(result.data))
+}
+```
+
+### Data Transformation Pipeline
+
+```javascript
+soul transformJsonData(jsonInput) {
+    // Parse input
+    data = JSON.decode(jsonInput)
+    
+    // Transform data
+    transformed = {
+        id: data.id,
+        fullName: data.firstName + " " + data.lastName,
+        email: data.email.toLowerCase(),
+        active: data.status == "active",
+        metadata: {
+            created: data.createdAt,
+            updated: Date.now(),
+            version: 2
+        }
+    }
+    
+    // Return as JSON
+    return JSON.encode(transformed)
+}
+
+// Input JSON
+input = '{
+    "id": 456,
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "JOHN.DOE@EXAMPLE.COM",
+    "status": "active",
+    "createdAt": "2024-01-01"
+}'
+
+output = transformJsonData(input)
+println(output)
+```
+
+### Working with JSON Arrays
+
+```javascript
+soul processJsonArray(jsonArray) {
+    // Parse JSON array
+    items = JSON.decode(jsonArray)
+    
+    // Process each item
+    processed = Array.map(items, soul(item) {
+        return {
+            id: item.id,
+            name: item.name.toUpperCase(),
+            value: item.price * item.quantity
+        }
+    })
+    
+    // Calculate totals
+    total = Array.reduce(processed, soul(sum, item) {
+        return sum + item.value
+    }, 0)
+    
+    // Return result as JSON
+    result = {
+        items: processed,
+        total: total,
+        count: Array.length(processed)
+    }
+    
+    return JSON.encode(result)
+}
+
+// Example usage
+products = '[
+    {"id": 1, "name": "Apple", "price": 0.5, "quantity": 10},
+    {"id": 2, "name": "Banana", "price": 0.3, "quantity": 15},
+    {"id": 3, "name": "Orange", "price": 0.7, "quantity": 8}
+]'
+
+result = processJsonArray(products)
+println(result)
+```
+
+### JSON Validation Workflow
+
+```javascript
+soul validateJsonSchema(json, requiredFields) {
+    // First check if valid JSON
+    if (!JSON.isValid(json)) {
+        return {valid: false, error: "Invalid JSON format"}
+    }
+    
+    // Parse JSON
+    data = JSON.decode(json)
+    
+    // Check if it's an object (map)
+    if (data.type() != "MAP") {
+        return {valid: false, error: "JSON must be an object"}
+    }
+    
+    // Validate required fields
+    missing = []
+    Array.forEach(requiredFields, soul(field) {
+        if (!data.hasKey(field)) {
+            Array.push(missing, field)
+        }
+    })
+    
+    if (Array.length(missing) > 0) {
+        return {
+            valid: false, 
+            error: "Missing required fields: " + Array.join(missing, ", ")
+        }
+    }
+    
+    return {valid: true, data: data}
+}
+
+// Test validation
+userJson = '{"name": "Alice", "email": "alice@example.com"}'
+required = ["name", "email", "age"]
+
+validation = validateJsonSchema(userJson, required)
+if (!validation.valid) {
+    println("Validation failed: " + validation.error)
+}
+```
+
+## Best Practices
+
+1. **Always validate before parsing**: Use `isValid()` to check JSON validity before parsing
+2. **Handle errors gracefully**: Check for ERROR types when parsing or encoding
+3. **Use appropriate aliases**: Choose `decode/encode` or `parse/stringify` based on your preference
+4. **Be aware of type limitations**: Only LIST and MAP types can be encoded to JSON
+5. **Consider memory usage**: Large JSON strings can consume significant memory
+
+```javascript
+// Good - validate before parsing
+soul parseJsonSafely(jsonString) {
+    if (!JSON.isValid(jsonString)) {
+        return null
+    }
+    return JSON.decode(jsonString)
+}
+
+// Good - handle different input types
+soul toJson(data) {
+    type = data.type()
+    if (type != "LIST" && type != "MAP") {
+        // Wrap in a map if not directly serializable
+        return JSON.encode({value: data})
+    }
+    return JSON.encode(data)
+}
+
+// Good - parse with default values
+soul parseWithDefaults(jsonString, defaults) {
+    if (!JSON.isValid(jsonString)) {
+        return defaults
+    }
+    
+    parsed = JSON.decode(jsonString)
+    // Merge with defaults
+    result = {}
+    for (key in defaults) {
+        result[key] = parsed[key] || defaults[key]
+    }
+    return result
+}
+```
+
+The JSON module provides essential tools for working with JSON data in Soul, enabling seamless integration with APIs, configuration files, and data exchange formats commonly used in modern applications.

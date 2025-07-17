@@ -1,0 +1,683 @@
+---
+title: "Array"
+description: "Array manipulation module for Soul"
+---
+
+# Array
+
+The Array module provides comprehensive array manipulation capabilities for Soul, including functional programming methods, searching, sorting, and mathematical operations. It offers a JavaScript-like API for working with arrays efficiently.
+
+## Adding Elements
+
+### push - Add elements to end
+
+Add one or more elements to the end of an array:
+
+```javascript
+numbers = [1, 2, 3]
+newLength = Array.push(numbers, 4, 5)
+println(numbers)     // [1, 2, 3, 4, 5]
+println(newLength)   // 5
+```
+
+### unshift - Add elements to beginning
+
+Add one or more elements to the beginning of an array:
+
+```javascript
+numbers = [3, 4, 5]
+newLength = Array.unshift(numbers, 1, 2)
+println(numbers)     // [1, 2, 3, 4, 5]
+println(newLength)   // 5
+```
+
+### insert - Insert element at specific index
+
+Insert an element at a specific position:
+
+```javascript
+numbers = [1, 3, 4]
+success = Array.insert(numbers, 1, 2)
+println(numbers)   // [1, 2, 3, 4]
+println(success)   // true
+```
+
+## Removing Elements
+
+### pop - Remove last element
+
+Remove and return the last element:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+last = Array.pop(numbers)
+println(numbers)   // [1, 2, 3, 4]
+println(last)      // 5
+```
+
+### shift - Remove first element
+
+Remove and return the first element:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+first = Array.shift(numbers)
+println(numbers)   // [2, 3, 4, 5]
+println(first)     // 1
+```
+
+### remove - Remove first occurrence of value
+
+Remove the first occurrence of a specific value:
+
+```javascript
+numbers = [1, 2, 3, 2, 4]
+removed = Array.remove(numbers, 2)
+println(numbers)   // [1, 3, 2, 4]
+println(removed)   // true
+```
+
+### removeAt - Remove element at index
+
+Remove element at a specific index:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+removed = Array.removeAt(numbers, 2)
+println(numbers)   // [1, 2, 4, 5]
+println(removed)   // 3
+```
+
+### clear - Remove all elements
+
+Remove all elements from an array:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+Array.clear(numbers)
+println(numbers)   // []
+```
+
+## Accessing Elements
+
+### get - Get element at index
+
+Get element at a specific index:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+element = Array.get(numbers, 2)
+println(element)   // 3
+```
+
+### set - Set element at index
+
+Set element at a specific index:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+success = Array.set(numbers, 2, 10)
+println(numbers)   // [1, 2, 10, 4, 5]
+println(success)   // true
+```
+
+### first - Get first element
+
+Get the first element:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+first = Array.first(numbers)
+println(first)     // 1
+```
+
+### last - Get last element
+
+Get the last element:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+last = Array.last(numbers)
+println(last)      // 5
+```
+
+### at - Get element with negative index support
+
+Get element at index with negative index support:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+element = Array.at(numbers, -1)  // Last element
+println(element)   // 5
+
+element = Array.at(numbers, -2)  // Second to last
+println(element)   // 4
+```
+
+## Searching
+
+### indexOf - Find first index of value
+
+Find the first index of a specific value:
+
+```javascript
+numbers = [1, 2, 3, 2, 4]
+index = Array.indexOf(numbers, 2)
+println(index)     // 1
+```
+
+### lastIndexOf - Find last index of value
+
+Find the last index of a specific value:
+
+```javascript
+numbers = [1, 2, 3, 2, 4]
+index = Array.lastIndexOf(numbers, 2)
+println(index)     // 3
+```
+
+### includes - Check if array contains value
+
+Check if an array contains a specific value:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+contains = Array.includes(numbers, 3)
+println(contains)  // true
+```
+
+### find - Find first element matching predicate
+
+Find the first element that matches a predicate:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+found = Array.find(numbers, soul(x) { return x > 3 })
+println(found)     // 4
+```
+
+### findIndex - Find index of first match
+
+Find the index of the first element matching a predicate:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+index = Array.findIndex(numbers, soul(x) { return x > 3 })
+println(index)     // 3
+```
+
+## Transformation
+
+### map - Transform each element
+
+Transform each element using a function:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+squared = Array.map(numbers, soul(x) { return x * x })
+println(squared)   // [1, 4, 9, 16, 25]
+```
+
+### filter - Keep elements matching predicate
+
+Keep only elements that match a predicate:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+evens = Array.filter(numbers, soul(x) { return x % 2 == 0 })
+println(evens)     // [2, 4]
+```
+
+### reduce - Reduce to single value
+
+Reduce array to a single value:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+sum = Array.reduce(numbers, soul(acc, x) { return acc + x }, 0)
+println(sum)       // 15
+
+// Without initial value
+product = Array.reduce(numbers, soul(acc, x) { return acc * x })
+println(product)   // 120
+```
+
+### forEach - Execute function for each element
+
+Execute a function for each element:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+Array.forEach(numbers, soul(x, i) { 
+    println("Index " + i + ": " + x) 
+})
+```
+
+### flatMap - Map and flatten result
+
+Map each element and flatten the result:
+
+```javascript
+numbers = [1, 2, 3]
+result = Array.flatMap(numbers, soul(x) { return [x, x * 2] })
+println(result)    // [1, 2, 2, 4, 3, 6]
+```
+
+## Array Manipulation
+
+### slice - Extract portion of array
+
+Extract a portion of an array:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+portion = Array.slice(numbers, 1, 4)
+println(portion)   // [2, 3, 4]
+
+// With negative indices
+portion = Array.slice(numbers, -3, -1)
+println(portion)   // [3, 4]
+```
+
+### splice - Remove/replace elements
+
+Remove or replace elements at a specific position:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+removed = Array.splice(numbers, 1, 2, 10, 20)
+println(numbers)   // [1, 10, 20, 4, 5]
+println(removed)   // [2, 3]
+```
+
+### concat - Combine arrays
+
+Combine multiple arrays:
+
+```javascript
+arr1 = [1, 2]
+arr2 = [3, 4]
+arr3 = [5, 6]
+combined = Array.concat(arr1, arr2, arr3)
+println(combined)  // [1, 2, 3, 4, 5, 6]
+```
+
+### join - Join elements as string
+
+Join array elements into a string:
+
+```javascript
+words = ["Hello", "World", "Soul"]
+text = Array.join(words, " ")
+println(text)      // "Hello World Soul"
+
+// With custom separator
+csv = Array.join(words, ",")
+println(csv)       // "Hello,World,Soul"
+```
+
+### reverse - Reverse array in place
+
+Reverse the order of elements:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+Array.reverse(numbers)
+println(numbers)   // [5, 4, 3, 2, 1]
+```
+
+### sort - Sort array in place
+
+Sort array elements:
+
+```javascript
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+Array.sort(numbers)
+println(numbers)   // [1, 1, 2, 3, 4, 5, 6, 9]
+
+// Custom sort function
+words = ["apple", "Banana", "cherry"]
+Array.sort(words, soul(a, b) { 
+    return a.toLowerCase().localeCompare(b.toLowerCase()) 
+})
+```
+
+### shuffle - Randomly shuffle array
+
+Randomly shuffle array elements:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+Array.shuffle(numbers)
+println(numbers)   // [3, 1, 5, 2, 4] (random order)
+```
+
+### unique - Remove duplicates
+
+Remove duplicate values:
+
+```javascript
+numbers = [1, 2, 2, 3, 3, 3, 4, 5]
+unique = Array.unique(numbers)
+println(unique)    // [1, 2, 3, 4, 5]
+```
+
+### flatten - Flatten nested arrays
+
+Flatten nested arrays:
+
+```javascript
+nested = [[1, 2], [3, 4], [5, 6]]
+flattened = Array.flatten(nested)
+println(flattened) // [1, 2, 3, 4, 5, 6]
+
+// With depth control
+deepNested = [[[1, 2]], [[3, 4]]]
+flattened = Array.flatten(deepNested, 2)
+println(flattened) // [1, 2, 3, 4]
+```
+
+### chunk - Split into chunks
+
+Split array into chunks of specified size:
+
+```javascript
+numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+chunks = Array.chunk(numbers, 3)
+println(chunks)    // [[1, 2, 3], [4, 5, 6], [7, 8]]
+```
+
+### zip - Combine arrays element-wise
+
+Combine multiple arrays element-wise:
+
+```javascript
+names = ["Alice", "Bob", "Charlie"]
+ages = [25, 30, 35]
+cities = ["New York", "London", "Tokyo"]
+
+zipped = Array.zip(names, ages, cities)
+println(zipped)    // [["Alice", 25, "New York"], ["Bob", 30, "London"], ["Charlie", 35, "Tokyo"]]
+```
+
+## Testing
+
+### every - Test if all elements match predicate
+
+Test if all elements match a predicate:
+
+```javascript
+numbers = [2, 4, 6, 8, 10]
+allEven = Array.every(numbers, soul(x) { return x % 2 == 0 })
+println(allEven)   // true
+```
+
+### some - Test if any element matches predicate
+
+Test if any element matches a predicate:
+
+```javascript
+numbers = [1, 3, 5, 7, 8]
+hasEven = Array.some(numbers, soul(x) { return x % 2 == 0 })
+println(hasEven)   // true
+```
+
+### isEmpty - Check if array is empty
+
+Check if an array is empty:
+
+```javascript
+empty = []
+numbers = [1, 2, 3]
+
+println(Array.isEmpty(empty))    // true
+println(Array.isEmpty(numbers))  // false
+```
+
+## Utility Methods
+
+### length - Get array length
+
+Get the length of an array:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+len = Array.length(numbers)
+println(len)       // 5
+```
+
+### copy - Create shallow copy
+
+Create a shallow copy of an array:
+
+```javascript
+original = [1, 2, 3, 4, 5]
+copied = Array.copy(original)
+println(copied)    // [1, 2, 3, 4, 5]
+```
+
+### fill - Fill array with value
+
+Fill array with a specific value:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+Array.fill(numbers, 0)
+println(numbers)   // [0, 0, 0, 0, 0]
+
+// Fill specific range
+numbers = [1, 2, 3, 4, 5]
+Array.fill(numbers, 99, 1, 4)
+println(numbers)   // [1, 99, 99, 99, 5]
+```
+
+### range - Create array of numbers
+
+Create an array of numbers in a range:
+
+```javascript
+// Range from 0 to 5
+numbers = Array.range(5)
+println(numbers)   // [0, 1, 2, 3, 4]
+
+// Range from 1 to 10
+numbers = Array.range(1, 10)
+println(numbers)   // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+// Range with step
+numbers = Array.range(0, 10, 2)
+println(numbers)   // [0, 2, 4, 6, 8]
+```
+
+## Mathematical Operations
+
+### sum - Calculate sum of numbers
+
+Calculate the sum of numeric elements:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+total = Array.sum(numbers)
+println(total)     // 15
+```
+
+### min - Find minimum value
+
+Find the minimum numeric value:
+
+```javascript
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+minimum = Array.min(numbers)
+println(minimum)   // 1
+```
+
+### max - Find maximum value
+
+Find the maximum numeric value:
+
+```javascript
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+maximum = Array.max(numbers)
+println(maximum)   // 9
+```
+
+### average - Calculate average
+
+Calculate the average of numeric elements:
+
+```javascript
+numbers = [1, 2, 3, 4, 5]
+avg = Array.average(numbers)
+println(avg)       // 3
+```
+
+## Advanced Examples
+
+### Data Processing Pipeline
+
+```javascript
+soul processData(data) {
+    // Clean and transform data
+    cleaned = Array.filter(data, soul(x) { return x != null })
+    
+    // Extract numeric values
+    numbers = Array.map(cleaned, soul(x) { return parseFloat(x) })
+    
+    // Remove invalid numbers
+    valid = Array.filter(numbers, soul(x) { return !isNaN(x) })
+    
+    // Calculate statistics
+    stats = {
+        count: Array.length(valid),
+        sum: Array.sum(valid),
+        min: Array.min(valid),
+        max: Array.max(valid),
+        average: Array.average(valid)
+    }
+    
+    return stats
+}
+
+rawData = ["10", "20", null, "30", "invalid", "40"]
+result = processData(rawData)
+println(result)
+```
+
+### Functional Programming Example
+
+```javascript
+soul functionalExample() {
+    numbers = Array.range(1, 21)  // [1, 2, 3, ..., 20]
+    
+    result = numbers
+        |> Array.filter(soul(x) { return x % 2 == 0 })    // Even numbers
+        |> Array.map(soul(x) { return x * x })             // Square them
+        |> Array.filter(soul(x) { return x > 50 })         // Keep > 50
+        |> Array.reduce(soul(acc, x) { return acc + x }, 0) // Sum them
+    
+    return result
+}
+
+total = functionalExample()
+println(total)  // Sum of squares of even numbers > 50
+```
+
+### Array Manipulation Workflow
+
+```javascript
+soul arrayWorkflow() {
+    // Create sample data
+    data = Array.range(1, 11)  // [1, 2, 3, ..., 10]
+    
+    // Shuffle the data
+    Array.shuffle(data)
+    
+    // Split into chunks
+    chunks = Array.chunk(data, 3)
+    
+    // Process each chunk
+    processed = Array.map(chunks, soul(chunk) {
+        return Array.reduce(chunk, soul(acc, x) { return acc + x }, 0)
+    })
+    
+    // Sort results
+    Array.sort(processed)
+    
+    return processed
+}
+
+result = arrayWorkflow()
+println("Processed chunks: " + result)
+```
+
+### Search and Filter Operations
+
+```javascript
+soul searchOperations() {
+    users = [
+        {name: "Alice", age: 25, city: "New York"},
+        {name: "Bob", age: 30, city: "London"},
+        {name: "Charlie", age: 35, city: "Tokyo"},
+        {name: "Diana", age: 28, city: "Paris"}
+    ]
+    
+    // Find users over 30
+    mature = Array.filter(users, soul(user) { return user.age > 30 })
+    
+    // Get names of mature users
+    names = Array.map(mature, soul(user) { return user.name })
+    
+    // Find specific user
+    alice = Array.find(users, soul(user) { return user.name == "Alice" })
+    
+    // Check if any user is from Tokyo
+    hasTokyoUser = Array.some(users, soul(user) { return user.city == "Tokyo" })
+    
+    return {
+        matureUsers: names,
+        alice: alice,
+        hasTokyoUser: hasTokyoUser
+    }
+}
+
+result = searchOperations()
+println(result)
+```
+
+## Best Practices
+
+1. **Use appropriate methods**: Choose the right method for your use case
+2. **Handle empty arrays**: Always check for empty arrays when needed
+3. **Immutable operations**: Use methods that return new arrays for immutable operations
+4. **Performance considerations**: Be aware of O(n) operations on large arrays
+5. **Function composition**: Chain operations for cleaner code
+
+```javascript
+// Good - functional approach
+result = Array.range(1, 101)
+    |> Array.filter(soul(x) { return x % 2 == 0 })
+    |> Array.map(soul(x) { return x * x })
+    |> Array.sum()
+
+// Good - explicit error handling
+soul safeArrayOperation(arr) {
+    if (Array.isEmpty(arr)) {
+        return null
+    }
+    
+    return Array.reduce(arr, soul(acc, x) { return acc + x }, 0)
+}
+
+// Good - immutable operations
+original = [1, 2, 3, 4, 5]
+doubled = Array.map(original, soul(x) { return x * 2 })
+// original remains unchanged
+
+// Good - combining operations
+words = ["hello", "world", "soul", "language"]
+result = Array.filter(words, soul(w) { return w.length() > 4 })
+    |> Array.map(soul(w) { return w.toUpperCase() })
+    |> Array.join(" ")
+```
+
+The Array module provides a comprehensive set of tools for array manipulation in Soul, enabling both imperative and functional programming styles for working with collections of data.
