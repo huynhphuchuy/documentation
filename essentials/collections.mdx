@@ -1,0 +1,289 @@
+---
+title: "Collections"
+description: "Working with Lists and Maps in Soul"
+---
+
+## Lists
+
+Lists are ordered collections that can hold values of any type. They're similar to arrays in other languages.
+
+### Creating Lists
+
+```javascript
+// Empty list
+empty = []
+
+// List with values
+numbers = [1, 2, 3, 4, 5]
+mixed = [1, "hello", true, null, [1, 2]]
+
+// Lists can span multiple lines
+users = [
+    "Alice",
+    "Bob", 
+    "Charlie"
+]
+```
+
+### Accessing Elements
+
+Lists use zero-based indexing:
+
+```javascript
+fruits = ["apple", "banana", "orange"]
+
+first = fruits[0]    // "apple"
+last = fruits[2]     // "orange"
+
+// Negative indices count from the end
+lastItem = fruits[-1]    // "orange"
+secondLast = fruits[-2]  // "banana"
+```
+
+### List Methods
+
+<CodeGroup>
+```javascript Common Operations
+list = [1, 2, 3]
+
+// Add elements
+list.push(4)           // Adds to end: [1, 2, 3, 4]
+list.unshift(0)        // Adds to beginning: [0, 1, 2, 3, 4]
+
+// Remove elements  
+last = list.pop()      // Removes & returns last: 4
+first = list.shift()   // Removes & returns first: 0
+
+// Get information
+length = list.length() // 3
+isEmpty = list.isEmpty() // false
+```
+
+```javascript Search and Check
+numbers = [10, 20, 30, 40, 50]
+
+// Find elements
+index = numbers.indexOf(30)      // 2
+lastIndex = numbers.lastIndexOf(30) // 2
+contains = numbers.includes(40)   // true
+
+// Get sublist
+slice = numbers.slice(1, 4)      // [20, 30, 40]
+```
+
+```javascript Transform Methods
+values = [1, 2, 3, 4, 5]
+
+// Map - transform each element
+squared = values.map(soul(n) { return n * n })
+// Result: [1, 4, 9, 16, 25]
+
+// Filter - keep matching elements
+evens = values.filter(soul(n) { return n % 2 == 0 })
+// Result: [2, 4]
+
+// Reduce - combine into single value
+sum = values.reduce(soul(acc, n) { return acc + n }, 0)
+// Result: 15
+```
+</CodeGroup>
+
+### List Iteration
+
+```javascript
+items = ["a", "b", "c"]
+
+// For-in loop
+for (item in items) {
+    print(item)
+}
+
+// With index
+for (i in 0..items.length()-1) {
+    print(i + ": " + items[i])
+}
+
+// forEach method
+items.forEach(soul(item, index) {
+    print(index + ": " + item)
+})
+```
+
+## Maps
+
+Maps are unordered collections of key-value pairs, similar to dictionaries or objects.
+
+### Creating Maps
+
+```javascript
+// Empty map
+empty = {}
+
+// Map with values
+person = {
+    "name": "Alice",
+    "age": 30,
+    "active": true
+}
+
+// Nested maps
+config = {
+    "database": {
+        "host": "localhost",
+        "port": 5432
+    },
+    "cache": {
+        "enabled": true,
+        "ttl": 3600
+    }
+}
+```
+
+### Accessing Values
+
+```javascript
+user = {
+    "name": "Bob",
+    "email": "bob@example.com",
+    "age": 25
+}
+
+// Bracket notation
+name = user["name"]
+
+// Dot notation  
+email = user.email
+
+// Nested access
+db = config.database.host
+// or
+db = config["database"]["host"]
+```
+
+### Map Methods
+
+```javascript
+data = {"a": 1, "b": 2}
+
+// Get all keys and values
+keys = data.keys()      // ["a", "b"]
+values = data.values()  // [1, 2]
+
+// Check existence
+hasKey = data.has("a")  // true
+
+// Add/update values
+data["c"] = 3
+data.d = 4
+
+// Remove values
+removed = data.remove("a")  // Returns removed value
+
+// Get with default
+value = data.get("missing", "default")  // "default"
+
+// Merge maps
+merged = data.merge({"e": 5, "f": 6})
+```
+
+### Map Iteration
+
+```javascript
+scores = {
+    "Alice": 95,
+    "Bob": 87,
+    "Charlie": 92
+}
+
+// Iterate over keys
+for (name in scores) {
+    print(name + ": " + scores[name])
+}
+
+// Iterate over key-value pairs
+for (name, score in scores) {
+    print(name + " scored " + score)
+}
+```
+
+## Advanced Patterns
+
+### Destructuring
+
+```javascript
+// List destructuring
+coordinates = [10, 20]
+[x, y] = coordinates
+
+// Map destructuring in loops
+users = [
+    {"name": "Alice", "age": 30},
+    {"name": "Bob", "age": 25}
+]
+
+for (user in users) {
+    print(user.name + " is " + user.age)
+}
+```
+
+### Spread Operations
+
+```javascript
+// Combining lists
+list1 = [1, 2, 3]
+list2 = [4, 5, 6]
+combined = [...list1, ...list2]  // [1, 2, 3, 4, 5, 6]
+
+// Copying lists
+original = [1, 2, 3]
+copy = [...original]
+
+// Map spreading
+defaults = {"theme": "dark", "lang": "en"}
+userPrefs = {"lang": "es"}
+settings = {...defaults, ...userPrefs}
+// Result: {"theme": "dark", "lang": "es"}
+```
+
+### Collection Utilities
+
+```javascript
+// Sort a list
+numbers = [3, 1, 4, 1, 5]
+sorted = numbers.sort()  // [1, 1, 3, 4, 5]
+
+// Custom sort
+people = [
+    {"name": "Charlie", "age": 35},
+    {"name": "Alice", "age": 30},
+    {"name": "Bob", "age": 25}
+]
+
+byAge = people.sort(soul(a, b) { return a.age - b.age })
+
+// Reverse a list
+reversed = [1, 2, 3].reverse()  // [3, 2, 1]
+
+// Join list elements
+words = ["Hello", "Soul", "World"]
+sentence = words.join(" ")  // "Hello Soul World"
+```
+
+## Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Pre-allocate Size" icon="gauge">
+    When you know the size, pre-allocate for better performance:
+    ```javascript
+    // Instead of multiple pushes
+    list = []
+    list.reserve(1000)  // Pre-allocate
+    ```
+  </Card>
+  
+  <Card title="Use Appropriate Type" icon="shapes">
+    - Use Lists for ordered data and indexed access
+    - Use Maps for key-value lookups
+    - Consider Sets for unique values (if available)
+  </Card>
+</CardGroup>

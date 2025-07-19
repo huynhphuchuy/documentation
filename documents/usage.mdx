@@ -1,33 +1,344 @@
 ---
 title: "Usage"
-description: "Example section for showcasing API endpoints"
+description: "Complete guide to using the Soul CLI and command-line tools"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Overview
 
-## Welcome
+The Soul CLI provides a comprehensive set of commands for developing, building, and managing Soul applications. This guide covers all available commands and their usage.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Global Flags
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+These flags can be used with any Soul command:
 
-## Authentication
+```bash
+soul [command] --directory /path/to/project  # Set custom working directory
+soul [command] --config config.json         # Use custom configuration file
+```
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+## Core Commands
+
+### `soul run` - Execute Soul Programs
+
+Run Soul source code directly without compilation:
+
+```bash
+soul run app.soul
+soul run --skip-validation app.soul # Skip dependency validation
+```
+
+<Accordion title="Run Command Details">
+**Features:**
+- Executes Soul programs immediately without creating binaries
+- Auto-installs missing packages by scanning imports
+- Validates that exactly one `genesis()` function exists
+- Creates temporary executable for execution
+- Supports path aliases defined in `soul.json`
+
+**Requirements:**
+- Must have exactly one `genesis()` function with no parameters
+- All dependencies must be available or auto-installable
+</Accordion>
+
+### `soul build` - Compile Soul Programs
+
+Compile Soul source code into standalone executables:
+
+```bash
+soul build app.soul                  # Creates 'app' executable
+soul build --skip-validation app.soul
+```
+
+<Accordion title="Build Command Details">
+**Features:**
+- Creates self-contained executable binaries
+- Embeds source code in the executable
+- Auto-installs missing packages before compilation
+- Validates package dependencies
+- Output binary has same name as source file (without extension)
+
+**Output:**
+- Standalone executable that doesn't require Soul runtime
+- Can be distributed and run on systems without Soul installed
+</Accordion>
+
+## Version Management
+
+### `soul version` - Check Version
+
+Display the current Soul version:
+
+```bash
+soul version
+# Output: Soul 1.0.0
+```
+
+### `soul update` - Update Soul
+
+Update Soul to the latest version:
+
+```bash
+soul update              # Check and install updates
+soul update --dry-run    # Check for updates without installing
+soul update -n           # Same as --dry-run
+```
+
+<Accordion title="Update Process">
+**How it works:**
+1. Fetches latest version from GitHub releases
+2. Downloads platform-specific archive (macOS, Linux, Windows)
+3. Extracts and replaces current Soul binary
+4. Automatically handles ARM64 and AMD64 architectures
+5. Creates backup and rolls back on failure
+</Accordion>
+
+## Package Management
+
+Soul includes a comprehensive package management system accessed through the `pkg` subcommands.
+
+### `soul pkg init` - Initialize Package
+
+Create a new Soul package with `soul.json` manifest:
+
+```bash
+soul pkg init
+```
+
+This creates a `soul.json` file with:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "name": "project-name",
+  "version": "1.0.0",
+  "description": "A Soul project",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {}
+}
 ```
+
+### `soul pkg install` - Install Dependencies
+
+<Tabs>
+  <Tab title="Install All">
+    Install all dependencies from `soul.json`:
+    ```bash
+    soul pkg install
+    ```
+  </Tab>
+  <Tab title="Install Package">
+    Install a specific package:
+    ```bash
+    soul pkg install console
+    soul pkg install math@1.2.0
+    ```
+  </Tab>
+  <Tab title="Install Local">
+    Install from local path:
+    ```bash
+    soul pkg install ./local-package
+    soul pkg install /absolute/path/to/package
+    ```
+  </Tab>
+</Tabs>
+
+### `soul pkg list` - List Available Packages
+
+View all packages in the Soul package registry:
+
+```bash
+soul pkg list
+```
+
+**Output includes:**
+- Package names with latest versions
+- Package descriptions and categories
+- All available versions
+- Total package count
+
+### `soul pkg search` - Search Packages
+
+Search for packages by name, description, or keywords:
+
+```bash
+soul pkg search console      # Search for console-related packages
+soul pkg search "web server" # Search with multiple words
+```
+
+**Search covers:**
+- Package names
+- Descriptions
+- Keywords
+- Categories
+
+### `soul pkg validate` - Validate Dependencies
+
+Check package dependencies and version constraints:
+
+```bash
+soul pkg validate
+```
+
+**Validates:**
+- Soul version compatibility
+- All dependency version constraints
+- Package compatibility across the project
+- Displays dependency summary with installed versions
+
+### `soul pkg tidy` - Tidy Dependencies
+
+Automatically manage dependencies based on imports:
+
+```bash
+soul pkg tidy
+```
+
+**Features:**
+- Creates `soul.json` if it doesn't exist
+- Scans all `.soul` files for import statements
+- Extracts and adds package dependencies
+- Updates existing `soul.json` with new dependencies
+- Ignores relative imports and file paths
+
+### `soul pkg clear-cache` - Clear Cache
+
+Clear package cache to force fresh downloads:
+
+```bash
+soul pkg clear-cache
+```
+
+**Clears:**
+- Package download cache
+- Temporary installation files
+- Shows freed disk space in human-readable format
+
+## Program Structure
+
+### Genesis Function
+
+Every Soul program must have exactly one `genesis()` function as the entry point:
+
+<CodeGroup>
+```javascript Valid Genesis
+soul genesis() {
+    Console.log("Hello, Soul!")
+}
+```
+
+```javascript Invalid - With Parameters
+soul genesis(args) {  // ❌ Invalid
+    Console.log("Hello")
+}
+```
+
+```javascript Invalid - Multiple Genesis
+soul genesis() { ... }    // ❌ Multiple genesis
+soul genesis() { ... }   // functions not allowed
+```
+</CodeGroup>
+
+## Configuration
+
+### Project Configuration (`soul.json`)
+
+Complete example of a `soul.json` file:
+
+```json
+{
+  "name": "my-soul-app",
+  "version": "1.0.0",
+  "description": "My Soul application",
+  "license": "MIT",
+  "scripts": {
+    "start": "soul run app.soul",
+    "build": "soul build app.soul",
+    "test": "soul run tests/main.soul"
+  },
+  "dependencies": {
+    "console": "latest",
+    "math": "^1.0.0",
+    "http": "~2.1.0"
+  },
+  "soulVersion": "^1.0.0"
+}
+```
+
+## Error Handling
+
+Soul CLI provides detailed error messages and validation:
+
+<AccordionGroup>
+  <Accordion title="Genesis Function Errors">
+    - Missing genesis function
+    - Multiple genesis functions
+    - Genesis function with parameters
+    - Genesis function validation across multiple files
+  </Accordion>
+  
+  <Accordion title="Dependency Errors">
+    - Missing packages
+    - Version constraint conflicts  
+    - Soul version compatibility issues
+    - Invalid package specifications
+  </Accordion>
+  
+  <Accordion title="Build Errors">
+    - Source file not found
+    - Compilation failures
+    - Permission issues
+    - Disk space issues
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+### Basic Workflow
+
+```bash
+# Initialize a new project
+mkdir my-soul-app && cd my-soul-app
+soul pkg init
+
+# Create main file
+echo 'soul genesis() { Console.log("Hello, Soul!") }' > app.soul
+
+# Install dependencies (auto-detected)
+soul pkg tidy
+
+# Run the program
+soul run app.soul
+
+# Build executable
+soul build app.soul
+
+# Run the executable
+./app
+```
+
+### Package Development
+
+```bash
+# Create a package
+soul pkg init
+echo '{"name": "my-package", "version": "1.0.0"}' > soul.json
+
+# Install from local path in another project
+cd ../my-app
+soul pkg install ../my-package
+
+# Validate all dependencies
+soul pkg validate
+```
+
+### Development Tips
+
+```bash
+# Skip validation during development
+soul run --skip-validation app.soul
+
+# Build and run quickly
+soul build app.soul && ./app
+```
+
+This comprehensive CLI toolkit makes Soul development efficient and manageable, with powerful package management and build tools.

@@ -1,0 +1,240 @@
+---
+title: "Functions"
+description: "Creating and using functions in Soul"
+---
+
+## Function Declaration
+
+Functions in Soul are declared with the `soul` keyword:
+
+```javascript
+soul greet(name) {
+    return "Hello, " + name + "!"
+}
+
+message = greet("Alice")  // "Hello, Alice!"
+```
+
+## Parameters and Arguments
+
+Functions can accept multiple parameters:
+
+```javascript
+soul add(a, b) {
+    return a + b
+}
+
+soul introduce(firstName, lastName, age) {
+    return firstName + " " + lastName + " is " + age + " years old"
+}
+
+// Calling with arguments
+sum = add(5, 3)
+intro = introduce("John", "Doe", 30)
+```
+
+<Note>
+Soul doesn't support default parameters or named arguments. All parameters must be provided when calling a function.
+</Note>
+
+## Return Values
+
+Use the `return` keyword to return a value:
+
+```javascript
+soul multiply(x, y) {
+    return x * y
+}
+
+// Without explicit return, functions return null
+soul printMessage(msg) {
+    print(msg)
+    // Implicitly returns null
+}
+```
+
+## First-Class Functions
+
+Functions are first-class values in Soul - they can be assigned to variables, passed as arguments, and returned from other functions:
+
+### Assigning Functions to Variables
+
+```javascript
+soul sayHello() {
+    return "Hello!"
+}
+
+// Assign function to variable
+myFunc = sayHello
+result = myFunc()  // "Hello!"
+```
+
+### Functions as Arguments
+
+```javascript
+soul applyOperation(x, y, operation) {
+    return operation(x, y)
+}
+
+soul add(a, b) { return a + b }
+soul multiply(a, b) { return a * b }
+
+result1 = applyOperation(5, 3, add)      // 8
+result2 = applyOperation(5, 3, multiply) // 15
+```
+
+### Returning Functions
+
+```javascript
+soul createMultiplier(factor) {
+    return soul(x) {
+        return x * factor
+    }
+}
+
+double = createMultiplier(2)
+triple = createMultiplier(3)
+
+print(double(5))   // 10
+print(triple(5))   // 15
+```
+
+## Anonymous Functions
+
+Create functions without names:
+
+```javascript
+// Anonymous function assigned to variable
+square = soul(x) { return x * x }
+
+// Anonymous function as argument
+numbers = [1, 2, 3, 4, 5]
+squared = numbers.map(soul(n) { return n * n })
+// Result: [1, 4, 9, 16, 25]
+```
+
+## Closures
+
+Functions can capture variables from their enclosing scope:
+
+```javascript
+soul makeCounter() {
+    count = 0
+    
+    return soul() {
+        count = count + 1
+        return count
+    }
+}
+
+counter1 = makeCounter()
+counter2 = makeCounter()
+
+print(counter1())  // 1
+print(counter1())  // 2
+print(counter2())  // 1 (independent counter)
+```
+
+## Function Scope
+
+Each function creates its own scope:
+
+```javascript
+globalVar = "global"
+
+soul outerFunction() {
+    outerVar = "outer"
+    
+    soul innerFunction() {
+        innerVar = "inner"
+        print(globalVar)  // ✓ Access global
+        print(outerVar)   // ✓ Access outer scope
+    }
+    
+    innerFunction()
+    // print(innerVar)  // ✗ Error: not accessible
+}
+```
+
+## Recursion
+
+Functions can call themselves:
+
+```javascript
+soul factorial(n) {
+    if (n <= 1) {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+print(factorial(5))  // 120
+
+// Fibonacci with recursion
+soul fibonacci(n) {
+    if (n <= 1) return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+```
+
+## Higher-Order Functions
+
+Soul supports functional programming patterns:
+
+```javascript
+// Filter function
+soul filter(list, predicate) {
+    result = []
+    for (item in list) {
+        if (predicate(item)) {
+            result.push(item)
+        }
+    }
+    return result
+}
+
+numbers = [1, 2, 3, 4, 5, 6]
+evens = filter(numbers, soul(n) { return n % 2 == 0 })
+// Result: [2, 4, 6]
+
+// Reduce function
+soul reduce(list, fn, initial) {
+    acc = initial
+    for (item in list) {
+        acc = fn(acc, item)
+    }
+    return acc
+}
+
+sum = reduce([1, 2, 3, 4], soul(a, b) { return a + b }, 0)
+// Result: 10
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use Descriptive Names">
+    ```javascript
+    // Good
+    soul calculateTotalPrice(items, taxRate) { }
+    
+    // Avoid
+    soul calc(i, t) { }
+    ```
+  </Accordion>
+  
+  <Accordion title="Keep Functions Small">
+    Functions should do one thing well. If a function is getting too large, consider breaking it into smaller functions.
+  </Accordion>
+  
+  <Accordion title="Return Early">
+    ```javascript
+    soul findUser(id) {
+        if (!id) return null
+        
+        // Main logic here
+        return user
+    }
+    ```
+  </Accordion>
+</AccordionGroup>

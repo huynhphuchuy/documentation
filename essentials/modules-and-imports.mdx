@@ -1,0 +1,352 @@
+---
+title: "Modules and Imports"
+description: "Organizing code with Soul's module system"
+---
+
+## Import Basics
+
+Soul provides a flexible import system to organize and reuse code across files.
+
+### Import Entire Module
+
+```javascript
+// Import as namespace
+import "./utils.soul" as utils
+
+// Use imported functions
+result = utils.calculate(10, 20)
+```
+
+### Named Imports
+
+Import specific items from a module:
+
+```javascript
+// Import specific functions
+import { add, subtract } from "./math.soul";
+
+sum = add(5, 3);
+diff = subtract(10, 4);
+
+// Import with aliasing
+import { veryLongFunctionName as shortName } from "./helpers.soul";
+```
+
+### Default Exports
+
+```javascript
+// In user.soul
+export default sanctuary User {
+    soul __init__(name) {
+        this.name = name
+    }
+}
+
+// In main.soul
+import User from "./user.soul"
+user = User.new("Alice")
+```
+
+## Export Syntax
+
+### Named Exports
+
+```javascript
+// In math.soul
+export soul add(a, b) {
+    return a + b
+}
+
+export soul multiply(a, b) {
+    return a * b
+}
+
+export pi = 3.14159
+```
+
+### Export Existing Values
+
+```javascript
+soul helper() {
+    return "I help!"
+}
+
+sanctuary Tool {
+    # Class implementation
+}
+
+// Export at the end
+export { helper, Tool }
+```
+
+### Export with Aliases
+
+```javascript
+soul internalName() {
+    // Implementation
+}
+
+export { internalName as publicAPI }
+```
+
+## Module Resolution
+
+### Relative Imports
+
+```javascript
+// Current directory
+import "./sibling.soul";
+
+// Parent directory
+import "../utils/helper.soul";
+
+// Nested paths
+import "../../shared/config.soul";
+```
+
+### Package Imports
+
+Import installed packages from `soul_modules`:
+
+```javascript
+// Import standard library modules
+import "console"
+import "http"
+import "json"
+
+// Import third-party packages
+import "lodash" as _
+import { format } from "date-fns"
+```
+
+## Path Aliases
+
+Configure path aliases in `soul.json` for cleaner imports:
+
+```json
+{
+  "name": "my-project",
+  "paths": {
+    "@/": "./src/",
+    "@utils/": "./src/utils/",
+    "@models/": "./src/models/",
+    "@services/": "./src/services/"
+  }
+}
+```
+
+Then use in your code:
+
+```javascript
+// Instead of: import "../../../utils/validator.soul"
+import { validate } from "@utils/validator.soul";
+
+// Clean model imports
+import User from "@models/user.soul";
+import Post from "@models/post.soul";
+
+// Service imports
+import API from "@services/api.soul";
+```
+
+## Module Patterns
+
+### Barrel Exports
+
+Create an index file to re-export from multiple modules:
+
+```javascript
+// In utils/index.soul
+export { formatDate, parseDate } from "./date.soul";
+export { capitalize, truncate } from "./string.soul";
+export { debounce, throttle } from "./function.soul";
+
+// In main.soul - import all utilities
+import * as utils from "./utils/index.soul";
+```
+
+### Factory Module
+
+```javascript
+// In factory.soul
+soul createLogger(name) {
+    return {
+        "log": soul(message) {
+            print("[" + name + "] " + message)
+        },
+        "error": soul(message) {
+            print("[" + name + " ERROR] " + message)
+        }
+    }
+}
+
+export { createLogger }
+
+// In main.soul
+import { createLogger } from "./factory.soul"
+logger = createLogger("MyApp")
+logger.log("Started")
+```
+
+### Configuration Module
+
+```javascript
+// In config.soul
+env = os.getenv("SOUL_ENV") || "development";
+
+config = {
+  development: {
+    apiUrl: "http://localhost:3000",
+    debug: true,
+  },
+  production: {
+    apiUrl: "https://api.example.com",
+    debug: false,
+  },
+};
+
+export default config[env];
+
+// In main.soul
+import config from "./config.soul";
+print("API URL: " + config.apiUrl);
+```
+
+## Circular Dependencies
+
+Soul handles circular dependencies, but they should be avoided:
+
+```javascript
+// ❌ Avoid this pattern
+// In a.soul
+import { b } from "./b.soul"
+export soul a() { return b() }
+
+// In b.soul
+import { a } from "./a.soul"
+export soul b() { return a() }
+
+// ✅ Better approach - use dependency injection
+// In a.soul
+export soul a(bFunc) { return bFunc() }
+
+// In b.soul
+export soul b(aFunc) { return aFunc() }
+
+// In main.soul
+import { a } from "./a.soul"
+import { b } from "./b.soul"
+a(soul() { return b(soul() { return "done" }) })
+```
+
+## Dynamic Imports
+
+For conditional or lazy loading:
+
+```javascript
+soul loadPlugin(name) {
+    try {
+        plugin = import("./plugins/" + name + ".soul")
+        return plugin.init()
+    } catch (e) {
+        print("Plugin not found: " + name)
+        return null
+    }
+}
+
+// Load plugin based on config
+if (config.useAdvancedFeatures) {
+    advanced = import("./advanced.soul")
+    advanced.setup()
+}
+```
+
+## Module Best Practices
+
+<AccordionGroup>
+  <Accordion title="Single Responsibility">
+    Each module should have one clear purpose. Don't mix unrelated functionality.
+    
+    ```javascript
+    // Good - focused modules
+    // date-utils.soul - only date functions
+    // api-client.soul - only API calls
+    // validators.soul - only validation
+    ```
+  </Accordion>
+  
+  <Accordion title="Clear Exports">
+    Be explicit about what you export. Don't export internal helpers.
+    
+    ```javascript
+    // Private helper - not exported
+    soul _internalHelper() { }
+    
+    // Public API - exported
+    export soul publicFunction() {
+        return _internalHelper()
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Avoid Side Effects">
+    Modules should not execute code on import unless necessary.
+    
+    ```javascript
+    // ❌ Avoid
+    print("Module loaded!")  // Runs on import
+    
+    // ✅ Better
+    export soul init() {
+        print("Module initialized!")
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Namespace Pattern
+
+```javascript
+// In utils.soul
+export math = {
+    "add": soul(a, b) { return a + b },
+    "subtract": soul(a, b) { return a - b },
+    "multiply": soul(a, b) { return a * b }
+}
+
+export string = {
+    "capitalize": soul(s) {
+        return s[0].toUpperCase() + s.slice(1)
+    }
+}
+
+// Usage
+import { math, string } from "./utils.soul"
+result = math.add(5, 3)
+name = string.capitalize("soul")
+```
+
+### Module Initialization
+
+```javascript
+// In database.soul
+_connection = null
+
+export soul connect(config) {
+    _connection = createConnection(config)
+}
+
+export soul query(sql) {
+    if (!_connection) {
+        throw("Database not connected")
+    }
+    return _connection.execute(sql)
+}
+
+// In main.soul
+import * as db from "./database.soul"
+db.connect(config)
+results = db.query("SELECT * FROM users")
+```

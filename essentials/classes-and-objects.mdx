@@ -1,0 +1,396 @@
+---
+title: "Classes and Objects"
+description: "Object-oriented programming with sanctuaries and traits"
+---
+
+## Classes (Sanctuaries)
+
+In Soul, classes are called "sanctuaries" and provide a blueprint for creating objects.
+
+### Basic Class Definition
+
+```javascript
+sanctuary Person {
+    soul __init__(name, age) {
+        this.name = name
+        this.age = age
+    }
+    
+    soul greet() {
+        return "Hello, I'm " + this.name
+    }
+}
+
+// Create an instance
+person = Person.new("Alice", 30)
+print(person.greet())  // "Hello, I'm Alice"
+```
+
+<Note>
+The `__init__` method is the constructor and is called automatically when creating new instances with `.new()`.
+</Note>
+
+### Instance Properties
+
+Properties are dynamically added to instances:
+
+```javascript
+sanctuary Car {
+    soul __init__(make, model) {
+        this.make = make
+        this.model = model
+        this.speed = 0  // Default value
+    }
+    
+    soul accelerate(amount) {
+        this.speed = this.speed + amount
+    }
+    
+    soul getInfo() {
+        return this.make + " " + this.model + " at " + this.speed + " mph"
+    }
+}
+
+myCar = Car.new("Toyota", "Camry")
+myCar.accelerate(50)
+print(myCar.getInfo())  // "Toyota Camry at 50 mph"
+```
+
+### Methods
+
+Methods are functions defined within a sanctuary:
+
+```javascript
+sanctuary Calculator {
+    soul __init__() {
+        this.result = 0
+    }
+    
+    soul add(n) {
+        this.result = this.result + n
+        return this  // Enable method chaining
+    }
+    
+    soul multiply(n) {
+        this.result = this.result * n
+        return this
+    }
+    
+    soul getResult() {
+        return this.result
+    }
+}
+
+calc = Calculator.new()
+result = calc.add(5).multiply(3).getResult()  // 15
+```
+
+## Inheritance
+
+Classes can inherit from other classes using `extends`:
+
+```javascript
+sanctuary Animal {
+    soul __init__(name) {
+        this.name = name
+    }
+    
+    soul speak() {
+        return this.name + " makes a sound"
+    }
+}
+
+sanctuary Dog extends Animal {
+    soul __init__(name, breed) {
+        super.__init__(name)  // Call parent constructor
+        this.breed = breed
+    }
+    
+    soul speak() {
+        return this.name + " barks!"
+    }
+    
+    soul wagTail() {
+        return this.name + " is wagging tail"
+    }
+}
+
+dog = Dog.new("Buddy", "Golden Retriever")
+print(dog.speak())     // "Buddy barks!"
+print(dog.wagTail())   // "Buddy is wagging tail"
+```
+
+### Using Super
+
+The `super` keyword accesses parent class methods:
+
+```javascript
+sanctuary Employee {
+    soul __init__(name, id) {
+        this.name = name
+        this.id = id
+    }
+    
+    soul getInfo() {
+        return "Employee: " + this.name + " (ID: " + this.id + ")"
+    }
+}
+
+sanctuary Manager extends Employee {
+    soul __init__(name, id, department) {
+        super.__init__(name, id)
+        this.department = department
+    }
+    
+    soul getInfo() {
+        // Call parent method and extend it
+        return super.getInfo() + ", Dept: " + this.department
+    }
+}
+
+mgr = Manager.new("Alice", "E123", "Engineering")
+print(mgr.getInfo())
+// "Employee: Alice (ID: E123), Dept: Engineering"
+```
+
+## Traits (Oasis)
+
+Traits provide a way to share behavior across multiple classes without inheritance:
+
+```javascript
+oasis Timestampable {
+    soul updateTimestamp() {
+        this.lastModified = time.now()
+    }
+    
+    soul getLastModified() {
+        return this.lastModified || "Never modified"
+    }
+}
+
+oasis Taggable {
+    soul addTag(tag) {
+        if (!this.tags) {
+            this.tags = []
+        }
+        this.tags.push(tag)
+    }
+    
+    soul getTags() {
+        return this.tags || []
+    }
+}
+
+sanctuary Document uses Timestampable, Taggable {
+    soul __init__(title) {
+        this.title = title
+    }
+}
+
+doc = Document.new("My Report")
+doc.addTag("important")
+doc.addTag("draft")
+doc.updateTimestamp()
+
+print(doc.getTags())  # ["important", "draft"]
+```
+
+## Static Methods
+
+Static methods belong to the class itself, not instances:
+
+```javascript
+sanctuary MathUtils {
+    static soul pi() {
+        return 3.14159
+    }
+    
+    static soul circleArea(radius) {
+        return MathUtils.pi() * radius * radius
+    }
+}
+
+// Call without creating instance
+area = MathUtils.circleArea(5)  // 78.53975
+
+// Factory pattern with static methods
+sanctuary User {
+    soul __init__(name, email) {
+        this.name = name
+        this.email = email
+    }
+    
+    static soul fromEmail(email) {
+        name = email.split("@")[0]
+        return User.new(name, email)
+    }
+}
+
+user = User.fromEmail("john@example.com")
+print(user.name)  // "john"
+```
+
+## Property Access
+
+### Getters and Setters Pattern
+
+```javascript
+sanctuary Temperature {
+    soul __init__(celsius) {
+        this._celsius = celsius
+    }
+    
+    soul getCelsius() {
+        return this._celsius
+    }
+    
+    soul setCelsius(value) {
+        if (value < -273.15) {
+            throw("Temperature below absolute zero!")
+        }
+        this._celsius = value
+    }
+    
+    soul getFahrenheit() {
+        return (this._celsius * 9/5) + 32
+    }
+    
+    soul setFahrenheit(value) {
+        this._celsius = (value - 32) * 5/9
+    }
+}
+
+temp = Temperature.new(25)
+print(temp.getFahrenheit())  // 77
+temp.setFahrenheit(86)
+print(temp.getCelsius())     // 30
+```
+
+## Composition Over Inheritance
+
+Sometimes composition is better than inheritance:
+
+```javascript
+sanctuary Engine {
+    soul __init__(horsepower) {
+        this.horsepower = horsepower
+    }
+    
+    soul start() {
+        return "Engine starting..."
+    }
+}
+
+sanctuary Radio {
+    soul __init__() {
+        this.station = "101.5 FM"
+    }
+    
+    soul play() {
+        return "Playing " + this.station
+    }
+}
+
+sanctuary Car {
+    soul __init__(model) {
+        this.model = model
+        this.engine = Engine.new(200)
+        this.radio = Radio.new()
+    }
+    
+    soul start() {
+        return this.engine.start()
+    }
+    
+    soul playMusic() {
+        return this.radio.play()
+    }
+}
+
+car = Car.new("Sedan")
+print(car.start())      // "Engine starting..."
+print(car.playMusic())  // "Playing 101.5 FM"
+```
+
+## Design Patterns
+
+### Singleton Pattern
+
+```javascript
+sanctuary Database {
+    static soul getInstance() {
+        if (!Database._instance) {
+            Database._instance = Database.new()
+        }
+        return Database._instance
+    }
+    
+    soul __init__() {
+        if (Database._instance) {
+            throw("Use Database.getInstance()")
+        }
+        this.connection = "Connected to DB"
+    }
+}
+
+db1 = Database.getInstance()
+db2 = Database.getInstance()
+print(db1 == db2)  // true (same instance)
+```
+
+### Builder Pattern
+
+```javascript
+sanctuary Pizza {
+    soul __init__() {
+        this.size = "medium"
+        this.toppings = []
+    }
+}
+
+sanctuary PizzaBuilder {
+    soul __init__() {
+        this.pizza = Pizza.new()
+    }
+    
+    soul setSize(size) {
+        this.pizza.size = size
+        return this
+    }
+    
+    soul addTopping(topping) {
+        this.pizza.toppings.push(topping)
+        return this
+    }
+    
+    soul build() {
+        return this.pizza
+    }
+}
+
+pizza = PizzaBuilder.new()
+    .setSize("large")
+    .addTopping("cheese")
+    .addTopping("pepperoni")
+    .build()
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Keep Classes Focused" icon="bullseye">
+    Each class should have a single, well-defined responsibility.
+  </Card>
+  
+  <Card title="Favor Composition" icon="layer-group">
+    Use composition when you need to combine behaviors from multiple sources.
+  </Card>
+  
+  <Card title="Use Traits Wisely" icon="puzzle-piece">
+    Traits are great for cross-cutting concerns like logging or timestamps.
+  </Card>
+  
+  <Card title="Encapsulate Data" icon="lock">
+    Use methods to control access to internal state rather than direct property access.
+  </Card>
+</CardGroup>

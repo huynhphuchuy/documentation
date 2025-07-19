@@ -30,12 +30,12 @@
           {
             "group": "Essentials",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "essentials/variables-and-types",
+              "essentials/functions",
+              "essentials/control-flow",
+              "essentials/collections",
+              "essentials/classes-and-objects",
+              "essentials/modules-and-imports"
             ]
           }
         ]

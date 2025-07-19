@@ -1,0 +1,172 @@
+---
+title: "Variables and Types"
+description: "Understanding Soul's dynamic type system and variable declarations"
+---
+
+## Dynamic Typing
+
+Soul is dynamically typed, meaning variables don't need type declarations. The type is determined at runtime based on the assigned value.
+
+## Variable Declaration
+
+Variables are created upon first assignment using the `=` operator:
+
+```javascript
+name = "Alice"           // String
+age = 25                // Number
+isStudent = false       // Boolean
+data = null            // Null
+```
+
+<Note>
+Soul doesn't use keywords like `var`, `let`, or `const`. Simply assign a value to create a variable.
+</Note>
+
+## Primitive Types
+
+### Numbers
+
+Soul uses 64-bit floating-point numbers with high-precision decimal implementation to avoid common floating-point issues:
+
+```javascript
+integer = 100
+decimal = 3.14159
+scientific = 1.23e-4
+calculation = 0.1 + 0.2  // Correctly equals 0.3
+```
+
+### Strings
+
+Strings are UTF-8 encoded and can use three different quote styles:
+
+<CodeGroup>
+```javascript Double Quotes
+message = "Hello, World!"
+multiline = "Line 1
+Line 2"
+```
+
+```javascript Single Quotes
+name = 'Soul'
+path = 'C:\Users\file.txt'  # No escaping needed
+```
+
+```javascript Backticks
+template = `Hello, ${name}!`
+rawString = `No \n escaping`
+```
+</CodeGroup>
+
+### Booleans
+
+Boolean values are `true` or `false`:
+
+```javascript
+isReady = true
+isComplete = false
+
+// Falsy values: false, null, 0, ""
+// Everything else is truthy
+```
+
+### Null
+
+Represents the intentional absence of a value:
+
+```javascript
+result = null
+
+// Null is falsy in conditions
+if (!result) {
+    print("No result yet")
+}
+```
+
+## Type Checking
+
+Use built-in functions to check types at runtime:
+
+```javascript
+value = 42
+
+if (typeof(value) == "number") {
+    print("It's a number!")
+}
+
+// Common type checks
+isString = typeof("hello") == "string"
+isBoolean = typeof(true) == "boolean"
+isNull = value == null
+```
+
+## Type Conversion
+
+Soul provides functions for explicit type conversion:
+
+```javascript
+// String to Number
+age = Number("25")          // 25
+price = Number("19.99")     // 19.99
+
+// Number to String
+text = String(42)           // "42"
+formatted = String(3.14159) // "3.14159"
+
+// Boolean conversion
+bool1 = Boolean(1)          // true
+bool2 = Boolean("")         // false
+bool3 = Boolean("false")    // true (non-empty string)
+```
+
+## Variable Scope
+
+Variables follow lexical scoping rules:
+
+```javascript
+globalVar = "I'm global"
+
+soul myFunction() {
+    localVar = "I'm local"
+    
+    if (true) {
+        blockVar = "I'm in a block"
+        print(globalVar)    // ✓ Accessible
+        print(localVar)     // ✓ Accessible
+    }
+    
+    print(blockVar)         // ✓ Still accessible
+}
+
+print(localVar)             // ✗ Error: undefined variable
+```
+
+<Warning>
+Soul doesn't have block-scoped variables like JavaScript's `let` and `const`. Variables are function-scoped.
+</Warning>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Descriptive Names" icon="tag">
+    ```javascript
+    // Good
+    userName = "Alice"
+    isLoggedIn = true
+    
+    // Avoid
+    u = "Alice"
+    flag = true
+    ```
+  </Card>
+  
+  <Card title="Initialize Variables" icon="check">
+    ```javascript
+    // Good - clear intent
+    count = 0
+    items = []
+    
+    // Avoid - unclear
+    count = null
+    ```
+  </Card>
+</CardGroup>
