@@ -1,89 +1,193 @@
 ---
 title: "How to Install"
-description: "Start building awesome documentation in under 5 minutes"
+description: "Install Soul programming language on your system"
 ---
 
-## Setup your development
+## Quick Install
 
-Learn how to update your docs locally and deploy them to the public.
+The fastest way to install Soul is using our installation scripts.
 
-### Edit and preview
+### macOS / Linux
+
+Open your terminal and run:
+
+```bash
+sh <(curl -fsSL https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.sh)
+```
+
+Or with wget:
+
+```bash
+sh <(wget -qO- https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.sh)
+```
+
+### Windows
+
+Open PowerShell as Administrator and run:
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.ps1 | iex
+```
+
+## Manual Installation
+
+If you prefer to install manually, follow these steps:
+
+### 1. Download the Latest Release
+
+Check the latest version at: https://github.com/gantz-ai/soul-release/blob/main/latest.txt
+
+Download the appropriate archive for your platform:
+
+<CardGroup cols={2}>
+  <Card title="macOS (Apple Silicon)" icon="apple">
+    ```
+    mac/soul-VERSION-darwin-arm64.tar.gz
+    ```
+  </Card>
+  <Card title="macOS (Intel)" icon="apple">
+    ```
+    mac/soul-VERSION-darwin-amd64.tar.gz
+    ```
+  </Card>
+  <Card title="Linux" icon="linux">
+    ```
+    linux/soul-VERSION-linux-amd64.tar.gz
+    ```
+  </Card>
+  <Card title="Windows" icon="windows">
+    ```
+    windows/soul-VERSION-windows-amd64.zip
+    ```
+  </Card>
+</CardGroup>
+
+### 2. Extract the Archive
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash
+    tar -xzf soul-VERSION-PLATFORM.tar.gz
+    ```
+  </Tab>
+  <Tab title="Windows">
+    Extract the ZIP file using Windows Explorer or:
+    ```powershell
+    Expand-Archive soul-VERSION-windows-amd64.zip
+    ```
+  </Tab>
+</Tabs>
+
+### 3. Install the Binary
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash
+    # Rename to soul
+    mv soul-VERSION soul
+    
+    # Make executable
+    chmod +x soul
+    
+    # Move to PATH
+    sudo mv soul /usr/local/bin/
+    ```
+  </Tab>
+  <Tab title="Windows">
+    1. Rename `soul-VERSION.exe` to `soul.exe`
+    2. Move to a directory in your PATH, or:
+    3. Add the directory containing `soul.exe` to your PATH environment variable
+  </Tab>
+</Tabs>
+
+## Verify Installation
+
+After installation, verify Soul is working:
+
+```bash
+soul version
+```
+
+You should see output like:
+
+```
+Soul 1.0.0
+```
+
+## Installation Locations
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    Soul is installed to `/usr/local/bin/soul`
+    
+    If you need to uninstall:
+    ```bash
+    sudo rm /usr/local/bin/soul
+    ```
+  </Tab>
+  <Tab title="Windows">
+    Soul is installed to `%USERPROFILE%\.soul\bin\soul.exe`
+    
+    This directory is automatically added to your PATH.
+  </Tab>
+</Tabs>
+
+## Updating Soul
+
+Soul includes a built-in update command:
+
+```bash
+# Check for updates and install if available
+soul update
+
+# Check for updates without installing
+soul update --dry-run
+```
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
+  <Accordion title="Permission denied on macOS/Linux">
+    If you get a permission error during installation, make sure to use `sudo`:
+    ```bash
+    sudo mv soul /usr/local/bin/
+    ```
   </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 
-    1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `docs.json` is): ``` mintlify dev ```
-    <Note>
-      If you’re currently using the legacy ```mint.json``` configuration file, please update the Mintlify CLI:
-
-      ```npm i -g mintlify@latest```
-      And run the new upgrade command in your docs repository:
-
-      ```mintlify upgrade```
-      You should now be using the new ```docs.json``` configuration file. Feel free to delete the ```mint.json``` file from your repository.
-    </Note>
-
+  
+  <Accordion title="Command not found">
+    If `soul` command is not found after installation:
+    
+    **macOS/Linux**: Add to your shell profile:
+    ```bash
+    export PATH="$PATH:/usr/local/bin"
+    ```
+    
+    **Windows**: Restart your terminal or run:
+    ```powershell
+    refreshenv
+    ```
+  </Accordion>
+  
+  <Accordion title="macOS security warning">
+    If macOS blocks the executable, run:
+    ```bash
+    xattr -d com.apple.quarantine /usr/local/bin/soul
+    ```
   </Accordion>
 </AccordionGroup>
 
-### Deploy your changes
-
-<AccordionGroup>
-
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
-
-</AccordionGroup>
-
-## Update your docs
-
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
+## Next Steps
 
 <CardGroup>
-
-<Card title="Add Content With MDX" icon="file" href="/essentials/markdown">
-  Add content to your docs with MDX syntax.
-</Card>
-
-<Card title="Add Code Blocks" icon="square-code" href="/essentials/code">
-  Add code directly to your docs with syntax highlighting.
-</Card>
-
-<Card title="Add Images" icon="image" href="/essentials/images">
-  Add images to your docs to make them more engaging.
-</Card>
-
-<Card
-  title="Add Custom Components"
-  icon="puzzle-piece"
-  href="/essentials/reusable-snippets"
->
-  Add templates to your docs to make them more reusable.
-</Card>
-
+  <Card title="Getting Started" icon="rocket" href="/getting-started">
+    Learn the basics of Soul programming
+  </Card>
+  
+  <Card title="Language Guide" icon="book" href="/language-guide">
+    Explore Soul language features
+  </Card>
+  
+  <Card title="Examples" icon="code" href="/examples">
+    See Soul in action with examples
+  </Card>
 </CardGroup>
