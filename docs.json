@@ -22,6 +22,14 @@
     {
       "source": "/install.sh",
       "destination": "https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.sh"
+    },
+    {
+      "source": "/install.ps1",
+      "destination": "https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.ps1"
+    },
+    {
+      "source": "/releases",
+      "destination": "https://github.com/gantz-ai/soul-release"
     }
   ],
   "navigation": {

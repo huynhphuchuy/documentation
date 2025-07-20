@@ -12,13 +12,13 @@ The fastest way to install Soul is using our installation scripts.
 Open your terminal and run:
 
 ```bash
-sh <(curl -fsSL https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.sh)
+sh <(curl -fsSL https://soul-lang.com/install.sh)
 ```
 
 Or with wget:
 
 ```bash
-sh <(wget -qO- https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.sh)
+sh <(wget -qO- https://soul-lang.com/install.sh)
 ```
 
 ### Windows
@@ -26,7 +26,7 @@ sh <(wget -qO- https://raw.githubusercontent.com/gantz-ai/soul-release/main/inst
 Open PowerShell as Administrator and run:
 
 ```powershell
-iwr -useb https://raw.githubusercontent.com/gantz-ai/soul-release/main/install.ps1 | iex
+iwr -useb https://soul-lang.com/install.ps1 | iex
 ```
 
 ## Manual Installation
@@ -41,24 +41,16 @@ Download the appropriate archive for your platform:
 
 <CardGroup cols={2}>
   <Card title="macOS (Apple Silicon)" icon="apple">
-    ```
-    mac/soul-VERSION-darwin-arm64.tar.gz
-    ```
+    ``` mac/soul-VERSION-darwin-arm64.tar.gz ```
   </Card>
   <Card title="macOS (Intel)" icon="apple">
-    ```
-    mac/soul-VERSION-darwin-amd64.tar.gz
-    ```
+    ``` mac/soul-VERSION-darwin-amd64.tar.gz ```
   </Card>
   <Card title="Linux" icon="linux">
-    ```
-    linux/soul-VERSION-linux-amd64.tar.gz
-    ```
+    ``` linux/soul-VERSION-linux-amd64.tar.gz ```
   </Card>
   <Card title="Windows" icon="windows">
-    ```
-    windows/soul-VERSION-windows-amd64.zip
-    ```
+    ``` windows/soul-VERSION-windows-amd64.zip ```
   </Card>
 </CardGroup>
 
@@ -66,15 +58,11 @@ Download the appropriate archive for your platform:
 
 <Tabs>
   <Tab title="macOS/Linux">
-    ```bash
-    tar -xzf soul-VERSION-PLATFORM.tar.gz
-    ```
+    ```bash tar -xzf soul-VERSION-PLATFORM.tar.gz ```
   </Tab>
   <Tab title="Windows">
-    Extract the ZIP file using Windows Explorer or:
-    ```powershell
-    Expand-Archive soul-VERSION-windows-amd64.zip
-    ```
+    Extract the ZIP file using Windows Explorer or: ```powershell Expand-Archive
+    soul-VERSION-windows-amd64.zip ```
   </Tab>
 </Tabs>
 
@@ -82,21 +70,13 @@ Download the appropriate archive for your platform:
 
 <Tabs>
   <Tab title="macOS/Linux">
-    ```bash
-    # Rename to soul
-    mv soul-VERSION soul
-    
-    # Make executable
-    chmod +x soul
-    
-    # Move to PATH
-    sudo mv soul /usr/local/bin/
-    ```
+    ```bash # Rename to soul mv soul-VERSION soul # Make executable chmod +x
+    soul # Move to PATH sudo mv soul /usr/local/bin/ ```
   </Tab>
   <Tab title="Windows">
-    1. Rename `soul-VERSION.exe` to `soul.exe`
-    2. Move to a directory in your PATH, or:
-    3. Add the directory containing `soul.exe` to your PATH environment variable
+    1. Rename `soul-VERSION.exe` to `soul.exe` 2. Move to a directory in your
+    PATH, or: 3. Add the directory containing `soul.exe` to your PATH
+    environment variable
   </Tab>
 </Tabs>
 
@@ -118,17 +98,12 @@ Soul 1.0.0
 
 <Tabs>
   <Tab title="macOS/Linux">
-    Soul is installed to `/usr/local/bin/soul`
-    
-    If you need to uninstall:
-    ```bash
-    sudo rm /usr/local/bin/soul
-    ```
+    Soul is installed to `/usr/local/bin/soul` If you need to uninstall: ```bash
+    sudo rm /usr/local/bin/soul ```
   </Tab>
   <Tab title="Windows">
-    Soul is installed to `%USERPROFILE%\.soul\bin\soul.exe`
-    
-    This directory is automatically added to your PATH.
+    Soul is installed to `%USERPROFILE%\.soul\bin\soul.exe` This directory is
+    automatically added to your PATH.
   </Tab>
 </Tabs>
 
@@ -149,30 +124,18 @@ soul update --dry-run
 <AccordionGroup>
   <Accordion title="Permission denied on macOS/Linux">
     If you get a permission error during installation, make sure to use `sudo`:
-    ```bash
-    sudo mv soul /usr/local/bin/
-    ```
+    ```bash sudo mv soul /usr/local/bin/ ```
   </Accordion>
-  
+
   <Accordion title="Command not found">
-    If `soul` command is not found after installation:
-    
-    **macOS/Linux**: Add to your shell profile:
-    ```bash
-    export PATH="$PATH:/usr/local/bin"
-    ```
-    
-    **Windows**: Restart your terminal or run:
-    ```powershell
-    refreshenv
-    ```
+    If `soul` command is not found after installation: **macOS/Linux**: Add to
+    your shell profile: ```bash export PATH="$PATH:/usr/local/bin" ```
+    **Windows**: Restart your terminal or run: ```powershell refreshenv ```
   </Accordion>
-  
+
   <Accordion title="macOS security warning">
-    If macOS blocks the executable, run:
-    ```bash
-    xattr -d com.apple.quarantine /usr/local/bin/soul
-    ```
+    If macOS blocks the executable, run: ```bash xattr -d com.apple.quarantine
+    /usr/local/bin/soul ```
   </Accordion>
 </AccordionGroup>
 
@@ -182,11 +145,11 @@ soul update --dry-run
   <Card title="Getting Started" icon="rocket" href="/getting-started">
     Learn the basics of Soul programming
   </Card>
-  
+
   <Card title="Language Guide" icon="book" href="/language-guide">
     Explore Soul language features
   </Card>
-  
+
   <Card title="Examples" icon="code" href="/examples">
     See Soul in action with examples
   </Card>
